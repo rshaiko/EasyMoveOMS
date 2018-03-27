@@ -1,0 +1,39 @@
+Daily Scrum - Every day at 9AM
+
+Each member write down 3 questions
+
+<<current date goes here>>
+1. What I have done/not done since last Scrum?
+2. What I plan to do from this Scrum to next? (next 24 hours)
+3. Where do I need assistance?  What do I need to figure out?
+
+27.03.2018 Roman
+1. Done till now
+- created project description
+- creared the main app window
+- created database
+- added cards to Trello
+2. Plan until next Scrum
+- window 'Order'
+- add entries to the database
+- create query to get information for the main table
+3. Need assistance / figure things out
+- save app settings in XML file
+- working code for API and JSON
+
+
+2018.02.28 Dmitrii
+1. Done since last scrum
+- creared the programm dialog windows
+- created database
+- created project description
+- added cards to Trello
+
+2. Plan until next Scrum
+-finish the discription file
+-create sign-up menu item
+-create log-in, sign-up functionality
+3. Need assistance / figure things out
+-Complicated quieries
+
+
