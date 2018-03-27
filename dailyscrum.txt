@@ -22,18 +22,16 @@ Each member write down 3 questions
 - working code for API and JSON
 
 
-2018.02.28 Dmitrii
+2018.03.27 Dmitrii
 1. Done since last scrum
-- creared the programm dialog windows
+- created a dialog window
 - created database
-- created project description
 - added cards to Trello
-
 2. Plan until next Scrum
--finish the discription file
--create sign-up menu item
--create log-in, sign-up functionality
+-finish the project proposal
+-Trello full structure
+-create all the app's windows
+-database queries
 3. Need assistance / figure things out
--Complicated quieries
-
+- save app settings in XML file
 
