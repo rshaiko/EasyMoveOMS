@@ -23,6 +23,11 @@ namespace EasyMoveOMS
         public MainWindow()
         {
             InitializeComponent();
+            OrderWindow dlg = new OrderWindow();
+            if (dlg.ShowDialog() == true)
+            {
+
+            }
         }
     }
 }

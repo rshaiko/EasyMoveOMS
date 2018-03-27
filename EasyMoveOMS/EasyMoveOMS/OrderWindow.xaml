@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="OrderWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="New order - EasyMove OMS" Height="450" Width="1135" FontSize="12"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="20" Content="New order | Order  #120055" HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
+        <WrapPanel Width="350">
+            <Label Content="Date: " Height="30" VerticalAlignment="Top"/>
+            <DatePicker Height="30" />
+            <Label Content="Start time: " Height="30" VerticalAlignment="Top"/>
+            <DatePicker Height="30" />
+           
+        </WrapPanel>
+       
+
+
+
+    </DockPanel>
 </Window>
