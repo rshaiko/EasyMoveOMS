@@ -5,8 +5,81 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="Easy Move OMS" Height="450" Width="800">
-    <Grid>
         
-    </Grid>
+        Title="Orders - Easy Move OMS" Height="600" Width="1135" FontSize="12"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" FontSize="15">
+            <MenuItem Header="_Orders" Margin="5,5">
+                <MenuItem Name="mNew"  Header="_New"  />
+                <MenuItem Name="mEdit" Header="_Edit" />
+                <Separator />
+            </MenuItem>
+            <MenuItem Header="_Clients" Margin="5,5">
+
+            </MenuItem>
+            <MenuItem Header="_Invoices" Margin="5,5">
+
+            </MenuItem>
+            <MenuItem Header="_Reports" Margin="5,5">
+
+            </MenuItem>
+            <MenuItem Header="_Help" Margin="5,5">
+                <MenuItem Name="mAbout"  Header="_About" >
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+       <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="lblPath" Text="Current order info" />
+            </StatusBarItem>
+        </StatusBar>
+        <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="20" Content="ORDERS" HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
+
+        <!--<Border DockPanel.Dock="Top" Height="100">
+        </Border>-->
+        <StackPanel>
+            <DockPanel>
+                <Label x:Name="label" Content="Search:" HorizontalAlignment="Left" Height="23" Margin="10,20,0,10" VerticalAlignment="Top" Width="52"/>
+                <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="228" Margin="10,20,0,10"/>
+                <Button Name="btSort"  Content="Sort by ..." HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.59,0.628" Height="23"/>
+                <Button x:Name="btNew" Content="New" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
+                <Button x:Name="btEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
+                <Button x:Name="btDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" Height="23"/>
+                <CheckBox Content="Show all" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Bottom" Width="75" Height="18"/>
+            </DockPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="87*"/>
+                    <ColumnDefinition Width="728*"/>
+                    <ColumnDefinition Width="543*"/>
+                </Grid.ColumnDefinitions>
+                <ListView Margin="10,10,10,10" Name="lvOrders" SelectionMode="Single" Grid.ColumnSpan="3">
+                    <!--<ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Departed}" Value="True">
+                                <Setter Property="Background" Value="Gray" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Departed}" Value="False">
+                                <Setter Property="Background" Value="White" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>-->
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Number" Width="100" DisplayMemberBinding="{Binding Number}" />
+                            <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="Date" Width="100" DisplayMemberBinding="{Binding OrderDate}" />
+                            <GridViewColumn Header="Address" Width="300" DisplayMemberBinding="{Binding Address}" />
+                            <GridViewColumn Header="Phone" Width="200" DisplayMemberBinding="{Binding Phone}" />
+                            <GridViewColumn Header="Status" Width="150" DisplayMemberBinding="{Binding Status}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </StackPanel>
+
+    </DockPanel>
 </Window>
