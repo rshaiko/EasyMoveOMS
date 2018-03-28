@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace EasyMoveOMS
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        Database db;
+
+        public MainWindow()
+        {
+            try
+            {
+                db = new Database();
+                InitializeComponent();
+                reloadClientsList();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace);
+                MessageBox.Show("Error opening database connection: " + e.Message);
+                Environment.Exit(1);
+            }
+
+
+            /* InitializeComponent();
+             OrderWindow dlg = new OrderWindow();
+             if (dlg.ShowDialog() == true)
+             {
+
+             }
+
+             InvoiceWindow dlg1 = new InvoiceWindow();
+             if (dlg1.ShowDialog() == true)
+             {
+
+             }*/
+        }
+
+        private void reloadClientsList()
+        {
+            lvOrders.ItemsSource = db.GetAllClients();
+        }
+    }
+}
