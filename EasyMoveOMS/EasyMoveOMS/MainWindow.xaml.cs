@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +21,41 @@ namespace EasyMoveOMS
     /// </summary>
     public partial class MainWindow : Window
     {
+        Database db;
+
         public MainWindow()
         {
-            InitializeComponent();
-            OrderWindow dlg = new OrderWindow();
-            if (dlg.ShowDialog() == true)
+            try
             {
-
+                db = new Database();
+                InitializeComponent();
+                reloadClientsList();
             }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace);
+                MessageBox.Show("Error opening database connection: " + e.Message);
+                Environment.Exit(1);
+            }
+
+
+            /* InitializeComponent();
+             OrderWindow dlg = new OrderWindow();
+             if (dlg.ShowDialog() == true)
+             {
+
+             }
+
+             InvoiceWindow dlg1 = new InvoiceWindow();
+             if (dlg1.ShowDialog() == true)
+             {
+
+             }*/
+        }
+
+        private void reloadClientsList()
+        {
+            lvOrders.ItemsSource = db.GetAllClients();
         }
     }
 }

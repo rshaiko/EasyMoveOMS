@@ -41,3 +41,25 @@ C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOM
 C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.exe
 C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.pdb
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csprojResolveAssemblyReference.cache
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\EasyMoveOMS.exe.config
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\EasyMoveOMS.exe
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\EasyMoveOMS.pdb
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\MySql.Data.dll
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\MySql.Data.xml
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csprojResolveAssemblyReference.cache
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\InvoiceWindow.g.cs
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\MainWindow.g.cs
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\OrderWindow.g.cs
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\App.g.cs
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS_MarkupCompile.cache
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS_MarkupCompile.lref
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\InvoiceWindow.baml
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\MainWindow.baml
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\OrderWindow.baml
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.g.resources
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.Properties.Resources.resources
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.GenerateResource.cache
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.CoreCompileInputs.cache
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.CopyComplete
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.exe
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.pdb
