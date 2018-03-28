@@ -3,7 +3,6 @@ C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EasyMoveOMS.
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EasyMoveOMS.pdb
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\MySql.Data.dll
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\MySql.Data.xml
-C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csprojResolveAssemblyReference.cache
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\InvoiceWindow.g.cs
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\MainWindow.g.cs
 C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\OrderWindow.g.cs
@@ -41,3 +40,4 @@ C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOM
 C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.CoreCompileInputs.cache
 C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.exe
 C:\Users\1796117\Desktop\!!Easy_Rep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.pdb
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csprojResolveAssemblyReference.cache

@@ -35,3 +35,15 @@ Each member write down 3 questions
 3. Need assistance / figure things out
 - save app settings in XML file
 
+28.03.2018 Roman
+1. What I have done/not done
+- window 'Order'(80%)
+- added entries to the database
+- parsing JSON from Google Maps Distance Matrix API 
+2. Plan until next Scrum
+- validations for the window 'Order'
+- implement user friendly output of estimated travel time and distance 
+3. Need assistance / figure things out
+- save app settings in XML file
+- get data from JSON
+
