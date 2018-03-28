@@ -63,3 +63,9 @@ D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.CopyComplete
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.exe
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.pdb
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EntityFramework.dll
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\Newtonsoft.Json.dll
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EntityFramework.xml
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\roma\Desktop\EasyMoveRep\EasyMoveOMS\EasyMoveOMS\bin\Debug\Newtonsoft.Json.xml
