@@ -68,3 +68,18 @@ not comletly done: queries, XML
 - saving Order info to the database
 3. Need assistance / figure things out
 - export to Word, PDF (to generate contract)
+
+2018.03.29 Dmitrii
+1. Done since last scrum
+- saving and reading user and application 
+settings to(from) XML
+- main window list and query(partially)
+2. Plan until next Scrum
+- export data to Excel/Word
+-invoice window modifications
+3. Need assistance / figure things out
+-editable listview
+-export to Excel, Word
+
+
+
