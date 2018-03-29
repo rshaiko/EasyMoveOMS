@@ -95,35 +95,28 @@
                         <ComboBoxItem Content="20 ft" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="26 ft" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label Content="  Workers:  " Height="23" VerticalAlignment="Top"/>
+                    <Label Content="   Workers:" Height="23" VerticalAlignment="Top"/>
                     <TextBox Height="23" TextWrapping="Wrap" Text="2" Width="22"/>
                     <ScrollBar Height="23"/>
                     <Label></Label>
-                    <Label Content="Time: " Height="23" VerticalAlignment="Top"/>
+                    <Label Content=" Hours:" Height="23" VerticalAlignment="Top"/>
                     <TextBox Height="23" TextWrapping="Wrap" Text="" Width="30"/>
                     <ScrollBar Height="23"  />
                 </WrapPanel>
-                <Label Margin="0,15" Background="#d4d0c8"></Label>
+                <Label Margin="0,15" Height="5" Background="#d4d0c8"></Label>
                 
                 <WrapPanel MinWidth="500">
                     <Label Content="Travel time:  " Height="23" VerticalAlignment="Top"/>
                     <TextBox Height="23" TextWrapping="Wrap" Text="1" Width="22"/>
                     <ScrollBar Height="23"/>
                     <Label></Label>
-                    <Label Content="Travel time by Google:  " Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="65" IsEnabled="False"/>
-                    
+                    <Label Content="Google:" Height="23" VerticalAlignment="Top"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="45" IsEnabled="False"/>
+                    <Label Content="h:mm" Height="23" VerticalAlignment="Top"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="45" IsEnabled="False"/>
+                    <Label Content="km" Height="23" VerticalAlignment="Top"/>
                 </WrapPanel>
-                <Label></Label>
-                <WrapPanel MinWidth="500">
-                    <Label Content="Price:   " Height="23" VerticalAlignment="Top"/>
-                    <RadioButton GroupName="payMethod" Height="14" Content="per hour"/>
-                    <Label/>
-                    <RadioButton GroupName="payMethod" Height="14" Content="fixed"/>
-                    <Label Content="              Total: $" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="65" IsEnabled="False" />
-                    
-                </WrapPanel>
+                
                 <Label></Label>
                 <WrapPanel MinWidth="500">
                     <Label Content="Truck will arrive between " Height="23" VerticalAlignment="Top"/>
@@ -150,7 +143,7 @@
             <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
             
             
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="4">
                 <Label Content="ADDRESS INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <WrapPanel>
                     <Label Content="1. Customer actual address" Height="25" VerticalAlignment="Top" FontWeight="Bold" Margin="0,0"/>
@@ -271,9 +264,116 @@
                     <TextBox Height="23" TextWrapping="Wrap" Text="" Width="80" IsEnabled="False"/>
                 </WrapPanel>
             </StackPanel>
-            <StackPanel Grid.Column="4">
+            <StackPanel Grid.Column="2">
                 <Label Content="DESCRIPTION OF ITEMS TO MOVE" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
+                <Label/>
+                <WrapPanel Height="23">
+                    <Label Content="Boxes: " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="Beds:  " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="Sofas:  " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                </WrapPanel>
+                <Label/>
+                <WrapPanel Height="23">
+                    <Label Content="Frigos: " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="WDS:  " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="Desks: " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                </WrapPanel><Label/>
                 
+                <WrapPanel Height="23">
+                    <Label Content="Tables:" />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="Chairs:" />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                    <Label Content="Other: " />
+                    <TextBox Text="" Width="45"/>
+                    <ScrollBar />
+                    <Label/>
+                </WrapPanel><Label/>
+               
+                <WrapPanel Height="23">
+                    <Label Content="Oversized" />
+                    <CheckBox Content="" Height="14" Width="21"/>
+                    <Label Content=" Overweight" />
+                    <CheckBox Content="" Height="14" Width="21"/>
+                    <Label Content="  Fragile" />
+                    <CheckBox Content="" Height="14" Width="21"/>
+                    <Label Content="  Expensive" Height="25" VerticalAlignment="Top"/>
+                    <CheckBox Content="" Height="14" Width="21"/>
+                </WrapPanel><Label/>
+                <WrapPanel>
+                    <Label Content="Precise:" />
+                    <ComboBox Width="300" IsEditable="True">
+                        <ComboBoxItem Content="Piano" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="Marble" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="Treadmill" HorizontalAlignment="Left" Height="16" RenderTransformOrigin="0.5,0.5"/>
+                    </ComboBox>
+                </WrapPanel><Label/><Label/>
+                <Label Content="PAYMENT INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
+                <Label></Label>
+                <WrapPanel MinWidth="500" Height="23">
+                    <Label Content="Price:   " />
+                    <RadioButton GroupName="payMethod" Height="14" Content="per hour"/>
+                    <Label/>
+                    <RadioButton GroupName="payMethod" Height="14" Content="fixed"/>
+                    <Label Content="          Max hours" />
+                    <TextBox Height="23" Text="" Width="65" />
+                </WrapPanel>
+                <Label/>
+                <WrapPanel Height="23">
+                    <Label Content="Estimated total, $" />
+                    <TextBox Text="" Width="65" IsEnabled="False" />
+                    <Label Content="        Deposit, $" />
+                    <TextBox Text="" Width="65" />
+                </WrapPanel>
+           
+                <Label/>
+                <WrapPanel Height="23">
+                    
+                    <Label Content="Payments total, $" />
+                    <TextBox Text="" Width="65" IsEnabled="False"/><Label/>
+                    <CheckBox  Height="14" Content="complete"/>
+                    <Label/><Button Content="Add payment"/><Label/><Button Content="Complete"/>
+                </WrapPanel>
+                <Label />
+                <Label />
+                <Label Content="(List of payments will be here)" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <Label/>
+                <Label/>
+                <Label/>
+                <Label Content="ORDER STATUS" Height="30" FontWeight="Bold" Background="#d4d0c8"/>
+                <Label/>
+                <WrapPanel>
+                <Label /><RadioButton Content="Scheduled" GroupName="OrderStatus"/>
+                </WrapPanel>
+                <Label/>
+                <WrapPanel>
+                <Label />
+                    <RadioButton Content="Suspended" GroupName="OrderStatus"/> 
+                </WrapPanel><Label/>
+                <WrapPanel>
+                <Label /><RadioButton Content="Done" GroupName="OrderStatus"/></WrapPanel>
             </StackPanel>
         </Grid>
     </DockPanel>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EasyMoveOMS
 {
-    class Api
+    public class Api
     {
         private string getJson(string url)
         {
@@ -22,6 +22,10 @@ namespace EasyMoveOMS
             string responseFromServer = reader.ReadToEnd();
             response.Close();
             return responseFromServer;
+        }
+
+        public string getDistanceAndTime(string actualZip, string destinationZip) {
+            return "";
         }
     }
 }
