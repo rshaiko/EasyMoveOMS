@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EasyMoveOMS.Properties;
+
 
 namespace EasyMoveOMS
 {
@@ -27,9 +29,11 @@ namespace EasyMoveOMS
         {
             try
             {
+             
                 db = new Database();
                 InitializeComponent();
                 reloadClientsList();
+                chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
             }
             catch (SqlException e)
             {
@@ -56,6 +60,12 @@ namespace EasyMoveOMS
         private void reloadClientsList()
         {
             lvOrders.ItemsSource = db.GetAllClients();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Settings.Default["showAll"] = chbShowAll.IsChecked;
+            Settings.Default.Save();
         }
     }
 }

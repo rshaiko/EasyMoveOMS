@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+
 
 namespace EasyMoveOMS
 {
@@ -14,7 +16,10 @@ namespace EasyMoveOMS
 
         public Database()
         {
-            conn = new MySqlConnection("Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G");
+            //conn = new MySqlConnection("Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G");
+            //string conS = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            string conS = Properties.Settings.Default.connStr;
+            conn = new MySqlConnection(conS);
             conn.Open();
         }
 

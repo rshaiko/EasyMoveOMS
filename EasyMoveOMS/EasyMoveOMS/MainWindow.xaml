@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         
         Title="Orders - Easy Move OMS" Height="600" Width="1135" FontSize="12"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="15">
             <MenuItem Header="_Orders" Margin="5,5">
@@ -46,7 +46,7 @@
                 <Button x:Name="btNew" Content="New" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
                 <Button x:Name="btEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
                 <Button x:Name="btDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" Height="23"/>
-                <CheckBox Content="Show all" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Bottom" Width="75" Height="18"/>
+                <CheckBox Name="chbShowAll" Content="Show all" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Bottom" Width="75" Height="18"/>
             </DockPanel>
             <Grid>
                 <Grid.ColumnDefinitions>

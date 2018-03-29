@@ -63,3 +63,5 @@ D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.csproj.CopyComplete
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.exe
 D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\obj\Debug\EasyMoveOMS.pdb
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\Newtonsoft.Json.dll
+D:\Dim\john abbott\EasyMove\EasyMoveOMS\EasyMoveOMS\bin\Debug\Newtonsoft.Json.xml
