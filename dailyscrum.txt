@@ -57,3 +57,14 @@ not comletly done: queries, XML
 - database queries for some windows
 3. Need assistance / figure things out
 ---
+
+29.03.2018 Roman
+1. What I have done/not done
+- window Order finished
+- Google estimation of travel time and distance
+- validations - not done
+2. Plan until next Scrum
+- validations for the window 'Order'
+- saving Order info to the database
+3. Need assistance / figure things out
+- export to Word, PDF (to generate contract)
