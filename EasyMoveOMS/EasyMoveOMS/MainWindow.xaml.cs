@@ -32,7 +32,7 @@ namespace EasyMoveOMS
              
                 db = new Database();
                 InitializeComponent();
-                reloadClientsList();
+                //reloadClientsList();
                 chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
             }
             catch (SqlException e)
@@ -43,13 +43,9 @@ namespace EasyMoveOMS
             }
 
 
-            /* InitializeComponent();
-             OrderWindow dlg = new OrderWindow();
-             if (dlg.ShowDialog() == true)
-             {
-
-             }
-
+            
+             
+                /* 
              InvoiceWindow dlg1 = new InvoiceWindow();
              if (dlg1.ShowDialog() == true)
              {
@@ -66,6 +62,16 @@ namespace EasyMoveOMS
         {
             Settings.Default["showAll"] = chbShowAll.IsChecked;
             Settings.Default.Save();
+        }
+
+        //NEW ORDER
+        private void btNew_Click(object sender, RoutedEventArgs e)
+        {
+            OrderWindow dlg = new OrderWindow();
+            if (dlg.ShowDialog() == true)
+            {
+
+            }
         }
     }
 }

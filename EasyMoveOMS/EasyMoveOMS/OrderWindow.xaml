@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="New order - EasyMove OMS" Height="680" Width="1135" FontSize="12"
+        Title="New order - EasyMove OMS" Height="680" Width="1200" FontSize="12"
         WindowStartupLocation="CenterScreen">
     <DockPanel>
         <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="20" Content="New order | Order  #120055"  HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
@@ -14,7 +15,7 @@
             <Button Content="Cancel" Width="110" Height="30"/>
             <Label/>
             <Label/>
-            <Button Content="Save" Width="110" Height="30"/>
+            <Button Name="btSave" Click="btSave_Click" Content="Save" Width="110" Height="30"/>
             <Label/>
             <Label/>
             <Button Content="Export to..." Width="110" Height="30"/>
@@ -25,22 +26,24 @@
         <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" BorderBrush="DarkBlue" BorderThickness="0,0,0,5" VerticalAlignment="Top" Margin="0"/>
         <Label DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" BorderBrush="#d4d0c8" BorderThickness="0,5,0,0" VerticalAlignment="Top" Margin="0"/>
 
-        <Grid>
+        <Grid MaxWidth="1200">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25" />
                 <ColumnDefinition Width="4*" />
-                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="25" />
                 <ColumnDefinition Width="4*" />
-                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="25" />
                 <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="25" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
+            <StackPanel Grid.Column="1" MinWidth="364">
                 <Label Content="MOVING INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label />
                 <WrapPanel MinWidth="500">
                     <Label Content="Date:   " VerticalAlignment="Top"/>
-                    <DatePicker />
+                    <DatePicker Name="dpMoveDate" SelectedDateChanged="dpMoveDate_SelectedDateChanged" />
                     <Label Content="     Start time: "  VerticalAlignment="Top"/>
-                    <ComboBox Width="45" IsEditable="True">
+                    <ComboBox Name="cbStartTimeH" Width="45" IsEditable="True">
                         <ComboBoxItem Content="6" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="7" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="8" HorizontalAlignment="Left" Height="16"/>
@@ -57,7 +60,7 @@
                         <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <ComboBox Width="45" Text="00" >
+                    <ComboBox Name="cbcbStartTimeM" Width="45" Text="00" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -67,54 +70,54 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Client:  " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="Select a customer" Width="140" IsEnabled="False"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="Select a customer" Width="140" IsEnabled="False" Foreground="Black"/>
                     <Label></Label>
-                    <Button Height="23" Content="Select" Width="60" IsEnabled="True"/>
+                    <Button Name="btSelectClient" Height="23" Content="Select" Width="60" IsEnabled="True"/>
                     <Label></Label>
-                    <Button Height="23" Content="Add new" Width="60" IsEnabled="True"/>
+                    <Button Name="btAddClient" Height="23" Content="Add new" Width="60" IsEnabled="True"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
                     <Label Content="Phone: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="110" IsEnabled="False"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="110" IsEnabled="False" Foreground="Black"/>
                     <Label Content="(h)   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="110" IsEnabled="False"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="110" IsEnabled="False" Foreground="Black"/>
                     <Label Content="(w)" Height="25" VerticalAlignment="Top"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
                     <Label Content="Email:  " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="283" IsEnabled="False"/>
+                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="283" IsEnabled="False" Foreground="Black"/>
                     
                 </WrapPanel>
                 <Label/>
                 <WrapPanel MinWidth="500"> 
                     <Label Content="Truck:  " Height="23" VerticalAlignment="Top"/>
-                    <ComboBox Width="70" Text=""  IsEditable="True">
+                    <ComboBox Name="cbTruck" Width="70" Text=""  IsEditable="True">
                         <ComboBoxItem Content="14 ft" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="20 ft" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="26 ft" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label Content="   Workers:" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="2" Width="22"/>
-                    <ScrollBar Height="23"/>
+                    <Label Content="  Workers:" Height="23" VerticalAlignment="Top"/>
+                    <TextBox Name="tbWorkers" Height="23" Text="2" Padding="2,3,0,0"  Width="25"/>
+                    <wpfx:ButtonSpinner Name="spinWorkers" Width="20" Spin="spinWorkers_Spin"  />
                     <Label></Label>
-                    <Label Content=" Hours:" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="30"/>
-                    <ScrollBar Height="23"  />
+                    <Label Content="Hours:" Height="23" VerticalAlignment="Top"/>
+                    <TextBox Name="tbHours" Height="23" Text="" Padding="2,3,0,0" Width="25"/>
+                    <wpfx:ButtonSpinner Name="spinHours" Width="20" Spin="spinHours_Spin"  />
                 </WrapPanel>
                 <Label Margin="0,15" Height="5" Background="#d4d0c8"></Label>
                 
                 <WrapPanel MinWidth="500">
                     <Label Content="Travel time:  " Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="1" Width="22"/>
-                    <ScrollBar Height="23"/>
+                    <TextBox Name="tbTravelTime" Height="23" TextWrapping="Wrap" Text="1" Width="22"/>
+                    <wpfx:ButtonSpinner Name="spinTravelTime" Width="20" Spin="spinTravelTime_Spin"  />
                     <Label></Label>
-                    <Label Content="Google:" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="45" IsEnabled="False"/>
-                    <Label Content="h:mm" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="45" IsEnabled="False"/>
-                    <Label Content="km" Height="23" VerticalAlignment="Top"/>
+                    <Label Content="  Google:  " Height="23" VerticalAlignment="Top"/>
+                    <TextBox Name="tbGoogleTime" Height="23" TextWrapping="Wrap" Text="" Width="65" IsEnabled="False" Foreground="Black"/>
+                    <Label />
+                    <TextBox Name="tbGoogleDistance" Height="23" TextWrapping="Wrap" Text="" Width="65" IsEnabled="False" Foreground="Black"/>
+                    <Label />
                 </WrapPanel>
                 
                 <Label></Label>
@@ -122,8 +125,8 @@
                     <Label Content="Truck will arrive between " Height="23" VerticalAlignment="Top"/>
                     <TextBox Height="23" TextWrapping="Wrap" Text="" Width="40"/>
                     <Label Content=" and " Height="23" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="40"/>
-                    <ScrollBar Height="23"/>
+                    <TextBox Name="tbArriveTo" Height="23"  Padding="2,3,0,0" Text="" Width="40"/>
+                    <wpfx:ButtonSpinner Name="spinArriveTo" Width="20" Spin="spinArriveTo_Spin"  />
                 </WrapPanel>
                 <Label /><Label />
                 <WrapPanel HorizontalAlignment="Center">
@@ -138,12 +141,12 @@
                 <Label Content="(List of moves will be here)" FontWeight="Bold" HorizontalAlignment="Center"/>
             </StackPanel>
             
-            
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
-            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
-            
-            
-            <StackPanel Grid.Column="4">
+            <GridSplitter Grid.Column="0" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
+            <GridSplitter Grid.Column="4" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
+            <GridSplitter Grid.Column="6" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
+
+            <StackPanel Grid.Column="5" MinWidth="364">
                 <Label Content="ADDRESS INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <WrapPanel>
                     <Label Content="1. Customer actual address" Height="25" VerticalAlignment="Top" FontWeight="Bold" Margin="0,0"/>
@@ -159,8 +162,8 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Floor: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="1" Width="25"/>
-                    <ScrollBar Height="23"/>
+                    <TextBox Name="tbFloorAct" Height="23"  Padding="2,3,0,0"  Text="1" Width="25"/>
+                    <wpfx:ButtonSpinner Name="spinFloorAddrAct" Width="20" Spin="spinFloorAddrAct_Spin"  />
                     <Label></Label>
                     <Label Content="Stairs: " Height="25" VerticalAlignment="Top"/>
                     <CheckBox Content="" Height="14" Width="21"/>
@@ -177,7 +180,7 @@
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="80"/>
+                    <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" TextWrapping="Wrap" Text="" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -200,8 +203,8 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Floor: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="1" Width="25"/>
-                    <ScrollBar Height="23"/>
+                    <TextBox Name="tbFloorDest" Height="23"  Padding="2,3,0,0"  Text="1" Width="25"/>
+                    <wpfx:ButtonSpinner Name="spinFloorAddrDest" Width="20" Spin="spinFloorAddrDest_Spin"  />
                     <Label></Label>
                     <Label Content="Stairs: " Height="25" VerticalAlignment="Top"/>
                     <CheckBox Content="" Height="14" Width="21"/>
@@ -218,7 +221,7 @@
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="80"/>
+                    <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23" TextWrapping="Wrap" Text="" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -243,8 +246,8 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Floor: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="1" Width="25" IsEnabled="False"/>
-                    <ScrollBar Height="23"/>
+                    <TextBox Name="tbFloorInt" Height="23"  Padding="2,3,0,0"  Text="1" Width="25" IsEnabled="False"/>
+                    <wpfx:ButtonSpinner Name="spinFloorAddrInt" Width="20" Spin="spinFloorAddrInt_Spin"  />
                     <Label></Label>
                     <Label Content="Stairs: " Height="25" VerticalAlignment="Top"/>
                     <CheckBox Content="" Height="14" Width="21" IsEnabled="False"/>
@@ -261,54 +264,54 @@
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Height="23" TextWrapping="Wrap" Text="" Width="80" IsEnabled="False"/>
+                    <TextBox Name="tbZipInt" TextChanged="tbZipInt_TextChanged" Height="23" TextWrapping="Wrap" Text="" Width="80" IsEnabled="False"/>
                 </WrapPanel>
             </StackPanel>
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="3" MinWidth="364">
                 <Label Content="DESCRIPTION OF ITEMS TO MOVE" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label/>
                 <WrapPanel Height="23">
                     <Label Content="Boxes: " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbBoxes"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinBoxes" Width="20" Spin="spinBoxes_Spin"  />
                     <Label/>
                     <Label Content="Beds:  " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbBeds" Padding="2,3,0,0"  Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinBeds" Width="20" Spin="spinBeds_Spin"  />
                     <Label/>
-                    <Label Content="Sofas:  " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <Label Content="Sofas: " />
+                    <TextBox Name="tbSofas"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinSofas" Width="20" Spin="spinSofas_Spin"  />
                     <Label/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel Height="23">
                     <Label Content="Frigos: " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbFrigos" Padding="2,3,0,0"  Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinFrigos" Width="20" Spin="spinFrigos_Spin"  />
                     <Label/>
                     <Label Content="WDS:  " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbWds"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinWds" Width="20" Spin="spinWds_Spin" />
                     <Label/>
-                    <Label Content="Desks: " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <Label Content="Desks:" />
+                    <TextBox Name="tbDesks"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinDesks" Width="20" Spin="spinDesks_Spin" />
                     <Label/>
                 </WrapPanel><Label/>
                 
                 <WrapPanel Height="23">
                     <Label Content="Tables:" />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbTables"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinTables" Width="20" Spin="spinTables_Spin"  />
                     <Label/>
                     <Label Content="Chairs:" />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <TextBox Name="tbChairs"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinChairs" Width="20" Spin="spinChairs_Spin"  />
                     <Label/>
-                    <Label Content="Other: " />
-                    <TextBox Text="" Width="45"/>
-                    <ScrollBar />
+                    <Label Content="Other:" Margin="0,0,2,0"/>
+                    <TextBox Name="tbOther"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <wpfx:ButtonSpinner Name="spinOther" Width="20" Spin="spinOther_Spin"  />
                     <Label/>
                 </WrapPanel><Label/>
                
@@ -323,7 +326,7 @@
                     <CheckBox Content="" Height="14" Width="21"/>
                 </WrapPanel><Label/>
                 <WrapPanel>
-                    <Label Content="Precise:" />
+                    <Label Content="Details:" />
                     <ComboBox Width="300" IsEditable="True">
                         <ComboBoxItem Content="Piano" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="Marble" HorizontalAlignment="Left" Height="16"/>
@@ -337,14 +340,14 @@
                     <RadioButton GroupName="payMethod" Height="14" Content="per hour"/>
                     <Label/>
                     <RadioButton GroupName="payMethod" Height="14" Content="fixed"/>
-                    <Label Content="          Max hours" />
+                    <Label Content="                Max hours" />
                     <TextBox Height="23" Text="" Width="65" />
                 </WrapPanel>
                 <Label/>
                 <WrapPanel Height="23">
                     <Label Content="Estimated total, $" />
-                    <TextBox Text="" Width="65" IsEnabled="False" />
-                    <Label Content="        Deposit, $" />
+                    <TextBox Text="" Width="65" IsEnabled="False" Foreground="Black" />
+                    <Label Content="              Deposit, $" />
                     <TextBox Text="" Width="65" />
                 </WrapPanel>
            
@@ -352,29 +355,133 @@
                 <WrapPanel Height="23">
                     
                     <Label Content="Payments total, $" />
-                    <TextBox Text="" Width="65" IsEnabled="False"/><Label/>
-                    <CheckBox  Height="14" Content="complete"/>
-                    <Label/><Button Content="Add payment"/><Label/><Button Content="Complete"/>
+                    <TextBox Text="" Width="65" IsEnabled="False" Foreground="Black"/><Label/>
+                    <CheckBox  Height="14" Content="complete     "/>
+                    <Label/><Button Content="Add payment"/><Label/>
                 </WrapPanel>
                 <Label />
                 <Label />
                 <Label Content="(List of payments will be here)" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <Label/>
                 <Label/>
-                <Label/>
+                
                 <Label Content="ORDER STATUS" Height="30" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label/>
                 <WrapPanel>
-                <Label /><RadioButton Content="Scheduled" GroupName="OrderStatus"/>
+                    <Label />
+                    <RadioButton Content="Scheduled      " GroupName="OrderStatus" Margin="0,3" />
+                    <Label />
+                    <RadioButton Content="Suspended, contact on: " GroupName="OrderStatus" Margin="0,3"/>
+                    <DatePicker IsEnabled="False"/>
                 </WrapPanel>
-                <Label/>
+                <Label Padding="0,0" Margin="0,5" BorderThickness="0,0,0,3" BorderBrush="#d4d0c8"/>
                 <WrapPanel>
-                <Label />
-                    <RadioButton Content="Suspended" GroupName="OrderStatus"/> 
-                </WrapPanel><Label/>
+                    <Label />
+                    <RadioButton Content="Done  " GroupName="OrderStatus" Margin="0,5"/>
+                    <Label Content="Start time:"/>
+                    <ComboBox Width="45" IsEditable="True">
+                        <ComboBoxItem Content="6" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="7" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="8" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="9" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="10" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="11" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="12" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="13" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="14" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="16" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="17" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="18" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <ComboBox Width="45" Text="00" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+
+
+                    <Label Content=" Breaks:"/>
+                    <ComboBox Width="45" IsEditable="True">
+                        <ComboBoxItem Content="6" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="7" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="8" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="9" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="10" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="11" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="12" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="13" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="14" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="16" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="17" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="18" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <ComboBox Width="45" Text="00" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                </WrapPanel>
                 <WrapPanel>
-                <Label /><RadioButton Content="Done" GroupName="OrderStatus"/></WrapPanel>
-            </StackPanel>
+                    <Label Content="End time:" Margin="60,0,5,0"/>
+                    <ComboBox Width="45" IsEditable="True">
+                        <ComboBoxItem Content="6" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="7" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="8" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="9" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="10" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="11" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="12" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="13" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="14" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="16" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="17" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="18" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <ComboBox Width="45" Text="00" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+
+
+                    <Label Content=" Total:" Margin="0,0,9,0"/>
+                    <ComboBox Width="45" IsEditable="True">
+                        <ComboBoxItem Content="6" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="7" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="8" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="9" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="10" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="11" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="12" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="13" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="14" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="16" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="17" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="18" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <ComboBox Width="45" Text="00" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                </WrapPanel>
+            </StackPanel> <!--end of column stackpanel-->
         </Grid>
     </DockPanel>
 

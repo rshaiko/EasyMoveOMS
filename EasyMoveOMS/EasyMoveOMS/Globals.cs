@@ -9,5 +9,6 @@ namespace EasyMoveOMS
     class Globals
     {
         public static Database db;
+        public static string APIkey = "AIzaSyD0jS05VZtofCHL7mERZ9ibw91om5jwWX4";
     }
 }

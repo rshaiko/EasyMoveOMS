@@ -8,24 +8,55 @@ using System.Threading.Tasks;
 
 namespace EasyMoveOMS
 {
-    public class Api
+    public static class Api
     {
-        private string getJson(string url)
+        public static string getJson(string url)
         {
-            //url = @"https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=Washington,DC&destinations=New+York+City,NY&key=AIzaSyD0jS05VZtofCHL7mERZ9ibw91om5jwWX4";
+            WebClient client = new WebClient();
+            Stream data = client.OpenRead(url);
 
-            WebRequest request = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-            Stream data = response.GetResponseStream();
+            //WebRequest request = WebRequest.Create(url);
+            //WebResponse response = request.GetResponse();
+            //Stream data = response.GetResponseStream();
             StreamReader reader = new StreamReader(data);
-            // json-formatted string from maps api
             string responseFromServer = reader.ReadToEnd();
-            response.Close();
+            //response.Close();
             return responseFromServer;
         }
-
-        public string getDistanceAndTime(string actualZip, string destinationZip) {
-            return "";
-        }
     }
+
+
+    // --- START classes GoogleMatrix
+    public class GoogleMatrixData
+    {
+        public string[] destination_addresses { get; set; }
+        public string[] origin_addresses { get; set; }
+        public Row[] rows { get; set; }
+        public string status { get; set; }
+    }
+    public class Row
+    {
+        public Element[] elements { get; set; }
+    }
+
+    public class Element
+    {
+        public Distance distance { get; set; }
+        public Duration duration { get; set; }
+        public string status { get; set; }
+    }
+
+    public class Distance
+    {
+        public string text { get; set; }
+        public int value { get; set; }
+    }
+
+    public class Duration
+    {
+        public string text { get; set; }
+        public int value { get; set; }
+    }
+    // --- END classes GoogleMatrix
+
 }
