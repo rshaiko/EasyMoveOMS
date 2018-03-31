@@ -11,6 +11,12 @@
 */**/bin/Release
 */**/obj/Debug
 */**/obj/Release
+#EasyMoveOMS/v15/
+#v15/
+**/v15
+**/.vs
+#*/**/**/v15/
+#*v15/
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
