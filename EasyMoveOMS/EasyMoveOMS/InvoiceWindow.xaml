@@ -5,27 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="InvoiceWindow" Height="901.426" Width="800">
+        Title="InvoiceWindow" Height="768.426" Width="800">
     <Grid>
         <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="81,68,0,0" VerticalAlignment="Top"/>
-        <Label Content="Date:" HorizontalAlignment="Left" Margin="136,131,0,0" VerticalAlignment="Top"/>
-        <Label Content="Time:" HorizontalAlignment="Left" Margin="135,197,0,0" VerticalAlignment="Top"/>
+        <Label Content="Date:" HorizontalAlignment="Left" Margin="144,131,0,0" VerticalAlignment="Top"/>
+        <Label Content="Time:" HorizontalAlignment="Left" Margin="143,197,0,0" VerticalAlignment="Top"/>
         <Label Content="..." HorizontalAlignment="Left" Margin="248,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.342,0.385" Width="461"/>
         <Label Content="..." HorizontalAlignment="Left" Margin="248,131,0,0" VerticalAlignment="Top" Width="461"/>
         <Label Content="..." HorizontalAlignment="Left" Margin="248,197,0,0" VerticalAlignment="Top" Width="461"/>
         <Label Content="Hourly rate:" HorizontalAlignment="Left" Margin="109,542,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="221,542,0,0" VerticalAlignment="Top"/>
         <Label Content="Hours:" HorizontalAlignment="Left" Margin="300,542,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="403,542,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.389,7.346"/>
-        <Label Content="Total before tax:" HorizontalAlignment="Left" Margin="526,542,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="668,542,0,0" VerticalAlignment="Top"/>
-        <Label Content="TPS 5%:" HorizontalAlignment="Left" Margin="570,594,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="668,594,0,0" VerticalAlignment="Top"/>
-        <Label Content="TVQ 9.975%:" HorizontalAlignment="Left" Margin="546,636,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="668,636,0,0" VerticalAlignment="Top"/>
+        <Label Content="Total before tax:" HorizontalAlignment="Left" Margin="508,542,0,0" VerticalAlignment="Top"/>
+        <Label Content="TPS 5%:" HorizontalAlignment="Left" Margin="319,636,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblTPS" Content="..." HorizontalAlignment="Left" Margin="402,636,0,0" VerticalAlignment="Top"/>
+        <Label Content="TVQ 9.975%:" HorizontalAlignment="Left" Margin="527,636,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblTVQ" Content="..." HorizontalAlignment="Left" Margin="647,636,0,0" VerticalAlignment="Top"/>
         <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="574,686,0,0" VerticalAlignment="Top"/>
-        <Label Content="..." HorizontalAlignment="Left" Margin="668,686,0,0" VerticalAlignment="Top"/>
-        <Button Content="Print" HorizontalAlignment="Left" Margin="346,805,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Print" HorizontalAlignment="Left" Margin="104,671,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="addOne" Click="addOne_Click" Content="Add one" HorizontalAlignment="Left" Margin="248,239,0,0" VerticalAlignment="Top" Width="75"/>
         <DataGrid AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="100" Margin="104,270,0,0" VerticalAlignment="Top" Width="267"  CellEditEnding="dgInvoice_CellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Description                                            " Binding="{Binding Description}"></DataGridTextColumn>
@@ -34,11 +31,19 @@
         </DataGrid>
         <Label Name="lblDescription" Content="" HorizontalAlignment="Left" Margin="190,376,0,0" VerticalAlignment="Top"/>
         <Label Name="lblAmount" Content="" HorizontalAlignment="Left" Margin="616,376,0,0" VerticalAlignment="Top"/>
-        <Label Content="Description" HorizontalAlignment="Left" Margin="81,376,0,0" VerticalAlignment="Top"/>
-        <Label Content="Amount" HorizontalAlignment="Left" Margin="508,376,0,0" VerticalAlignment="Top"/>
-        <Label Content="Additinal services:" HorizontalAlignment="Left" Margin="113,239,0,0" VerticalAlignment="Top"/>
+        <Label Content="Description:" HorizontalAlignment="Left" Margin="81,376,0,0" VerticalAlignment="Top"/>
+        <Label Content="Amount:" HorizontalAlignment="Left" Margin="508,376,0,0" VerticalAlignment="Top"/>
+        <Label Content="Additional services:" HorizontalAlignment="Left" Margin="76,228,0,0" VerticalAlignment="Top"/>
         <Label Name="lblDescription2" Content="" HorizontalAlignment="Left" Margin="190,426,0,0" VerticalAlignment="Top"/>
         <Label  Name="lblAmount2" Content="" HorizontalAlignment="Left" Margin="616,426,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblDescription3" Content="" HorizontalAlignment="Left" Margin="190,489,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblAmount3" Content="" HorizontalAlignment="Left" Margin="616,489,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbTotal" HorizontalAlignment="Left" Height="23" Margin="647,689,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" TextChanged="tbTotal_TextChanged"/>
+        <TextBox Name="tbTotalBefore" HorizontalAlignment="Left" Height="23" Margin="647,542,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" RenderTransformOrigin="0.425,0.304"/>
+        <TextBox Name="tbHourly" HorizontalAlignment="Left" Height="23" Margin="190,545,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" Text="80.0"/>
+        <TextBox Name="tbHours" HorizontalAlignment="Left" Height="23" Margin="363,546,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="95" Text="5.25"/>
+        <Label Content="Discount (percentage):" HorizontalAlignment="Left" Margin="475,591,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbDiscount" HorizontalAlignment="Left" Height="23" Margin="647,594,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" TextChanged="tbDiscount_TextChanged"/>
 
     </Grid>
 </Window>

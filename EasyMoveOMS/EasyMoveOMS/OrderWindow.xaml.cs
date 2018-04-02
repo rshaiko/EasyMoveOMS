@@ -62,6 +62,15 @@ namespace EasyMoveOMS
         DateTime contactOnDate;
         int timeStartH, timeStartM, timeBreaksH, timeBreaksM, timeEndH, timeEndM, timeTotalH, timeTotalM;
 
+        private void btnCreateInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            InvoiceWindow dlg1 = new InvoiceWindow();
+            if (dlg1.ShowDialog() == true)
+            {
+
+            }
+        }
+
         //ADDRESS INFORMATION 
         ////String addrActLine, addrDestLine, addrIntLine;
         ////String addrActCity, addrDestCity, addrIntCity;
