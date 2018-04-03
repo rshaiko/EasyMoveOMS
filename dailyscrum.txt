@@ -81,5 +81,15 @@ settings to(from) XML
 -editable listview
 -export to Excel, Word
 
+03.04.2018 Roman
+1. What I have done/not done
+- complete validations for the window 'Order'
+- saving Order info to the database
+2. Plan until next Scrum
+- adding payments Interface
+- add On The Date Schedule info
+3. Need assistance / figure things out
+- export to Word, PDF (to generate contract)
+
 
 
