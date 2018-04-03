@@ -91,5 +91,14 @@ settings to(from) XML
 3. Need assistance / figure things out
 - export to Word, PDF (to generate contract)
 
+2018.04.03 Dmitrii
+1. Done since last scrum
+-export data to Word
+-datagrid for invoice window, autocalculations
+2. Plan until next Scrum
+- export data to Excel
+-complete invoice window
+3. Need assistance / figure things out
+-export to Excel, data formatting
 
 
