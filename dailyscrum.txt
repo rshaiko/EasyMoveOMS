@@ -101,4 +101,17 @@ settings to(from) XML
 3. Need assistance / figure things out
 -export to Excel, data formatting
 
+04.04.2018 Roman
+1. What I have done/not done
+- communicated with the company owner (final version of order window, final invoice structure)
+- first test of order window, fixing bugs, adding controls
+2. Plan until next Scrum
+- redesign Main Window (add grid split interface)
+- change order class and order table structure according to company owner needs
+- add On The Date Schedule info
+3. Need assistance / figure things out
+- export to Word, PDF (to generate contract)
+
+
+
 
