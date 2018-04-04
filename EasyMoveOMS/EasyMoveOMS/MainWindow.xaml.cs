@@ -67,7 +67,7 @@ namespace EasyMoveOMS
         //NEW ORDER
         private void btNew_Click(object sender, RoutedEventArgs e)
         {
-            OrderWindow dlg = new OrderWindow();
+            OrderWindow dlg = new OrderWindow(null);
             if (dlg.ShowDialog() == true)
             {
 

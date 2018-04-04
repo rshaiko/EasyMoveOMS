@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Address.cs" />
     <Compile Include="SmallClasses.cs" />
     <Page Include="InvoiceWindow.xaml">
       <SubType>Designer</SubType>

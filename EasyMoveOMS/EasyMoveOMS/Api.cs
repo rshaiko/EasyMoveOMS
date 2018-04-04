@@ -13,6 +13,7 @@ namespace EasyMoveOMS
         public static string getJson(string url)
         {
             WebClient client = new WebClient();
+            client.Proxy = null;
             Stream data = client.OpenRead(url);
 
             //WebRequest request = WebRequest.Create(url);

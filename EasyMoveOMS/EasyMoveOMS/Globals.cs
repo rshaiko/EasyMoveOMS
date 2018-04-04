@@ -10,5 +10,6 @@ namespace EasyMoveOMS
     {
         public static Database db;
         public static string APIkey = "AIzaSyD0jS05VZtofCHL7mERZ9ibw91om5jwWX4";
+        public static List<Truck> truckList = new List<Truck>();
     }
 }
