@@ -112,6 +112,15 @@ settings to(from) XML
 3. Need assistance / figure things out
 - export to Word, PDF (to generate contract)
 
+2018.04.04 Dmitrii
+1. Done since last scrum
+-major changes to datagrid
+-not done: export to Excel
+2. Plan until next Scrum
+- export data to Excel
+-use library for text formatting when exporting to Word
+3. Need assistance / figure things out
+-appropriate library for Word formatting
 
 
 
