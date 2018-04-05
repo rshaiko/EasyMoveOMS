@@ -22,7 +22,7 @@ namespace EasyMoveOMS
     public partial class InvoiceWindow : Window
     {
         List<Service> services = new List<Service>();
-
+        double sum = 0;
         public InvoiceWindow()
         {
             InitializeComponent();
@@ -34,8 +34,8 @@ namespace EasyMoveOMS
             //if(not fixed price)
             lblTotalBeforeTax.Content  = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
             lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
-            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
-            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
+            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.09975;
+            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.14975 + "";
 
            
             
@@ -96,13 +96,18 @@ namespace EasyMoveOMS
                         //recalculating the new total and other values
 
 
+                      //  double sum = 0;
+                        for (int i = 0; i < services.Count; i++)
+                        {
+                            sum += services[i].Amount;
+                        }
 
-                        lblTotalBeforeTax.Content = services[rowIndex].Amount;//add travel time
-                        lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
-                            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
-                            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
-                        
-                        
+                        lblTotalBeforeTax.Content = sum;
+                        lblTPS.Content = sum * 0.05;
+                        lblTVQ.Content = sum * 0.09975;
+                        tbTotal.Text = sum * 1.14975 + "";
+                        sum = 0;
+
                     }
                     if (bindingPath == "Quantity")
                     {
@@ -123,24 +128,27 @@ namespace EasyMoveOMS
 
 
                         //recalculating the new total and other values
+                        //double sum=0;
+                        for (int i = 0; i < services.Count; i++)
+                        {
+                            sum += services[i].Amount;
+                        }
 
+                        lblTotalBeforeTax.Content = sum;
+                        lblTPS.Content = sum * 0.05;
+                        lblTVQ.Content = sum * 0.09975;
+                        tbTotal.Text = sum * 1.14975 + "";
 
-
-                        lblTotalBeforeTax.Content = services[rowIndex].Amount;//add travel time
-                        lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
-                        lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
-                        tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
-
-
+                        sum = 0;
                     }
                 }
             }
         }
 
-        private void addOne_Click(object sender, RoutedEventArgs e)
+       /* private void addOne_Click(object sender, RoutedEventArgs e)
         {
-
-        }
+         
+        }*/
 
         private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
         {
@@ -149,7 +157,49 @@ namespace EasyMoveOMS
 
         private void tbDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
-           
+            if (tbDiscount.Text != "") { tbTotal.IsEnabled = false; }
+        }
+
+        private void miDelete_Click(object sender, RoutedEventArgs e)
+        {
+            //dgInvoice.CommitEdit();
+
+            MessageBoxResult result = MessageBox.Show("Would you like to delete the selected row?", "Alert", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    int index = dgInvoice.SelectedIndex;
+                    
+                    if (index < 0 || index==services.Count-1)
+            {
+                        MessageBox.Show("Please complete editing the current row.");
+                        return;
+            }
+                    
+                        services.RemoveAt(index);
+
+                        dgInvoice.ItemsSource = services;
+                        dgInvoice.Items.Refresh();
+
+                        for (int i = 0; i < services.Count; i++)
+                        {
+                            sum += services[i].Amount;
+                        }
+
+                        lblTotalBeforeTax.Content = sum;
+                        lblTPS.Content = sum * 0.05;
+                        lblTVQ.Content = sum * 0.09975;
+                        tbTotal.Text = sum * 1.14975 + "";
+
+                        sum = 0;
+                    
+                    break;
+                case MessageBoxResult.No:
+
+                    break;
+
+
+            }
         }
     }
 

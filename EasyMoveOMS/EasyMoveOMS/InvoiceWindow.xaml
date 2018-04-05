@@ -23,8 +23,14 @@
         <Label Name="lblTVQ" Content="..." HorizontalAlignment="Left" Margin="647,636,0,0" VerticalAlignment="Top"/>
         <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="574,686,0,0" VerticalAlignment="Top"/>
         <Button Content="Print" HorizontalAlignment="Left" Margin="104,671,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Name="addOne" Click="addOne_Click" Content="Add one" HorizontalAlignment="Left" Margin="653,212,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="addOne"  Content="Add one" HorizontalAlignment="Left" Margin="653,212,0,0" VerticalAlignment="Top" Width="75"/>
         <DataGrid  AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="47,270,0,0" VerticalAlignment="Top" Width="681"  CellEditEnding="dgInvoice_CellEditEnding">
+            <DataGrid.ContextMenu>
+                <ContextMenu Name="cMenu">
+                    <MenuItem Click="miDelete_Click" Name="miDelete" Header="Delete" />
+
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Description                                                               
                                                             " Binding="{Binding Description}"></DataGridTextColumn>
