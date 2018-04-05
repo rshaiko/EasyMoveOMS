@@ -26,7 +26,7 @@
         <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" BorderBrush="DarkBlue" BorderThickness="0,0,0,5" VerticalAlignment="Top" Margin="0"/>
         <Label DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" BorderBrush="#d4d0c8" BorderThickness="0,5,0,0" VerticalAlignment="Top" Margin="0"/>
 
-        <Grid MaxWidth="1200">
+        <Grid MaxWidth="1200" Background="#edeeef">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="25" />
                 <ColumnDefinition Width="4*" />
@@ -110,7 +110,7 @@
                     <Label Content="Max:"/>
                     <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
                     <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" IsEnabled="False"  />
-                    <ComboBox Name="cbMaxMinutes"  Width="40" Text="00" IsEnabled="False" >
+                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00" IsEnabled="False" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -119,7 +119,7 @@
                     <Label Content=" Min:"/>
                     <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
                     <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" IsEnabled="False"  />
-                    <ComboBox Name="cbMinMinutes"  Width="40" Text="00" IsEnabled="False" >
+                    <ComboBox Name="cbMinMinutes" Padding="3,3" Width="40" Text="00" IsEnabled="False" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -129,8 +129,8 @@
                 </WrapPanel>
                 <Label/>
 
-                <Label Margin="0,5" Height="18" Padding="0,0" HorizontalContentAlignment="Center" Background="#d4d0c8" FontWeight="DemiBold">Google estimation</Label>
-                <Grid>
+                <Label BorderBrush="Gray" BorderThickness="0,0,0,2" Margin="0,0" Height="18" Padding="0,0" HorizontalContentAlignment="Center" Background="#d4d0c8" FontWeight="DemiBold">Google estimation</Label>
+                <Grid Background="#d4d0c8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="2*" />
@@ -141,13 +141,26 @@
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">from EasyMove to Client</Label>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">... moving ...</Label>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">from destination to EasyMove</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">From EasyMove to Client</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left"> >> ... moving ... >></Label>
+                    <TextBox Name="tbGoogleTime" Grid.Column="1" Grid.Row="1" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <TextBox Name="tbGoogleDistance"  Grid.Column="2" Grid.Row="1" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+
+                    <TextBox Name="tbGoogleTimeTo" Grid.Column="1" Grid.Row="0" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <TextBox Name="tbGoogleDistanceTo"  Grid.Column="2" Grid.Row="0" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+
+                    <TextBox Name="tbGoogleTimeFrom" Grid.Column="1" Grid.Row="2" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <TextBox Name="tbGoogleDistanceFrom"  Grid.Column="2" Grid.Row="2" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+
+                    <TextBox Name="tbGoogleTimeTT" Grid.Column="1" Grid.Row="3" Background="#d4d0c8" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <TextBox Name="tbGoogleDistanceTT"  Grid.Column="2" Grid.Row="3" Background="#d4d0c8" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">From destination to EasyMove</Label>
                     <Label Padding="2,2" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" FontWeight="DemiBold">Estimated travel time</Label>
                 </Grid>
+                <Label Padding="0,3"></Label>
                 <WrapPanel MinWidth="370">
                     <Label Content="Travel time:" Height="23" VerticalAlignment="Top"/>
                     <TextBox Name="tbTravelTimeH" MouseEnter="tbTravelTimeH_MouseEnter" Height="23" Text="1" Width="22"/>
@@ -158,10 +171,10 @@
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label Content="Home to Client" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Name="tbGoogleTime" Height="23" TextWrapping="Wrap" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
+                    
+                    
                     <Label />
-                    <TextBox Name="tbGoogleDistance" Height="23" TextWrapping="Wrap" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
+                    
                     <Label />
                 </WrapPanel>
 
@@ -186,7 +199,7 @@
                         <ComboBoxItem Content="19" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="20" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <ComboBox Name="cbArriveFromM" MouseEnter="cbArriveFromM_MouseEnter" TabIndex="3" Width="40" Text="00" >
+                    <ComboBox Name="cbArriveFromM" MouseEnter="cbArriveFromM_MouseEnter" Padding="3,3" TabIndex="3" Width="40" Text="00" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -195,7 +208,7 @@
                     <Label Content=" and " Height="23" VerticalAlignment="Top"/>
                     <TextBox Name="tbArriveToH" MouseEnter="tbArriveToH_MouseEnter" Height="23"  Padding="2,3,0,0" Text="" Width="35"/>
                     <wpfx:ButtonSpinner Name="spinArriveToH" Width="20" Spin="spinArriveToH_Spin"  />
-                    <ComboBox Name="cbArriveToM" MouseEnter="cbArriveFromM_MouseEnter" TabIndex="3" Width="40" Text="00" >
+                    <ComboBox Name="cbArriveToM" MouseEnter="cbArriveFromM_MouseEnter" Padding="3,3" TabIndex="3" Width="40" Text="00" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -393,13 +406,13 @@
                 <Label/>
 
                 <WrapPanel Height="23">
-                    <Label Content="Oversized" />
+                    <Label Content=" Oversized" Padding="2,2"/>
                     <CheckBox Name="cbOversized" Content="" Height="14" Width="21"/>
-                    <Label Content=" Overweight" />
+                    <Label Content="   Overweight" Padding="2,2" />
                     <CheckBox Name="cbOverweight"  Content="" Height="14" Width="21"/>
-                    <Label Content="  Fragile" />
+                    <Label Content="    Fragile" Padding="2,2" />
                     <CheckBox Name="cbFragile"  Content="" Height="14" Width="21"/>
-                    <Label Content="  Expensive" Height="25" VerticalAlignment="Top"/>
+                    <Label Content="    Expensive" Height="25" Padding="2,2" />
                     <CheckBox Name="cbExpensive" Content="" Height="14" Width="21"/>
                 </WrapPanel>
                 <Label/>
