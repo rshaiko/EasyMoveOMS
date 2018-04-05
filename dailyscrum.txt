@@ -136,7 +136,8 @@ settings to(from) XML
 - INotifyPropertyChanged interface implemented for datagrid
 2. Plan until next Scrum
 -database queries
-- export data to Excel
+-export data to Excel
+-menu tab "Settings"
 -use library for text formatting when exporting to Word
 3. Need assistance / figure things out
 -appropriate library for Word formatting
