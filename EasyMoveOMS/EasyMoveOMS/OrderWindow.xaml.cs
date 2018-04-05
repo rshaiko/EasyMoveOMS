@@ -221,33 +221,7 @@ namespace EasyMoveOMS
                     throw new InvalidDataException("Workers number can not be negative");
                 }
 
-                // ==> PAYMENT
-                if (rbPerHour.IsChecked == true)
-                {
-                    payPerHour = true;
-                    if (!decimal.TryParse(tbPricePerHour.Text, out pricePerHour))
-                    {
-                        throw new InvalidDataException("Enter a price per hour");
-                    }
-                    if (pricePerHour < 0)
-                    {
-                        throw new InvalidDataException("Price per hour is less than zero");
-                    }
-                }
-                else if (rbFixed.IsChecked == true)
-                {
-                    payPerHour = false;
-                    if (!decimal.TryParse(tbFixed.Text, out priceFixed))
-                    {
-                        throw new InvalidDataException("Enter a fixed price");
-                    }
-                    if (priceFixed < 0)
-                    {
-                        throw new InvalidDataException("Fixed price is less than zero");
-                    }
-                }
-                else throw new InvalidDataException("Select payment type");
-
+                
                 //Max HOURS
                 if(!int.TryParse(tbMaxHours.Text, out maxHours))
                 {
@@ -261,6 +235,9 @@ namespace EasyMoveOMS
 
                 if (!int.TryParse(cbMaxMinutes.Text, out maxMinutes)) maxMinutes = 0;
                 maxTime = new TimeSpan(maxHours, maxMinutes, 0);
+
+                //TODO Min Hours
+
 
                 //DEPOSIT
                 if(!decimal.TryParse(tbDeposit.Text, out deposit))
@@ -631,7 +608,7 @@ namespace EasyMoveOMS
             }
         }
 
-<<<<<<< HEAD
+
         private void tbTables_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(int.TryParse(tbTables.Text, out int number))
@@ -649,7 +626,7 @@ namespace EasyMoveOMS
         private void spinMinHours_Spin(object sender, SpinEventArgs e)
         {
 
-=======
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             InvoiceWindow dlg1 = new InvoiceWindow();
@@ -657,7 +634,7 @@ namespace EasyMoveOMS
             {
 
             }
->>>>>>> 6fade007ee3d020d1f9a7f59a579474b7be1d530
+
         }
 
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
