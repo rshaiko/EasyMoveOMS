@@ -122,7 +122,7 @@ settings to(from) XML
 3. Need assistance / figure things out
 -appropriate library for Word formatting
 
-04.04.2018 Roman
+05.04.2018 Roman
 1. What I have done/not done
 - changes in order window, travel time calculation changed
 - order data structure changed (class, table, controls)
@@ -131,4 +131,13 @@ settings to(from) XML
 - add On The Date Schedule info
 3. Need assistance / figure things out
 
+2018.04.05 Dmitrii
+1. Done since last scrum
+- INotifyPropertyChanged interface implemented for datagrid
+2. Plan until next Scrum
+-database queries
+- export data to Excel
+-use library for text formatting when exporting to Word
+3. Need assistance / figure things out
+-appropriate library for Word formatting
 
