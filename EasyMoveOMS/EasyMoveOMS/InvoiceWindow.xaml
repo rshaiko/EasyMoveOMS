@@ -24,7 +24,7 @@
         <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="574,686,0,0" VerticalAlignment="Top"/>
         <Button Content="Print" HorizontalAlignment="Left" Margin="104,671,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="addOne" Click="addOne_Click" Content="Add one" HorizontalAlignment="Left" Margin="653,212,0,0" VerticalAlignment="Top" Width="75"/>
-        <DataGrid AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="47,270,0,0" VerticalAlignment="Top" Width="681"  CellEditEnding="dgInvoice_CellEditEnding">
+        <DataGrid  AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="47,270,0,0" VerticalAlignment="Top" Width="681"  CellEditEnding="dgInvoice_CellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Description                                                               
                                                             " Binding="{Binding Description}"></DataGridTextColumn>
