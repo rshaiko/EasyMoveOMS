@@ -16,10 +16,10 @@ namespace EasyMoveOMS
 
         public Database()
         {
-           // conn = new MySqlConnection("Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G;SslMode=none");
+            conn = new MySqlConnection("Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G;SslMode=none");
             //string conS = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string conS = Properties.Settings.Default.connStr;
-            conn = new MySqlConnection(conS);
+           // string conS = Properties.Settings.Default.connStr;
+            //conn = new MySqlConnection(conS);
             conn.Open();
         }
 

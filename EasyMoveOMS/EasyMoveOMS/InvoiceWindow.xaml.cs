@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -20,36 +21,36 @@ namespace EasyMoveOMS
     /// </summary>
     public partial class InvoiceWindow : Window
     {
-        double addAmount = 0;
-        double addAmount2 = 0;
-        double addAmount3 = 0;
+        List<Service> services = new List<Service>();
+
         public InvoiceWindow()
         {
             InitializeComponent();
-            /* double tbHourly;
-             string str = tbHourly.Text;
 
-             if (!double.TryParse(str, out tbHourly))
-             {
-                 
-             }*/
-             //populating the fields
-            tbTotalBefore.Text = (Convert.ToDouble(tbHourly.Text)) * (Convert.ToDouble(tbHours.Text)) + addAmount + addAmount2 + addAmount3 + "";
-            lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-            lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-            tbTotal.Text = Convert.ToDouble(tbTotalBefore.Text) * 1.1475 + "";
+            //populating the fields
+            //lblName.Content = currentOrder.Name;   .......
 
-            List<Service> services = new List<Service>();
-            // services.Add(new Service() { Description = "", Amount = 0 });
+
+            //if(not fixed price)
+            lblTotalBeforeTax.Content  = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
+            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
+            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
+            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
+
+           
+            
+             services.Add(new Service() { Description = "Moving", Price=85, Quantity=4, Amount = 85*4 });
+            services.Add(new Service() { Description = "Travel", Price = 85, Quantity = 1, Amount = 85 * 1 });
+
             // services.Add(new Service() { Description = "", Amount = 0 });
             //dgInvoice.Items.Add(new Service() { Description = "", Amount = 0 });
 
             dgInvoice.ItemsSource = services;
 
-            
+
 
         }
-        
+
 
         /* private void dgInvoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
          {
@@ -69,57 +70,68 @@ namespace EasyMoveOMS
                 if (column != null)
                 {
                     var bindingPath = (column.Binding as Binding).Path.Path;
-                    if (bindingPath == "Description")
-                    {
-                        int rowIndex = e.Row.GetIndex();
-                        var el = e.EditingElement as TextBox;
-                        if (rowIndex == 0)
-                            lblDescription.Content = el.Text;
-                        else if (rowIndex == 1)
-                            lblDescription2.Content = el.Text;
-                        else
-                            lblDescription3.Content = el.Text;
+                    
                         // rowIndex has the row index
                         // bindingPath has the column's binding
                         // el.Text has the new, user-entered value
+                    
+                    if (bindingPath == "Price")
+                    {
+                        int rowIndex = e.Row.GetIndex();
+                        var el = e.EditingElement as TextBox;
+                        
+                        
+                            
+                            
+                            string value = el.Text;
+                        double price;
+                            if (!double.TryParse(value, out price))
+                            {
+                                MessageBox.Show("Amount must be a number.");
+                                return;
+                            }
+                        services[rowIndex].Amount = price* services[rowIndex].Quantity;
+
+
+                        //recalculating the new total and other values
+
+
+
+                        lblTotalBeforeTax.Content = services[rowIndex].Amount;//add travel time
+                        lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
+                            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
+                            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
+                        
+                        
                     }
-                    if (bindingPath == "Amount")
+                    if (bindingPath == "Quantity")
                     {
                         int rowIndex = e.Row.GetIndex();
                         var el = e.EditingElement as TextBox;
-                        if (rowIndex == 0)
+
+
+
+
+                        string value = el.Text;
+                        int quant;
+                        if (!int.TryParse(value, out quant))
                         {
-                            lblAmount.Content = el.Text;
-                            addAmount = Convert.ToDouble(el.Text);
-                            //recalculating the new total and other values
-                            tbTotalBefore.Text = (Convert.ToDouble(tbHourly.Text)) * (Convert.ToDouble(tbHours.Text)) + addAmount + addAmount2 + addAmount3 + "";
-                            lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-                            lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-                            tbTotal.Text = Convert.ToDouble(tbTotalBefore.Text) * 1.1475 + "";
+                            MessageBox.Show("Quantity must be a number.");
+                            return;
                         }
-                        else if (rowIndex == 1)
-                        {
-                            lblAmount2.Content = el.Text;
-                            addAmount2 = Convert.ToDouble(el.Text);
-                            //recalculating the new total and other values
-                            tbTotalBefore.Text = (Convert.ToDouble(tbHourly.Text)) * (Convert.ToDouble(tbHours.Text)) + addAmount + addAmount2 + addAmount3 + "";
-                            lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-                            lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-                            tbTotal.Text = Convert.ToDouble(tbTotalBefore.Text) * 1.1475 + "";
-                        }
-                        else
-                        {
-                            lblAmount3.Content = el.Text;
-                            addAmount3 = Convert.ToDouble(el.Text);
-                            //recalculating the new total and other values
-                            tbTotalBefore.Text = (Convert.ToDouble(tbHourly.Text)) * (Convert.ToDouble(tbHours.Text)) + addAmount + addAmount2 + addAmount3 + "";
-                            lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-                            lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-                            tbTotal.Text = Convert.ToDouble(tbTotalBefore.Text) * 1.1475 + "";
-                        }
-                        // rowIndex has the row index
-                        // bindingPath has the column's binding
-                        // el.Text has the new, user-entered value
+                        services[rowIndex].Amount = quant * services[rowIndex].Price;
+
+
+                        //recalculating the new total and other values
+
+
+
+                        lblTotalBeforeTax.Content = services[rowIndex].Amount;//add travel time
+                        lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
+                        lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.0975;
+                        tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.1475 + "";
+
+
                     }
                 }
             }
@@ -132,33 +144,34 @@ namespace EasyMoveOMS
 
         private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
         {
-            if (tbTotal.Text != "")
-            {
-                tbTotalBefore.Text = (Convert.ToDouble(tbTotal.Text) / 1.1475) + "";
-                lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-                lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-                tbHourly.Text = (Convert.ToDouble(tbTotalBefore.Text) - addAmount - addAmount2 - addAmount3) / Convert.ToDouble(tbHours.Text) + "";
-            }
+            
         }
 
         private void tbDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tbDiscount.Text != "")
-            {
-                tbTotalBefore.Text = ((100 - Convert.ToDouble(tbDiscount.Text))/100.0)* Convert.ToDouble(tbTotalBefore.Text) + "";
-                lblTVQ.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.0975;
-                lblTPS.Content = Convert.ToDouble(tbTotalBefore.Text) * 0.05;
-                tbHourly.Text = (Convert.ToDouble(tbTotalBefore.Text) - addAmount - addAmount2 - addAmount3) / Convert.ToDouble(tbHours.Text) + "";
-                tbTotal.Text= Convert.ToDouble(tbTotalBefore.Text) * 1.1475 +"";
-            }
+           
         }
     }
 
-    public class Service
+    public class Service : INotifyPropertyChanged
     {
         public string Description { get; set; }
+        public double Price { get; set; }
+        public int Quantity { get; set; }
+        //public double Amount { get; set; }
+        private double _amount;
+        public double Amount
+        {
+            get { return _amount; }
+            set { _amount = value; NotifyPropertyChanged("Amount"); }
+        }
 
-        public double Amount { get; set; }
-
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
+
 }
+
