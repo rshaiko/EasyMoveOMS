@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="InvoiceWindow" Height="768.426" Width="800">
     <Grid>
-        <CheckBox Name="chbCalculateTax" Content="Calculate Tax" HorizontalAlignment="Left" Margin="690,0,0,713" VerticalAlignment="Bottom" Width="92" Height="18"/>
+        <CheckBox IsChecked="True" Name="chbCalculateTax" Content="Calculate Tax" HorizontalAlignment="Left" Margin="681,0,0,706" VerticalAlignment="Bottom" Width="92" Height="18"/>
         <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="81,25,0,0" VerticalAlignment="Top"/>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="144,76,0,0" VerticalAlignment="Top"/>
         <Label Content="Time:" HorizontalAlignment="Left" Margin="143,115,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.632,-2.577"/>
@@ -23,7 +23,6 @@
         <Label Name="lblTVQ" Content="..." HorizontalAlignment="Left" Margin="647,636,0,0" VerticalAlignment="Top"/>
         <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="574,686,0,0" VerticalAlignment="Top"/>
         <Button Content="Print" HorizontalAlignment="Left" Margin="104,671,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Name="addOne"  Content="Add one" HorizontalAlignment="Left" Margin="653,212,0,0" VerticalAlignment="Top" Width="75"/>
         <DataGrid  AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="47,270,0,0" VerticalAlignment="Top" Width="681"  CellEditEnding="dgInvoice_CellEditEnding">
             <DataGrid.ContextMenu>
                 <ContextMenu Name="cMenu">

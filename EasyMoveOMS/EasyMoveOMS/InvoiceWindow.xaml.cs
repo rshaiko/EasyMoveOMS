@@ -32,14 +32,14 @@ namespace EasyMoveOMS
 
 
             //if(not fixed price)
-            lblTotalBeforeTax.Content  = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
+            lblTotalBeforeTax.Content = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
             lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
             lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.09975;
             tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.14975 + "";
 
-           
-            
-             services.Add(new Service() { Description = "Moving", Price=85, Quantity=4, Amount = 85*4 });
+
+
+            services.Add(new Service() { Description = "Moving", Price = 85, Quantity = 4, Amount = 85 * 4 });
             services.Add(new Service() { Description = "Travel", Price = 85, Quantity = 1, Amount = 85 * 1 });
 
             // services.Add(new Service() { Description = "", Amount = 0 });
@@ -70,33 +70,33 @@ namespace EasyMoveOMS
                 if (column != null)
                 {
                     var bindingPath = (column.Binding as Binding).Path.Path;
-                    
-                        // rowIndex has the row index
-                        // bindingPath has the column's binding
-                        // el.Text has the new, user-entered value
-                    
+
+                    // rowIndex has the row index
+                    // bindingPath has the column's binding
+                    // el.Text has the new, user-entered value
+
                     if (bindingPath == "Price")
                     {
                         int rowIndex = e.Row.GetIndex();
                         var el = e.EditingElement as TextBox;
-                        
-                        
-                            
-                            
-                            string value = el.Text;
+
+
+
+
+                        string value = el.Text;
                         double price;
-                            if (!double.TryParse(value, out price))
-                            {
-                                MessageBox.Show("Amount must be a number.");
-                                return;
-                            }
-                        services[rowIndex].Amount = price* services[rowIndex].Quantity;
+                        if (!double.TryParse(value, out price))
+                        {
+                            MessageBox.Show("Amount must be a number.");
+                            return;
+                        }
+                        services[rowIndex].Amount = price * services[rowIndex].Quantity;
 
 
                         //recalculating the new total and other values
 
 
-                      //  double sum = 0;
+                        //  double sum = 0;
                         for (int i = 0; i < services.Count; i++)
                         {
                             sum += services[i].Amount;
@@ -145,14 +145,11 @@ namespace EasyMoveOMS
             }
         }
 
-       /* private void addOne_Click(object sender, RoutedEventArgs e)
-        {
-         
-        }*/
+
 
         private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
         {
-            
+
         }
 
         private void tbDiscount_TextChanged(object sender, TextChangedEventArgs e)
@@ -169,30 +166,35 @@ namespace EasyMoveOMS
             {
                 case MessageBoxResult.Yes:
                     int index = dgInvoice.SelectedIndex;
-                    
-                    if (index < 0 || index==services.Count-1)
-            {
+
+                    if (index < 0)
+                    {
+
+                        return;
+                    }
+                    if (index == services.Count - 1)
+                    {
                         MessageBox.Show("Please complete editing the current row.");
                         return;
-            }
-                    
-                        services.RemoveAt(index);
+                    }
 
-                        dgInvoice.ItemsSource = services;
-                        dgInvoice.Items.Refresh();
+                    services.RemoveAt(index);
 
-                        for (int i = 0; i < services.Count; i++)
-                        {
-                            sum += services[i].Amount;
-                        }
+                    dgInvoice.ItemsSource = services;
+                    dgInvoice.Items.Refresh();
 
-                        lblTotalBeforeTax.Content = sum;
-                        lblTPS.Content = sum * 0.05;
-                        lblTVQ.Content = sum * 0.09975;
-                        tbTotal.Text = sum * 1.14975 + "";
+                    for (int i = 0; i < services.Count; i++)
+                    {
+                        sum += services[i].Amount;
+                    }
 
-                        sum = 0;
-                    
+                    lblTotalBeforeTax.Content = sum;
+                    lblTPS.Content = sum * 0.05;
+                    lblTVQ.Content = sum * 0.09975;
+                    tbTotal.Text = sum * 1.14975 + "";
+
+                    sum = 0;
+
                     break;
                 case MessageBoxResult.No:
 
