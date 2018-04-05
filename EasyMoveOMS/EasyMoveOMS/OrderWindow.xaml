@@ -105,36 +105,49 @@
                 </WrapPanel>
                 <Label/>
                 <WrapPanel MinWidth="370" Height="23">
-                    <Label Content="Pay:     " />
-                    <RadioButton Name="rbPerHour" Checked="rbPerHour_Checked" GroupName="payMethod" Height="14" Content="per hour "/>
-                    <TextBox Name="tbPricePerHour" Height="23" Text="" Width="50" IsEnabled="False"/>
-                    <Label/>
-                    <Label/>
-                    <RadioButton Name="rbFixed" Checked="rbFixed_Checked" GroupName="payMethod" Height="14" Content="fixed payment  "/>
-                    <TextBox Name="tbFixed" Height="23"  Text="" Width="50" IsEnabled="False"/>
-
-                </WrapPanel>
-                <Label/>
-
-                <WrapPanel MinWidth="370" Height="23">
-
-                    <Label Content="Limit:    hh:"/>
+                    <Label Content="Price:   "  />
+                    <TextBox Name="tbPricePrHour" Height="23" Width="40" IsEnabled="False"/>
+                    <Label Content="Max:"/>
                     <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
                     <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" IsEnabled="False"  />
-                    <Label Content="mm:"/>
-                    <ComboBox Name="cbMaxMinutes"  Width="45" Text="00" IsEnabled="False" >
+                    <ComboBox Name="cbMaxMinutes"  Width="40" Text="00" IsEnabled="False" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label/>
-                    <Label Content="    Deposit, $" />
-                    <TextBox x:Name="tbDeposit" Text="" Width="50" />
+                    <Label Content=" Min:"/>
+                    <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
+                    <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" IsEnabled="False"  />
+                    <ComboBox Name="cbMinMinutes"  Width="40" Text="00" IsEnabled="False" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
 
                 </WrapPanel>
-                <Label Margin="0,15" Height="5" Background="#d4d0c8"></Label>
+                <Label/>
 
+                <Label Margin="0,5" Height="18" Padding="0,0" HorizontalContentAlignment="Center" Background="#d4d0c8" FontWeight="DemiBold">Google estimation</Label>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="2*" />
+                        
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">from EasyMove to Client</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">... moving ...</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">from destination to EasyMove</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" FontWeight="DemiBold">Estimated travel time</Label>
+                </Grid>
                 <WrapPanel MinWidth="370">
                     <Label Content="Travel time:" Height="23" VerticalAlignment="Top"/>
                     <TextBox Name="tbTravelTimeH" MouseEnter="tbTravelTimeH_MouseEnter" Height="23" Text="1" Width="22"/>
@@ -145,7 +158,7 @@
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label Content=" Google:" Height="23" VerticalAlignment="Top"/>
+                    <Label Content="Home to Client" Height="23" VerticalAlignment="Top"/>
                     <TextBox Name="tbGoogleTime" Height="23" TextWrapping="Wrap" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
                     <Label />
                     <TextBox Name="tbGoogleDistance" Height="23" TextWrapping="Wrap" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
@@ -365,7 +378,7 @@
 
                 <WrapPanel Height="23">
                     <Label Content="Tables:" />
-                    <TextBox Name="tbTables" MouseEnter="tbTables_MouseEnter"  Padding="2,3,0,0" Text="" Width="45"/>
+                    <TextBox Name="tbTables" MouseEnter="tbTables_MouseEnter" TextChanged="tbTables_TextChanged"  Padding="2,3,0,0" Text="" Width="45"/>
                     <wpfx:ButtonSpinner Name="spinTables" Width="20" Spin="spinTables_Spin"  />
                     <Label/>
                     <Label Content="Chairs:" />
@@ -405,12 +418,14 @@
                 <Label/>
                 <WrapPanel Height="23">
 
-                    <Label Content="Payments total, $" />
-                    <TextBox Name="tbPaymentsTotal" Text="" Width="65" IsEnabled="False" Foreground="Black"/>
+                    <Label Content="Total, $" Padding="0,2" />
+                    <TextBox Name="tbPaymentsTotal" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
                     <Label/>
                     <CheckBox Name="cbComplete"  Height="14" Content="complete     " IsEnabled="False"/>
-                    <Label/>
-                    <Button Name="btAddPayment" Content="Add payment"/>
+                   
+                    <Button Name="btAddPayment" Content="Add >" Padding="0,2"/>
+                    <Label Content="    Deposit, $: " Padding="0,2" />
+                    <TextBox x:Name="tbDeposit" Text="" Width="40" />
                     <Label/>
                 </WrapPanel>
                 <Label />

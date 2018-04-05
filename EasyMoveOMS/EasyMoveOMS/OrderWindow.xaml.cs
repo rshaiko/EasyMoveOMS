@@ -566,28 +566,6 @@ namespace EasyMoveOMS
             return (textLength < min || textLength > max) ? false : true;
         }
 
-        private void rbPerHour_Checked(object sender, RoutedEventArgs e)
-        {
-            tbPricePerHour.IsEnabled = true;
-            tbMaxHours.IsEnabled = true;
-            cbMaxMinutes.IsEnabled = true;
-            spinMaxHours.IsEnabled = true;
-            tbFixed.IsEnabled = false;
-            tbFixed.Text = "";
-        }
-
-        private void rbFixed_Checked(object sender, RoutedEventArgs e)
-        {
-            tbPricePerHour.IsEnabled = false;
-            spinMaxHours.IsEnabled = false;
-            tbMaxHours.IsEnabled = false;
-            cbMaxMinutes.IsEnabled = false;
-            tbPricePerHour.Text= "";
-            tbMaxHours.Text = "";
-            cbMaxMinutes.SelectedIndex = 1;
-            tbFixed.IsEnabled = true;
-        }
-
         private void rbDone_Checked(object sender, RoutedEventArgs e)
         {
             cbDoneStartH.IsEnabled = true;
@@ -653,6 +631,25 @@ namespace EasyMoveOMS
             }
         }
 
+<<<<<<< HEAD
+        private void tbTables_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(int.TryParse(tbTables.Text, out int number))
+            {
+                tbChairs.Text = (number * 4) + "";
+                tbChairs.Background = Brushes.Yellow;
+            }
+            else
+            {
+                tbChairs.Text = "";
+                tbChairs.Background = Brushes.White;
+            }
+        }
+
+        private void spinMinHours_Spin(object sender, SpinEventArgs e)
+        {
+
+=======
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             InvoiceWindow dlg1 = new InvoiceWindow();
@@ -660,6 +657,7 @@ namespace EasyMoveOMS
             {
 
             }
+>>>>>>> 6fade007ee3d020d1f9a7f59a579474b7be1d530
         }
 
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
