@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="InvoiceWindow" Height="691.426" Width="800" FontSize="15" ResizeMode="NoResize">
     <Grid>
-        <CheckBox IsChecked="True" Name="chbCalculateTax" Content="Calculate Tax" HorizontalAlignment="Left" Margin="667,0,0,639" VerticalAlignment="Bottom" Width="108" Height="18"/>
+        <CheckBox IsChecked="false" Name="chbCalculateTax" Content=" No Taxes" HorizontalAlignment="Left" Margin="643,0,0,634" VerticalAlignment="Bottom" Width="85" Height="18" Checked="chbCalculateTax_Checked" Unchecked="chbCalculateTax_Unchecked"/>
         <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="66,34,0,0" VerticalAlignment="Top"/>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="144,76,0,0" VerticalAlignment="Top"/>
         <Label Name="lblName" Content="..." HorizontalAlignment="Left" Margin="248,34,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.342,0.385" Width="419"/>

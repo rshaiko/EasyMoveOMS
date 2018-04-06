@@ -197,41 +197,51 @@ namespace EasyMoveOMS
 
         private void miDelete_Click(object sender, RoutedEventArgs e)
         {
-            //dgInvoice.CommitEdit();
-
+            //dgInvoice.CancelEdit();
+                
+            
             MessageBoxResult result = MessageBox.Show("Would you like to delete the selected row?", "Alert", MessageBoxButton.YesNo);
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    int index = dgInvoice.SelectedIndex;
+                    //try
+                    //{
+                        int index = dgInvoice.SelectedIndex;
 
-                    if (index < 0)
-                    {
+                        if (index < 0)
+                        {
 
-                        return;
-                    }
-                    if (index == services.Count - 1)
-                    {
-                        MessageBox.Show("Please complete editing the current row.");
-                        return;
-                    }
+                            return;
+                        }
+                        //if (index == services.Count - 1)
+                        //{
+                        //    MessageBox.Show("Please complete editing the current row.");
+                        //    return;
+                        //}
 
-                    services.RemoveAt(index);
+                        services.RemoveAt(index);
 
-                    dgInvoice.ItemsSource = services;
-                    dgInvoice.Items.Refresh();
+                        dgInvoice.ItemsSource = services;
+                        dgInvoice.Items.Refresh();
 
-                    for (int i = 0; i < services.Count; i++)
-                    {
-                        sum += services[i].Amount;
-                    }
+                        for (int i = 0; i < services.Count; i++)
+                        {
+                            sum += services[i].Amount;
+                        }
 
-                    lblTotalBeforeTax.Content = sum;
-                    lblTPS.Content = sum * 0.05;
-                    lblTVQ.Content = sum * 0.09975;
-                    tbTotal.Text = sum * 1.14975 + "";
+                        lblTotalBeforeTax.Content = sum;
+                        lblTPS.Content = sum * 0.05;
+                        lblTVQ.Content = sum * 0.09975;
+                        tbTotal.Text = sum * 1.14975 + "";
 
-                    sum = 0;
+                        sum = 0;
+                    //}
+                    //catch (InvalidOperationException)
+                    //{
+                    //    MessageBox.Show("Please complete editing the current row.");
+                    //        return;
+
+                    //}
 
                     break;
                 case MessageBoxResult.No:
@@ -345,6 +355,21 @@ namespace EasyMoveOMS
                 lblTVQ.Content = temp * 0.09975;
 
             }
+        }
+
+        private void chbCalculateTax_Checked(object sender, RoutedEventArgs e)
+        {
+     
+            lblTPS.Content = "";
+            lblTVQ.Content = "";
+            tbTotal.Text = lblTotalBeforeTax.Content+"";
+        }
+
+        private void chbCalculateTax_Unchecked(object sender, RoutedEventArgs e)
+        {
+            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content)*0.05+ "";
+            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.09975 + "";
+            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.14975 + "";
         }
     }
 
