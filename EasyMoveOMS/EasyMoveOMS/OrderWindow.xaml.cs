@@ -1,4 +1,5 @@
 ﻿using Microsoft.Windows.Controls;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,14 @@ namespace EasyMoveOMS
     public partial class OrderWindow : Window
     {
         //DECLARATIONS
-        Order currentOrder = null;
+        Order currentOrder;
         List <Address> orderAddresses = new List<Address>();
         Order.OrderStatus os;
-        Client orderClient = null;
+        Client orderClient;
         Truck orderTruck;
-        
 
+
+        bool isValid = false;
         bool isNewOrder=false;
         bool isNewClient = true;
         bool tbZipEventsOn = true; //off events if not manual changes
@@ -89,13 +91,19 @@ namespace EasyMoveOMS
         {
             InitializeComponent();
             currentOrder = order;
-            if (currentOrder != null)  
+            if (currentOrder == null)  
             {
-                orderClient = null; // TODO change to existing client
+                isNewOrder = true;
+                orderClient = new Client();
+                orderClient.id = 0;
+                orderTruck = new Truck();
+                orderTruck.id = 0;
             }
             else
             {
-                isNewOrder = true;
+                isNewOrder = false;
+                //orderClient = order.orderClient; // TODO LOAD INFO + change to existing client
+                //orderTruck = order.orderTruck; 
             }
 
             cbTruck.ItemsSource = Globals.truckList;
@@ -114,18 +122,20 @@ namespace EasyMoveOMS
         //SAVE
         private void btSave_Click(object sender, RoutedEventArgs e)
         {
+            isValid = false;
             validateOrder();
+            if (!isValid) return;
             String confirmation;
 
             //Save new Client if it is NEW
-            if (orderClient.Id == 0)
+            if (orderClient.id == 0)
             {
                 try
                 {
                     clientId = MainWindow.db.saveNewClient(orderClient);
-                    orderClient.Id = clientId;
-                    confirmation = "1) Database: New client " + orderClient.Name + " was saved \n";
-                    System.Windows.MessageBox.Show("Database: New client " + orderClient.Name + " was saved");
+                    orderClient.id = clientId;
+                    confirmation = "1) Database: New client " + orderClient.name + " was saved \n";
+                    System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
                     tbClient.IsEnabled = false;
                     tbEmail.IsEnabled = false;
                     tbPhoneH.IsEnabled = false;
@@ -138,15 +148,18 @@ namespace EasyMoveOMS
                 }
             }
 
-            if (currentOrder == null)
+            if (isNewOrder) 
             {
                 currentOrder = new Order();
-                
+                currentOrder.id = 0;
             }
             currentOrder.orderAddresses = orderAddresses;
-            currentOrder.id = 0; // IF new
             currentOrder.moveDate = moveDate;
             currentOrder.moveTime = moveTime;
+
+            currentOrder.orderClient = orderClient;
+            currentOrder.orderTruck = orderTruck;
+
             currentOrder.workers = workers;
             currentOrder.pricePerHour = pricePerHour;
             currentOrder.maxTime = maxTime;
@@ -176,18 +189,18 @@ namespace EasyMoveOMS
             currentOrder.doneEndTime = doneEndTime;
             currentOrder.doneBreaksTime = doneBreaksTime;
             currentOrder.doneTotalTime = doneTotalTime;
-            currentOrder.orderClient = orderClient;
 
-
-            //Save new or
+            //Save new order
             try
             {
                 orderId = MainWindow.db.saveNewOrder(currentOrder);
                 currentOrder.id = orderId;
+                isNewOrder = false;
+                lblTitle.Content = "Order #" + currentOrder.id;
             }
-            catch(SqlException ex)
+            catch(MySqlException ex)
             {
-
+                System.Windows.MessageBox.Show(ex.Message);
             }
 
         }
@@ -202,9 +215,7 @@ namespace EasyMoveOMS
                 {
                     throw new InvalidDataException("Moving date is not selected");
                 }
-                moveDate = dpMoveDate.DisplayDate;
-
-                //GetVisualChild(cbStartTimeH)
+                moveDate = (DateTime)dpMoveDate.SelectedDate;
 
                 if (cbStartTimeH.Text == "")
                 {
@@ -565,6 +576,7 @@ namespace EasyMoveOMS
                     orderAddresses.Add(new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes));
                 }
 
+                isValid = true; // All order information is valid
 
             }
             catch (InvalidDataException ex)
@@ -573,9 +585,6 @@ namespace EasyMoveOMS
                 System.Windows.MessageBox.Show(ex.Message);
                 return; // MAYBE 
             }
-
-
-
         }
 
         private int getHours(ComboBox cbH)

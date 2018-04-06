@@ -27,9 +27,11 @@ namespace EasyMoveOMS
     {
         public long id { get; set; }
         public string name { get; set; }
-        string make { get; set; }
-        string model { get; set; }
-        string year { get; set; }
+        public string make { get; set; }
+        public string model { get; set; }
+        public string year { get; set; }
+
+        public Truck() { }
 
         public Truck(long id, string name, string make, string model, string year)
         {

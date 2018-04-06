@@ -71,10 +71,10 @@ namespace EasyMoveOMS
             
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@name", c.Name);
-                cmd.Parameters.AddWithValue("@email", c.Email);
-                cmd.Parameters.AddWithValue("@phoneH", c.PhoneH);
-                cmd.Parameters.AddWithValue("@phoneW", c.PhoneW);
+                cmd.Parameters.AddWithValue("@name", c.name);
+                cmd.Parameters.AddWithValue("@email", c.email);
+                cmd.Parameters.AddWithValue("@phoneH", c.phoneH);
+                cmd.Parameters.AddWithValue("@phoneW", c.phoneW);
                 long id = Convert.ToInt32 (cmd.ExecuteScalar());
                 return id;
             }
@@ -82,24 +82,23 @@ namespace EasyMoveOMS
 
         internal long saveNewOrder(Order o)
         {
-            String sql = "INSERT INTO order (moveDate, moveTime, clientId, truckId, workers, pricePerHour, " +
+            String sql = "INSERT INTO orders (moveDate, moveTime, clientId, truckId, workers, pricePerHour, " +
                 "minTime, maxTime, deposit, travelTime, arriveTimeFrom, arriveTimeTo, " +
-                "boxes, beds, sofas, frigos, wds,desks,tables,chairs, other,oversized, overweight, fragile, expensive, details, " +
+                "boxes, beds, sofas, frigos, wds, desks, tables, chairs, other, oversized, overweight, fragile, expensive, details, " +
                 "isPaid, orderStatus, contactOnDate, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime) " +
                 "VALUES " +
-                "(@moveDate, @moveTime, @clientId, @truckId, @workers, @pricePerHour, @minTime, @maxTime, " +
-                "@deposit, @travelTime, @arriveTimeFrom, @arriveTimeTo, @boxes, @beds, @sofas, " +
-                "@frigos, @wds, @desks, @tables, @chairs, @other, @oversized, @overweight, @fragile, " +
-                "@expensive, @details, @isPaid, @orderStatus, @contactOnDate, " +
-                "@doneStartTime, @doneEndTime, @doneBreaksTime, @doneTotalTime); " +
+                "(@moveDate, @moveTime, @clientId, @truckId, @workers, @pricePerHour, " +
+                "@minTime, @maxTime, @deposit, @travelTime, @arriveTimeFrom, @arriveTimeTo, " +
+                "@boxes, @beds, @sofas, @frigos, @wds, @desks, @tables, @chairs, @other, @oversized, @overweight, @fragile, @expensive, @details, " +
+                "@isPaid, @orderStatus, @contactOnDate, @doneStartTime, @doneEndTime, @doneBreaksTime, @doneTotalTime); " +
                 "SELECT LAST_INSERT_ID();";
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@moveDate", o.moveDate);
                 cmd.Parameters.AddWithValue("@moveTime", o.moveTime);
-                cmd.Parameters.AddWithValue("@clientId", o.orderClient.Id);
-                cmd.Parameters.AddWithValue("@truckId", o.truckId);
+                cmd.Parameters.AddWithValue("@clientId", o.orderClient.id);
+                cmd.Parameters.AddWithValue("@truckId", o.orderTruck.id);
                 cmd.Parameters.AddWithValue("@workers", o.workers);
                 cmd.Parameters.AddWithValue("@pricePerHour", o.pricePerHour);
                 cmd.Parameters.AddWithValue("@minTime", o.minTime);
@@ -123,7 +122,7 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@expensive", o.expensive);
                 cmd.Parameters.AddWithValue("@details", o.details);
                 cmd.Parameters.AddWithValue("@isPaid", o.isPaid);
-                cmd.Parameters.AddWithValue("@orderStatus", o.orderStatus);
+                cmd.Parameters.AddWithValue("@orderStatus", o.orderStatus+"");
                 cmd.Parameters.AddWithValue("@contactOnDate", o.contactOnDate);
                 cmd.Parameters.AddWithValue("@doneStartTime", o.doneStartTime);
                 cmd.Parameters.AddWithValue("@doneEndTime", o.doneEndTime);

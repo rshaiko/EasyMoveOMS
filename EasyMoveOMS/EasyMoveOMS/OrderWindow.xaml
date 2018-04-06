@@ -70,7 +70,7 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Client*:" Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbClient" MouseEnter="tbClient_MouseEnter" TabIndex="4" Height="23" Text="" Width="140" Foreground="Black"/>
+                    <TextBox Name="tbClient" MouseEnter="tbClient_MouseEnter" TabIndex="4" Height="23" Text="Client 1" Width="140" Foreground="Black"/>
                     <Label></Label>
                     <Button Name="btSelectClient" Height="23" Content="Select" Width="60" IsEnabled="True"/>
                     <Label></Label>
@@ -93,7 +93,7 @@
                 <Label/>
                 <WrapPanel MinWidth="380" Height="23">
                     <Label Content="Truck:  " Height="23" VerticalAlignment="Top"/>
-                    <ComboBox Name="cbTruck" TabIndex="8" Width="140" Text=""  IsEditable="False"/>
+                    <ComboBox Name="cbTruck" TabIndex="8" Width="140" Text=""  IsEditable="False" SelectedIndex="1"/>
                     <Button Name="btClearTruckSelection" Click="btClearTruckSelection_Click" Content="x" Width="15" Height="21"/>
 
                     <Label Content="     Workers*:" Height="23" VerticalAlignment="Top"/>
@@ -245,7 +245,7 @@
 
                 <WrapPanel>
                     <Label Content="Adr:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbAddrLineAct" Height="23"  MinWidth="316"/>
+                    <TextBox Name="tbAddrLineAct" Height="23"  MinWidth="316" Text="Addr55"/>
                 </WrapPanel>
                 <Label></Label>
                 <WrapPanel>
@@ -261,14 +261,14 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbCityAct" Height="23"  Text="" Width="140"/>
+                    <TextBox Name="tbCityAct" Height="23"  Text="LaSalle" Width="140"/>
                     <Label></Label>
                     <ComboBox Name="cbProvinceAct" Width="45" Text="QC" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" Text="" Width="80"/>
+                    <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" Text="H8N 2K6" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -286,7 +286,7 @@
                 </WrapPanel>
                 <WrapPanel>
                     <Label Content="Adr:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbAddrLineDest" Height="23"  MinWidth="316"/>
+                    <TextBox Name="tbAddrLineDest" Height="23"  MinWidth="316" Text="sadfwefws 55"/>
                 </WrapPanel>
                 <Label></Label>
                 <WrapPanel>
@@ -302,14 +302,14 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbCityDest" Height="23"  Text="" Width="140"/>
+                    <TextBox Name="tbCityDest" Height="23"  Text="LaSalle" Width="140"/>
                     <Label></Label>
                     <ComboBox Name="cbProvinceDest" Width="45" Text="QC" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23"  Text="" Width="80"/>
+                    <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23"  Text="H8N 2K6" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>

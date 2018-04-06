@@ -8,46 +8,50 @@ namespace EasyMoveOMS
 {
     public class Order
     {
-        public long id;
-        public DateTime moveDate;
-        public TimeSpan moveTime;
-        public long truckId;
-        public int workers;
+        public long id { get; set; }
+        public DateTime moveDate { get; set; }
+        public TimeSpan moveTime { get; set; }
+        public long truckId { get; set; }
+        public int workers { get; set; }
         
-        public decimal pricePerHour;
-        public TimeSpan minTime;
-        public TimeSpan maxTime;
+        public decimal pricePerHour { get; set; }
+        public TimeSpan minTime { get; set; }
+        public TimeSpan maxTime { get; set; }
         
-        public decimal deposit;
-        public TimeSpan travelTime;
-        public TimeSpan arriveTimeFrom;
-        public TimeSpan arriveTimeTo;
-        public int boxes;
-        public int beds;
-        public int sofas;
-        public int frigos;
-        public int wds;
-        public int desks;
-        public int tables;
-        public int chairs;
-        public int other;
-        public bool oversized;
-        public bool overweight;
-        public bool fragile;
-        public bool expensive;
-        public String details;
-        public bool isPaid;
-        public OrderStatus orderStatus;
-        public DateTime contactOnDate;
-        public TimeSpan doneStartTime;
-        public TimeSpan doneEndTime;
-        public TimeSpan doneBreaksTime;
-        public TimeSpan doneTotalTime;
+        public decimal deposit { get; set; }
+        public TimeSpan travelTime { get; set; }
+        public TimeSpan arriveTimeFrom { get; set; }
+        public TimeSpan arriveTimeTo { get; set; }
+        public int boxes { get; set; }
+        public int beds { get; set; }
+        public int sofas { get; set; }
+        public int frigos { get; set; }
+        public int wds { get; set; }
+        public int desks { get; set; }
+        public int tables { get; set; }
+        public int chairs { get; set; }
+        public int other { get; set; }
+        public bool oversized { get; set; }
+        public bool overweight { get; set; }
+        public bool fragile { get; set; }
+        public bool expensive { get; set; }
+        public String details { get; set; }
+        public bool isPaid { get; set; }
+        public OrderStatus orderStatus { get; set; }
+        public DateTime contactOnDate { get; set; }
+        public TimeSpan doneStartTime { get; set; }
+        public TimeSpan doneEndTime { get; set; }
+        public TimeSpan doneBreaksTime { get; set; }
+        public TimeSpan doneTotalTime { get; set; }
 
-        public List<Address> orderAddresses; //= new List<Address>();
-        public Client orderClient;// = new Client();
-        public Truck orderTruck;
+        public List<Address> orderAddresses { get; set; } //= new List<Address>();
+        public Client orderClient { get; set; }// = new Client();
+        public Truck orderTruck { get; set; }
+
         public enum OrderStatus {Scheduled, Suspended, Done, Cancelled};
+
+
+
 
         public Order()
         {

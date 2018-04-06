@@ -8,11 +8,11 @@ namespace EasyMoveOMS
 {
     public class Client
     {
-        private long _id;
-        private string _name;
-        private string _email;
-        private string _phoneH;
-        private string _phoneW;
+        public long id { get; set; }
+        public string name { get; set; }
+        public string email { get; set; }
+        public string phoneH { get; set; }
+        public string phoneW { get; set; }
 
         public Client()
         {
@@ -21,25 +21,21 @@ namespace EasyMoveOMS
 
         public Client(long id, string name, string email, string phoneH, string phoneW)
         {
-            Id = id;
-            Name = name;
-            Email = email;
-            PhoneH = phoneH;
-            PhoneW = phoneW;
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.phoneH = phoneH;
+            this.phoneW = phoneW;
         }
 
         public Client(string name, string email, string phoneH, string phoneW)
         {
-            Name = name;
-            Email = email;
-            PhoneH = phoneH;
-            PhoneW = phoneW;
+            this.name = name;
+            this.email = email;
+            this.phoneH = phoneH;
+            this.phoneW = phoneW;
         }
 
-        public long Id { get => _id; set => _id = value; }
-        public string Name { get => _name; set => _name = value; }
-        public string Email { get => _email; set => _email = value; }
-        public string PhoneH { get => _phoneH; set => _phoneH = value; }
-        public string PhoneW { get => _phoneW; set => _phoneW = value; }
+       
     }
 }
