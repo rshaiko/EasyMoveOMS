@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,10 +25,12 @@ namespace EasyMoveOMS
     public partial class OrderWindow : Window
     {
         //DECLARATIONS
+        Order currentOrder = null;
         List <Address> orderAddresses = new List<Address>();
         Order.OrderStatus os;
-        Client orderClient;
+        Client orderClient = null;
         Truck orderTruck;
+        
 
         bool isNewOrder=false;
         bool isNewClient = true;
@@ -50,17 +53,17 @@ namespace EasyMoveOMS
 
 
         //MOVING INFORMATION
-        float orderId, truckId;
+        long orderId, truckId;
         DateTime moveDate;
-        TimeSpan moveTime, maxTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
+        TimeSpan moveTime, maxTime, minTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
         int startHour, startMinute, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
         String phoneHome, phoneWork, email, googleTime, googleDistance;
         int workers;
         bool payPerHour;
-        decimal pricePerHour, priceFixed, deposit;
+        decimal pricePerHour, deposit;
 
         //CLIENT INFORMATION
-        float clientId;
+        long clientId;
         String clientName, clientPhoneH, clientPhoneW, clientEmail;
         //DESCRIPTION OF ITEMS TO MOVE
         int boxes, beds, sofas, frigos, wds, desks, tables, chairs, other;
@@ -85,7 +88,16 @@ namespace EasyMoveOMS
         public OrderWindow (Order order)
         {
             InitializeComponent();
-            if (order == null) isNewOrder = true;
+            currentOrder = order;
+            if (currentOrder != null)  
+            {
+                orderClient = null; // TODO change to existing client
+            }
+            else
+            {
+                isNewOrder = true;
+            }
+
             cbTruck.ItemsSource = Globals.truckList;
         }
 
@@ -103,44 +115,79 @@ namespace EasyMoveOMS
         private void btSave_Click(object sender, RoutedEventArgs e)
         {
             validateOrder();
+            String confirmation;
 
-            Order o = new Order();
-            o.orderAddresses = orderAddresses;
-            o.id = 0; // new
-            o.moveDate = moveDate;
-            o.moveTime = moveTime;
-            o.workers = workers;
-            o.payPerHour = payPerHour;
-            o.pricePerHour = pricePerHour;
-            o.priceFixed = priceFixed;
-            o.maxTime = maxTime;
-            o.deposit = deposit;
-            o.travelTime = travelTime;
-            o.googleTime = googleTime;
-            o.googleDistance = googleDistance;
-            o.arriveTimeFrom = arriveTimeFrom;
-            o.arriveTimeTo = arriveTimeTo;
-            o.boxes = boxes;
-            o.beds = beds;
-            o.sofas = sofas;
-            o.frigos = frigos;
-            o.wds = wds;
-            o.desks = desks;
-            o.tables = tables;
-            o.chairs = chairs;
-            o.other = other;
-            o.oversized = oversized;
-            o.overweight = overweight;
-            o.fragile = fragile;
-            o.expensive = expensive;
-            o.details = details;
-            o.isPaid = isCompletePayment;
-            o.orderStatus = os;
-            o.contactOnDate = contactOnDate;
-            o.doneStartTime = doneStartTime;
-            o.doneEndTime = doneEndTime;
-            o.doneBreaksTime = doneBreaksTime;
-            o.doneTotalTime = doneTotalTime;
+            //Save new Client if it is NEW
+            if (orderClient.Id == 0)
+            {
+                try
+                {
+                    clientId = MainWindow.db.saveNewClient(orderClient);
+                    orderClient.Id = clientId;
+                    confirmation = "1) Database: New client " + orderClient.Name + " was saved \n";
+                    System.Windows.MessageBox.Show("Database: New client " + orderClient.Name + " was saved");
+                    tbClient.IsEnabled = false;
+                    tbEmail.IsEnabled = false;
+                    tbPhoneH.IsEnabled = false;
+                    tbPhoneW.IsEnabled = false;
+                }
+                catch (SqlException er)
+                {
+                    System.Windows.MessageBox.Show("Database error. New client was not added! \n" + er.Message);
+                    return;
+                }
+            }
+
+            if (currentOrder == null)
+            {
+                currentOrder = new Order();
+                
+            }
+            currentOrder.orderAddresses = orderAddresses;
+            currentOrder.id = 0; // IF new
+            currentOrder.moveDate = moveDate;
+            currentOrder.moveTime = moveTime;
+            currentOrder.workers = workers;
+            currentOrder.pricePerHour = pricePerHour;
+            currentOrder.maxTime = maxTime;
+            currentOrder.minTime = minTime;
+            currentOrder.deposit = deposit;
+            currentOrder.travelTime = travelTime;
+            currentOrder.arriveTimeFrom = arriveTimeFrom;
+            currentOrder.arriveTimeTo = arriveTimeTo;
+            currentOrder.boxes = boxes;
+            currentOrder.beds = beds;
+            currentOrder.sofas = sofas;
+            currentOrder.frigos = frigos;
+            currentOrder.wds = wds;
+            currentOrder.desks = desks;
+            currentOrder.tables = tables;
+            currentOrder.chairs = chairs;
+            currentOrder.other = other;
+            currentOrder.oversized = oversized;
+            currentOrder.overweight = overweight;
+            currentOrder.fragile = fragile;
+            currentOrder.expensive = expensive;
+            currentOrder.details = details;
+            currentOrder.isPaid = isCompletePayment;
+            currentOrder.orderStatus = os;
+            currentOrder.contactOnDate = contactOnDate;
+            currentOrder.doneStartTime = doneStartTime;
+            currentOrder.doneEndTime = doneEndTime;
+            currentOrder.doneBreaksTime = doneBreaksTime;
+            currentOrder.doneTotalTime = doneTotalTime;
+
+
+            //Save new or
+            try
+            {
+                orderId = MainWindow.db.saveNewOrder(currentOrder);
+                currentOrder.id = orderId;
+            }
+            catch(SqlException ex)
+            {
+
+            }
 
         }
 
@@ -176,30 +223,33 @@ namespace EasyMoveOMS
                 if (!int.TryParse(cbStartTimeM.Text, out startMinute)) startMinute = 0;
 
                 moveTime = new TimeSpan(startHour, startMinute, 0);
-                
-                // ==> CUSTOMER
-                clientName = tbClient.Text;
-                clientPhoneH = tbPhoneH.Text;
-                clientPhoneW = tbPhoneW.Text;
-                clientEmail = tbEmail.Text;
-                if (clientName.Length < 2 || clientName.Length > 150)
-                {
-                    tbClient.Background = Brushes.Red;
-                    throw new InvalidDataException("Client name must be 2 to 150 characters");
-                }
-                if (clientPhoneH.Length > 25 || clientPhoneW.Length > 25)
-                {
-                    throw new InvalidDataException("Phone number can not exceed 25 characters");
-                }
 
-                if (clientEmail.Length > 0 && !SmallClasses.emailIsValid(clientEmail))
+                // ==> CUSTOMER
+                if (orderClient == null)
                 {
-                    tbEmail.Background = Brushes.Red;
-                    throw new InvalidDataException("Entered email is not valid");
-                }
-                if (isNewClient)
-                {
-                    orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
+                    clientName = tbClient.Text;
+                    clientPhoneH = tbPhoneH.Text;
+                    clientPhoneW = tbPhoneW.Text;
+                    clientEmail = tbEmail.Text;
+                    if (clientName.Length < 2 || clientName.Length > 150)
+                    {
+                        tbClient.Background = Brushes.Red;
+                        throw new InvalidDataException("Client name must be 2 to 150 characters");
+                    }
+                    if (clientPhoneH.Length > 25 || clientPhoneW.Length > 25)
+                    {
+                        throw new InvalidDataException("Phone number can not exceed 25 characters");
+                    }
+
+                    if (clientEmail.Length > 0 && !SmallClasses.emailIsValid(clientEmail))
+                    {
+                        tbEmail.Background = Brushes.Red;
+                        throw new InvalidDataException("Entered email is not valid");
+                    }
+                    if (isNewClient)
+                    {
+                        orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
+                    }
                 }
 
                 // ==> TRUCK AND WORKERS
@@ -230,13 +280,25 @@ namespace EasyMoveOMS
                 }
                 else
                 {
-                    if (maxHours < 0 || maxHours > 24) throw new InvalidDataException("Max limit must be 0 to 24 hours");
+                    if (maxHours < 0 || maxHours > 100) throw new InvalidDataException("Max limit must be 0 to 100 hours");
                 }
 
                 if (!int.TryParse(cbMaxMinutes.Text, out maxMinutes)) maxMinutes = 0;
                 maxTime = new TimeSpan(maxHours, maxMinutes, 0);
 
-                //TODO Min Hours
+                 if(!int.TryParse(tbMinHours.Text, out hours))
+                {
+                    if (tbMinHours.Text == "") { hours = 0; }
+                    else throw new InvalidDataException("Invalid limit in hours");
+                }
+                else
+                {
+                    if (hours < 0 || hours > 100) throw new InvalidDataException("Min limit must be 0 to 100 hours");
+                }
+
+                if (!int.TryParse(cbMinMinutes.Text, out minutes)) minutes = 0;
+                minTime = new TimeSpan(hours, minutes, 0);
+
 
 
                 //DEPOSIT
@@ -567,6 +629,7 @@ namespace EasyMoveOMS
             cbProvinceInt.IsEnabled = true;
             tbZipInt.IsEnabled = true;
             cbIsBillingInt.IsEnabled = true;
+            spinFloorAddrInt.IsEnabled = true;
         }
 
         private void cbUseIntermediateAddress_Unchecked(object sender, RoutedEventArgs e)
@@ -579,6 +642,7 @@ namespace EasyMoveOMS
             cbProvinceInt.IsEnabled = false;
             tbZipInt.IsEnabled = false;
             cbIsBillingInt.IsEnabled = false;
+            spinFloorAddrInt.IsEnabled = false;
         }
 
         private void cbIsBillingDest_Checked(object sender, RoutedEventArgs e)
@@ -623,11 +687,8 @@ namespace EasyMoveOMS
             }
         }
 
-        private void spinMinHours_Spin(object sender, SpinEventArgs e)
-        {
-
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        
+        private void tbInvoice_Click(object sender, RoutedEventArgs e)
         {
             InvoiceWindow dlg1 = new InvoiceWindow();
             if (dlg1.ShowDialog() == true)
@@ -927,6 +988,11 @@ namespace EasyMoveOMS
         private void spinMaxHours_Spin(object sender, SpinEventArgs e)
         {
             getNewSpinValue(tbMaxHours, e);
+        }
+
+        private void spinMinHours_Spin(object sender, SpinEventArgs e)
+        {
+            getNewSpinValue(tbMinHours, e);
         }
 
         private void getNewSpinValue(TextBox tb, SpinEventArgs e)

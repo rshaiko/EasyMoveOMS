@@ -23,7 +23,7 @@ namespace EasyMoveOMS
     /// </summary>
     public partial class MainWindow : Window
     {
-        Database db;
+       public static Database db;
 
         public MainWindow()
         {
@@ -34,6 +34,10 @@ namespace EasyMoveOMS
                 InitializeComponent();
                 //reloadClientsList();
                 chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
+
+                //Rom@
+                Globals.truckList = db.GetWorkingTrucks();
+
             }
             catch (SqlException e)
             {

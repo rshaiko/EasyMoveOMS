@@ -13,14 +13,13 @@ namespace EasyMoveOMS
         public TimeSpan moveTime;
         public long truckId;
         public int workers;
-        public bool payPerHour;
+        
         public decimal pricePerHour;
-        public decimal priceFixed;
+        public TimeSpan minTime;
         public TimeSpan maxTime;
+        
         public decimal deposit;
         public TimeSpan travelTime;
-        public String googleTime;
-        public String googleDistance;
         public TimeSpan arriveTimeFrom;
         public TimeSpan arriveTimeTo;
         public int boxes;
@@ -56,8 +55,7 @@ namespace EasyMoveOMS
         }
 
         public Order ( long id, DateTime moveDate, TimeSpan moveTime, long truckId, int workers,
-            bool payPerHour, decimal pricePerHour, decimal priceFixed, TimeSpan maxTime, decimal deposit, TimeSpan travelTime, String googleTime,
-            String googleDistance, TimeSpan arriveTimeFrom, TimeSpan arriveTimeTo, int boxes, int beds, int sofas, int frigos, int wds, int desks, int tables,
+            decimal pricePerHour, TimeSpan minTime, TimeSpan maxTime,  decimal deposit, TimeSpan travelTime, TimeSpan arriveTimeFrom, TimeSpan arriveTimeTo, int boxes, int beds, int sofas, int frigos, int wds, int desks, int tables,
             int chairs, int other, bool oversized, bool overweight, bool fragile, bool expensive, String details, bool isPaid, OrderStatus orderStatus,
             DateTime contactOnDate, TimeSpan doneStartTime, TimeSpan doneEndTime, TimeSpan doneBreaksTime, TimeSpan doneTotalTime)
         {
