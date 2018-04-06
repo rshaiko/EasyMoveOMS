@@ -45,5 +45,65 @@ namespace EasyMoveOMS.Properties {
                 return ((string)(this["connStr"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string companyName {
+            get {
+                return ((string)(this["companyName"]));
+            }
+            set {
+                this["companyName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string truckParking {
+            get {
+                return ((string)(this["truckParking"]));
+            }
+            set {
+                this["truckParking"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string phoneNumber {
+            get {
+                return ((string)(this["phoneNumber"]));
+            }
+            set {
+                this["phoneNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string city {
+            get {
+                return ((string)(this["city"]));
+            }
+            set {
+                this["city"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string province {
+            get {
+                return ((string)(this["province"]));
+            }
+            set {
+                this["province"] = value;
+            }
+        }
     }
 }
