@@ -142,3 +142,10 @@ settings to(from) XML
 3. Need assistance / figure things out
 -appropriate library for Word formatting
 
+06.04.2018 Roman
+1. What I have done/not done
+- saving into database newClient-newOrder-newAddresses
+2. Plan until next Scrum
+- redesign Main Window (add grid split interface)
+- add On The Date Schedule info
+3. Need assistance / figure things out

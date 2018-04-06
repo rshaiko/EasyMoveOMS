@@ -176,6 +176,7 @@ namespace EasyMoveOMS
             currentOrder.doneEndTime = doneEndTime;
             currentOrder.doneBreaksTime = doneBreaksTime;
             currentOrder.doneTotalTime = doneTotalTime;
+            currentOrder.orderClient = orderClient;
 
 
             //Save new or

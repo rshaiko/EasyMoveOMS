@@ -96,39 +96,40 @@ namespace EasyMoveOMS
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@moveDate”, o.moveDate);
-cmd.Parameters.AddWithValue("@moveTime”, o.moveTime);
-cmd.Parameters.AddWithValue("@clientId”, o.clientId);
-cmd.Parameters.AddWithValue("@truckId”, o.truckId);
-cmd.Parameters.AddWithValue("@workers”, o.workers);
-cmd.Parameters.AddWithValue("@pricePerHour”, o.pricePerHour);
-cmd.Parameters.AddWithValue("@minTime”, o.minTime);
-cmd.Parameters.AddWithValue("@maxTime”, o.maxTime);
-cmd.Parameters.AddWithValue("@deposit”, o.deposit);
-cmd.Parameters.AddWithValue("@travelTime”, o.travelTime);
-cmd.Parameters.AddWithValue("@arriveTimeFrom”, o.arriveTimeFrom);
-cmd.Parameters.AddWithValue("@arriveTimeTo”, o.arriveTimeTo);
-cmd.Parameters.AddWithValue("@boxes”, o.boxes);
-cmd.Parameters.AddWithValue("@beds”, o.beds);
-cmd.Parameters.AddWithValue("@sofas”, o.sofas);
-cmd.Parameters.AddWithValue("@frigos”, o.frigos);
-cmd.Parameters.AddWithValue("@wds”, o.wds);
-cmd.Parameters.AddWithValue("@desks”, o.desks);
-cmd.Parameters.AddWithValue("@tables”, o.tables);
-cmd.Parameters.AddWithValue("@chairs”, o.chairs);
-cmd.Parameters.AddWithValue("@other”, o.other);
-cmd.Parameters.AddWithValue("@oversized”, o.oversized);
-cmd.Parameters.AddWithValue("@overweight”, o.overweight);
-cmd.Parameters.AddWithValue("@fragile”, o.fragile);
-cmd.Parameters.AddWithValue("@expensive”, o.expensive);
-cmd.Parameters.AddWithValue("@details”, o.details);
-cmd.Parameters.AddWithValue("@isPaid”, o.isPaid);
-cmd.Parameters.AddWithValue("@orderStatus”, o.orderStatus);
-cmd.Parameters.AddWithValue("@contactOnDate”, o.contactOnDate);
-cmd.Parameters.AddWithValue("@doneStartTime”, o.doneStartTime);
-cmd.Parameters.AddWithValue("@doneEndTime”, o.doneEndTime);
-cmd.Parameters.AddWithValue("@doneBreaksTime”, o.doneBreaksTime);
-cmd.Parameters.AddWithValue("@doneTotalTime”, o.doneTotalTime);
+                cmd.Parameters.AddWithValue("@moveDate", o.moveDate);
+                cmd.Parameters.AddWithValue("@moveTime", o.moveTime);
+                cmd.Parameters.AddWithValue("@clientId", o.orderClient.Id);
+                cmd.Parameters.AddWithValue("@truckId", o.truckId);
+                cmd.Parameters.AddWithValue("@workers", o.workers);
+                cmd.Parameters.AddWithValue("@pricePerHour", o.pricePerHour);
+                cmd.Parameters.AddWithValue("@minTime", o.minTime);
+                cmd.Parameters.AddWithValue("@maxTime", o.maxTime);
+                cmd.Parameters.AddWithValue("@deposit", o.deposit);
+                cmd.Parameters.AddWithValue("@travelTime", o.travelTime);
+                cmd.Parameters.AddWithValue("@arriveTimeFrom", o.arriveTimeFrom);
+                cmd.Parameters.AddWithValue("@arriveTimeTo", o.arriveTimeTo);
+                cmd.Parameters.AddWithValue("@boxes", o.boxes);
+                cmd.Parameters.AddWithValue("@beds", o.beds);
+                cmd.Parameters.AddWithValue("@sofas", o.sofas);
+                cmd.Parameters.AddWithValue("@frigos", o.frigos);
+                cmd.Parameters.AddWithValue("@wds", o.wds);
+                cmd.Parameters.AddWithValue("@desks", o.desks);
+                cmd.Parameters.AddWithValue("@tables", o.tables);
+                cmd.Parameters.AddWithValue("@chairs", o.chairs);
+                cmd.Parameters.AddWithValue("@other", o.other);
+                cmd.Parameters.AddWithValue("@oversized", o.oversized);
+                cmd.Parameters.AddWithValue("@overweight", o.overweight);
+                cmd.Parameters.AddWithValue("@fragile", o.fragile);
+                cmd.Parameters.AddWithValue("@expensive", o.expensive);
+                cmd.Parameters.AddWithValue("@details", o.details);
+                cmd.Parameters.AddWithValue("@isPaid", o.isPaid);
+                cmd.Parameters.AddWithValue("@orderStatus", o.orderStatus);
+                cmd.Parameters.AddWithValue("@contactOnDate", o.contactOnDate);
+                cmd.Parameters.AddWithValue("@doneStartTime", o.doneStartTime);
+                cmd.Parameters.AddWithValue("@doneEndTime", o.doneEndTime);
+                cmd.Parameters.AddWithValue("@doneBreaksTime", o.doneBreaksTime);
+                cmd.Parameters.AddWithValue("@doneTotalTime", o.doneTotalTime);
+
 
 
                 //cmd.Parameters.AddWithValue("@name", c.Name);
