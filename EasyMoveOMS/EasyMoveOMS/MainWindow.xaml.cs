@@ -77,5 +77,17 @@ namespace EasyMoveOMS
 
             }
         }
+
+        
+
+        private void mSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow dlg = new SettingsWindow();
+            if (dlg.ShowDialog() == true)
+            {
+
+            }
+
+        }
     }
 }

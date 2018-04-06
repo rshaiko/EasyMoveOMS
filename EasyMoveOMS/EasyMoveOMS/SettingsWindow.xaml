@@ -5,19 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="390.039" Width="604.141">
+        Title="SettingsWindow" Height="466.809" Width="604.141">
     <Grid>
-        <Label Content="Company:" HorizontalAlignment="Left" Margin="26,23,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="tbCompany" HorizontalAlignment="Left" Height="23" Margin="138,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
-        <TextBox Name="tbParking" HorizontalAlignment="Left" Height="23" Margin="138,189,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
-        <Button Name="btnSave" Click="btnSave_Click" Content="Save" HorizontalAlignment="Left" Margin="104,317,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Name="btnCancel"  Content="Cancel" HorizontalAlignment="Left" Margin="409,317,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label Content="Truck parking:" HorizontalAlignment="Left" Margin="32,186,0,0" VerticalAlignment="Top"/>
-        <Label Content="Phone number:" HorizontalAlignment="Left" Margin="26,238,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="tbPhone" HorizontalAlignment="Left" Height="23" Margin="138,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
-        <Label Content="Province:" HorizontalAlignment="Left" Margin="26,131,0,0" VerticalAlignment="Top"/>
-        <Label Content="City:" HorizontalAlignment="Left" Margin="26,76,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="tbCity" HorizontalAlignment="Left" Height="23" Margin="138,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
-        <TextBox Name="tbProvince" HorizontalAlignment="Left" Height="23" Margin="138,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <Label Content="Company:" HorizontalAlignment="Left" Margin="26,21,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbCompany" HorizontalAlignment="Left" Height="23" Margin="138,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <TextBox Name="tbParking" HorizontalAlignment="Left" Height="23" Margin="138,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <Button Name="btnSave" Click="btnSave_Click" Content="Save" HorizontalAlignment="Left" Margin="102,390,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="btnCancel"  Content="Cancel" HorizontalAlignment="Left" Margin="408,390,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Truck parking:" HorizontalAlignment="Left" Margin="26,279,0,0" VerticalAlignment="Top"/>
+        <Label Content="Phone number:" HorizontalAlignment="Left" Margin="26,332,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbPhone" HorizontalAlignment="Left" Height="23" Margin="138,335,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <Label Content="Province:" HorizontalAlignment="Left" Margin="26,229,0,0" VerticalAlignment="Top"/>
+        <Label Content="City:" HorizontalAlignment="Left" Margin="26,175,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbCity" HorizontalAlignment="Left" Height="23" Margin="138,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <TextBox Name="tbProvince" HorizontalAlignment="Left" Height="23" Margin="138,232,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <Label Content="Address:" HorizontalAlignment="Left" Margin="26,70,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.49,1.112"/>
+        <Label Content="ZIP:" HorizontalAlignment="Left" Margin="26,127,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbAddr" HorizontalAlignment="Left" Height="23" Margin="138,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
+        <TextBox Name="tbZip" HorizontalAlignment="Left" Height="23" Margin="138,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385"/>
     </Grid>
 </Window>

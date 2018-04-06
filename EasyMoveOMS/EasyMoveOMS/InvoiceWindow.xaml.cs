@@ -159,40 +159,7 @@ namespace EasyMoveOMS
         }
 
 
-        double localTotal;
-        private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
-        {
-            string value = tbTotal.Text;
-            double total;
-
-            if (!double.TryParse(value, out total))
-            {
-                
-                MessageBox.Show("Discount must be a number.");
-                return;
-            }
-            if ((localTotal - total) > 0)
-            {
-                double temp = (localTotal - total) * 100 / localTotal;
-                lblDiscount.Content = temp + "%";
-
-                lblTotalBeforeTax.Content = (1 - temp / 100) * total;
-                lblTPS.Content = (1 - temp / 100) * total * 0.05;
-                lblTVQ.Content = (1 - temp / 100) * total * 0.09975;
-
-            }
-            //if ((localTotal - total) < 0)
-            //{
-            //    lblDiscount.Content = "";
-            //    double temp = (total-localTotal) * 100 / localTotal;
-                
-
-            //    lblTotalBeforeTax.Content = (1 + temp / 100) * total;
-            //    lblTPS.Content = (1 + temp / 100) * total * 0.05;
-            //    lblTVQ.Content = (1 + temp / 100) * total * 0.09975;
-            //}
-            
-        }
+        
         double local;
         private void tbDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -277,38 +244,106 @@ namespace EasyMoveOMS
 
         private void tbDiscount_GotFocus(object sender, RoutedEventArgs e)
         {
+
              local = Convert.ToDouble(lblTotalBeforeTax.Content);
         }
 
         private void tbTotal_GotFocus(object sender, RoutedEventArgs e)
         {
+            if(tbTotal.Text!="")
             localTotal = Convert.ToDouble(tbTotal.Text);
         }
 
-        private void tbTotal_LostFocus(object sender, RoutedEventArgs e)
+        double localTotal;
+        //private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
+        //{
+        //    string value = tbTotal.Text;
+        //    double total;
+
+        //    if (!double.TryParse(value, out total))
+        //    {
+
+        //        MessageBox.Show("Discount must be a number.");
+        //        return;
+        //    }
+        //    if ((localTotal - total) > 0)
+        //    {
+        //        double temp = (localTotal - total) * 100 / localTotal;
+
+
+        //        lblTotalBeforeTax.Content = (1 - temp / 100) * total;
+        //        lblTPS.Content = (1 - temp / 100) * total * 0.05;
+        //        lblTVQ.Content = (1 - temp / 100) * total * 0.09975;
+
+        //    }
+            //if ((localTotal - total) < 0)
+            //{
+            //    lblDiscount.Content = "";
+            //    double temp = (total-localTotal) * 100 / localTotal;
+
+
+            //    lblTotalBeforeTax.Content = (1 + temp / 100) * total;
+            //    lblTPS.Content = (1 + temp / 100) * total * 0.05;
+            //    lblTVQ.Content = (1 + temp / 100) * total * 0.09975;
+            //}
+
+        //}
+        private void btnSetNew_Click(object sender, RoutedEventArgs e)
         {
             string value = tbTotal.Text;
             double total;
 
             if (!double.TryParse(value, out total))
             {
-                
-                MessageBox.Show("Discount must be a number.");
+                if (value == "")
+                {
+                    MessageBox.Show("Fill out the field, please.");
+                    return;
+                }
+                MessageBox.Show("Total must be a number.");
                 return;
             }
-            
-            if ((total - localTotal) > 3)
-            {
-                services.Add(new Service() { Description = "Other", Price = total - localTotal, Quantity = 1, Amount = (total - localTotal) * 1 });
-                //services[services.Count].Amount;
 
+            if ((total - localTotal) > 0)
+            {
+                if (services[services.Count - 1].Description == "Other" || services[services.Count - 1].Description == "Discount")
+                {
+                    services.RemoveAt(services.Count - 1);
+
+                    dgInvoice.ItemsSource = services;
+                    dgInvoice.Items.Refresh();
+                }
+                    services.Add(new Service() { Description = "Other", Price = total - localTotal, Quantity = 1, Amount = (total - localTotal) * 1 });
+                    
+
+                    dgInvoice.ItemsSource = services;
+                    dgInvoice.Items.Refresh();
+
+                    double temp = total / 1.14975;
+                    lblTotalBeforeTax.Content = temp;
+                    lblTPS.Content = temp * 0.05;
+                    lblTVQ.Content = temp * 0.09975;
+                
+            }
+
+            if ((localTotal - total) > 0)
+            {
+                if (services[services.Count - 1].Description == "Other" || services[services.Count - 1].Description == "Discount")
+                {
+                    services.RemoveAt(services.Count - 1);
+
+                    dgInvoice.ItemsSource = services;
+                    dgInvoice.Items.Refresh();
+                }
+                services.Add(new Service() { Description = "Discount", Price = localTotal - total, Quantity = 1, Amount = (localTotal - total) * 1 });
                 dgInvoice.ItemsSource = services;
                 dgInvoice.Items.Refresh();
 
-                  double temp = total / 1.14975;
+                double temp = total / 1.14975;
                 lblTotalBeforeTax.Content = temp;
                 lblTPS.Content = temp * 0.05;
                 lblTVQ.Content = temp * 0.09975;
+
             }
         }
     }

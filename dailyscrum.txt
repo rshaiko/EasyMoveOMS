@@ -149,3 +149,12 @@ settings to(from) XML
 - redesign Main Window (add grid split interface)
 - add On The Date Schedule info
 3. Need assistance / figure things out
+
+2018.04.06 Dmitrii
+1. Done since last scrum
+- Settings Window created/user settings added
+-Invoice Window calculations
+2. Plan until next Scrum
+-export data to Excel
+-use library for text formatting when exporting to Word
+3. Need assistance / figure things out

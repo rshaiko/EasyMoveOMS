@@ -41,6 +41,10 @@ namespace EasyMoveOMS
                 Settings.Default["province"] = tbProvince.Text;
            if (tbCity.Text != "")
                 Settings.Default["city"] = tbCity.Text;
+            if (tbAddr.Text != "")
+                Settings.Default["address"] = tbAddr.Text;
+            if (tbZip.Text != "")
+                Settings.Default["address"] = tbZip.Text;
 
 
             Settings.Default.Save();

@@ -23,7 +23,7 @@
             </MenuItem>
             <MenuItem Header="_Reports" Margin="5,5">
             </MenuItem>
-            <MenuItem Header="_Settings" Margin="5,5">
+            <MenuItem Header="_Settings" Name="mSettings" Margin="5,5" Click="mSettings_Click">
             </MenuItem>
             <MenuItem Header="_Help" Margin="5,5">
                 <MenuItem Name="mAbout"  Header="_About" >
