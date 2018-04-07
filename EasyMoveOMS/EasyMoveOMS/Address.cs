@@ -8,71 +8,63 @@ namespace EasyMoveOMS
 {
     public class Address
     {
-        long id;
-        long orderId;
-        String addrLine;
-        String city;
-        String zip;
-        String province;
-        int floor;
-        bool elevator;
-        bool stairs;
-        bool isBilling;
-        AddrType adType;
-        String notes;
+        public long id { get; set; }
+        public long orderId { get; set; }
+        public String addrLine { get; set; }
+        public String city { get; set; }
+        public String zip { get; set; }
+        public String province { get; set; }
+        public int floor { get; set; }
+        public bool elevator { get; set; }
+        public bool stairs { get; set; }
+        public bool isBilling { get; set; }
+        public AddrType addrType { get; set; }
+        public String notes { get; set; }
 
         public enum AddrType { Actual, Destination, Intermediate };
 
 
         public Address()
         {
-
+            id = 0;
+            orderId = 0;
         }
 
         //full constructor
         public Address(long id, long orderId, String addrLine, String city, String zip, String province, int floor, bool elevator,
             bool stairs, bool isBilling, AddrType addrType, String notes)
         {
-            Id = id;
-            OrderId = orderId;
-            AddrLine = addrLine;
-            City = city;
-            Zip = zip;
-            Province = province;
-            Floor = floor;
-            Elevator = elevator;
-            Stairs = stairs;
-            IsBilling = isBilling;
-            AdType = adType;
-            Notes = notes;
+            this.id = id;
+            this.orderId = orderId;
+            this.addrLine = addrLine;
+            this.city = city;
+            this.zip = zip;
+            this.province = province;
+            this.floor = floor;
+            this.elevator = elevator;
+            this.stairs = stairs;
+            this.isBilling = isBilling;
+            this.addrType = addrType;
+            this.notes = notes;
         }
 
         //constructor without id's
         public Address(String addrLine, String city, String zip, String province, int floor, bool elevator,
-            bool stairs, bool isBilling, AddrType adType, String notes)
+            bool stairs, bool isBilling, AddrType addrType, String notes)
         {
-            AddrLine = addrLine;
-            City = city;
-            Zip = zip;
-            Province = province;
-            Floor = floor;
-            Elevator = elevator;
-            Stairs = stairs;
-            IsBilling = isBilling;
-            AdType = adType;
-            Notes = notes;
+            id = 0;
+            orderId = 0;
+            this.addrLine = addrLine;
+            this.city = city;
+            this.zip = zip;
+            this.province = province;
+            this.floor = floor;
+            this.elevator = elevator;
+            this.stairs = stairs;
+            this.isBilling = isBilling;
+            this.addrType = addrType;
+            this.notes = notes;
         }
-        public long Id { get => id; set => id = value; }
-        public long OrderId { get => orderId; set => orderId = value; }
-        public string AddrLine { get => addrLine; set => addrLine = value; }
-        public string City { get => city; set => city = value; }
-        public string Zip { get => zip; set => zip = value; }
-        public string Province { get => province; set => province = value; }
-        public int Floor { get => floor; set => floor = value; }
-        public bool Elevator { get => elevator; set => elevator = value; }
-        public bool Stairs { get => stairs; set => stairs = value; }
-        public bool IsBilling { get => isBilling; set => isBilling = value; }
-        public AddrType AdType { get => adType; set => adType = value; }
-        public string Notes { get => notes; set => notes = value; }
+        
     }
 }

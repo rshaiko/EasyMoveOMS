@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-
+using System.Data;
+using System.IO;
 
 namespace EasyMoveOMS
 {
@@ -83,14 +84,14 @@ namespace EasyMoveOMS
         internal long saveNewOrder(Order o)
         {
             String sql = "INSERT INTO orders (moveDate, moveTime, clientId, truckId, workers, pricePerHour, " +
-                "minTime, maxTime, deposit, travelTime, arriveTimeFrom, arriveTimeTo, " +
+                "minTime, maxTime, deposit, workTime, travelTime, arriveTimeFrom, arriveTimeTo, " +
                 "boxes, beds, sofas, frigos, wds, desks, tables, chairs, other, oversized, overweight, fragile, expensive, details, " +
-                "isPaid, orderStatus, contactOnDate, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime) " +
+                "isPaid, orderStatus, contactOnDate, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime, useIntAddress) " +
                 "VALUES " +
                 "(@moveDate, @moveTime, @clientId, @truckId, @workers, @pricePerHour, " +
-                "@minTime, @maxTime, @deposit, @travelTime, @arriveTimeFrom, @arriveTimeTo, " +
+                "@minTime, @maxTime, @deposit, @workTime, @travelTime, @arriveTimeFrom, @arriveTimeTo, " +
                 "@boxes, @beds, @sofas, @frigos, @wds, @desks, @tables, @chairs, @other, @oversized, @overweight, @fragile, @expensive, @details, " +
-                "@isPaid, @orderStatus, @contactOnDate, @doneStartTime, @doneEndTime, @doneBreaksTime, @doneTotalTime); " +
+                "@isPaid, @orderStatus, @contactOnDate, @doneStartTime, @doneEndTime, @doneBreaksTime, @doneTotalTime, @useIntAddress); " +
                 "SELECT LAST_INSERT_ID();";
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -104,6 +105,7 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@minTime", o.minTime);
                 cmd.Parameters.AddWithValue("@maxTime", o.maxTime);
                 cmd.Parameters.AddWithValue("@deposit", o.deposit);
+                cmd.Parameters.AddWithValue("@workTime", o.workTime);
                 cmd.Parameters.AddWithValue("@travelTime", o.travelTime);
                 cmd.Parameters.AddWithValue("@arriveTimeFrom", o.arriveTimeFrom);
                 cmd.Parameters.AddWithValue("@arriveTimeTo", o.arriveTimeTo);
@@ -128,13 +130,154 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@doneEndTime", o.doneEndTime);
                 cmd.Parameters.AddWithValue("@doneBreaksTime", o.doneBreaksTime);
                 cmd.Parameters.AddWithValue("@doneTotalTime", o.doneTotalTime);
+                cmd.Parameters.AddWithValue("@useIntAddress", o.useIntAddress);
 
+                long id = Convert.ToInt32(cmd.ExecuteScalar());
+                return id;
+            }
+        }
 
+        internal void updateOrder(Order o)
+        {
+            String sql = "UPDATE orders SET  moveDate=@moveDate, moveTime=@moveTime, clientId=@clientId, truckId=@truckId, workers=@workers, " +
+                "pricePerHour=@pricePerHour, minTime=@minTime, maxTime=@maxTime, deposit=@deposit, workTime=@workTime, travelTime=@travelTime, " +
+                "arriveTimeFrom=@arriveTimeFrom, arriveTimeTo=@arriveTimeTo, boxes=@boxes, beds=@beds, sofas=@sofas, " +
+                "frigos=@frigos, wds=@wds, desks=@desks, tables=@tables, chairs=@chairs, other=@other, oversized=@oversized, " +
+                "overweight=@overweight, fragile=@fragile, expensive=@expensive, details=@details, isPaid=@isPaid, " +
+                "orderStatus=@orderStatus, contactOnDate=@contactOnDate, doneStartTime=@doneStartTime, doneEndTime=@doneEndTime, " +
+                "doneBreaksTime=@doneBreaksTime, doneTotalTime=@doneTotalTime, useIntAddress=@useIntAddress " +
+                    "WHERE id=@id;"; 
 
-                //cmd.Parameters.AddWithValue("@name", c.Name);
-                //cmd.Parameters.AddWithValue("@email", c.Email);
-                //cmd.Parameters.AddWithValue("@phoneH", c.PhoneH);
-                //cmd.Parameters.AddWithValue("@phoneW", c.PhoneW);
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", o.id);
+                cmd.Parameters.AddWithValue("@moveDate", o.moveDate);
+                cmd.Parameters.AddWithValue("@moveTime", o.moveTime);
+                cmd.Parameters.AddWithValue("@clientId", o.orderClient.id);
+                cmd.Parameters.AddWithValue("@truckId", o.orderTruck.id);
+                cmd.Parameters.AddWithValue("@workers", o.workers);
+                cmd.Parameters.AddWithValue("@pricePerHour", o.pricePerHour);
+                cmd.Parameters.AddWithValue("@minTime", o.minTime);
+                cmd.Parameters.AddWithValue("@maxTime", o.maxTime);
+                cmd.Parameters.AddWithValue("@deposit", o.deposit);
+                cmd.Parameters.AddWithValue("@workTime", o.workTime);
+                cmd.Parameters.AddWithValue("@travelTime", o.travelTime);
+                cmd.Parameters.AddWithValue("@arriveTimeFrom", o.arriveTimeFrom);
+                cmd.Parameters.AddWithValue("@arriveTimeTo", o.arriveTimeTo);
+                cmd.Parameters.AddWithValue("@boxes", o.boxes);
+                cmd.Parameters.AddWithValue("@beds", o.beds);
+                cmd.Parameters.AddWithValue("@sofas", o.sofas);
+                cmd.Parameters.AddWithValue("@frigos", o.frigos);
+                cmd.Parameters.AddWithValue("@wds", o.wds);
+                cmd.Parameters.AddWithValue("@desks", o.desks);
+                cmd.Parameters.AddWithValue("@tables", o.tables);
+                cmd.Parameters.AddWithValue("@chairs", o.chairs);
+                cmd.Parameters.AddWithValue("@other", o.other);
+                cmd.Parameters.AddWithValue("@oversized", o.oversized);
+                cmd.Parameters.AddWithValue("@overweight", o.overweight);
+                cmd.Parameters.AddWithValue("@fragile", o.fragile);
+                cmd.Parameters.AddWithValue("@expensive", o.expensive);
+                cmd.Parameters.AddWithValue("@details", o.details);
+                cmd.Parameters.AddWithValue("@isPaid", o.isPaid);
+                cmd.Parameters.AddWithValue("@orderStatus", o.orderStatus + "");
+                cmd.Parameters.AddWithValue("@contactOnDate", o.contactOnDate);
+                cmd.Parameters.AddWithValue("@doneStartTime", o.doneStartTime);
+                cmd.Parameters.AddWithValue("@doneEndTime", o.doneEndTime);
+                cmd.Parameters.AddWithValue("@doneBreaksTime", o.doneBreaksTime);
+                cmd.Parameters.AddWithValue("@doneTotalTime", o.doneTotalTime);
+                cmd.Parameters.AddWithValue("@useIntAddress", o.useIntAddress);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        internal void updateAddresses(List<Address> orderAddresses)
+        {
+            String sql = "UPDATE addresses SET orderId=@orderId, addrLine=@addrLine, city=@city, zip=@zip, province=@province, " +
+                "floor=@floor, elevator=@elevator, stairs=@stairs, isBilling=@isBilling, addrType=@addrType, notes=@notes " +
+                    "WHERE id=@id;";
+
+            MySqlTransaction myTrans;
+            myTrans = conn.BeginTransaction();
+            try
+            {
+                foreach (Address a in orderAddresses)
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", a.id);
+                        cmd.Parameters.AddWithValue("@orderId", a.orderId);
+                        cmd.Parameters.AddWithValue("@addrLine", a.addrLine);
+                        cmd.Parameters.AddWithValue("@city", a.city);
+                        cmd.Parameters.AddWithValue("@zip", a.zip);
+                        cmd.Parameters.AddWithValue("@province", a.province);
+                        cmd.Parameters.AddWithValue("@floor", a.floor);
+                        cmd.Parameters.AddWithValue("@elevator", a.elevator);
+                        cmd.Parameters.AddWithValue("@stairs", a.stairs);
+                        cmd.Parameters.AddWithValue("@isBilling", a.isBilling);
+                        cmd.Parameters.AddWithValue("@addrType", a.addrType+"");
+                        cmd.Parameters.AddWithValue("@notes", a.notes);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                myTrans.Commit();
+                
+            }
+            catch (Exception e)
+            {
+                myTrans.Rollback();
+                throw new InvalidDataException(e.ToString());
+            }
+        }
+
+        internal long insertAddresses(List<Address> orderAddresses)
+        {
+            //Creating DataTable to insert all three addresses by one query
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add(new DataColumn("orderId", typeof(long)));
+            dt.Columns.Add(new DataColumn("addrLine", typeof(string)));
+            dt.Columns.Add(new DataColumn("city", typeof(string)));
+            dt.Columns.Add(new DataColumn("zip", typeof(string)));
+            dt.Columns.Add(new DataColumn("province", typeof(string)));
+            dt.Columns.Add(new DataColumn("floor", typeof(int)));
+            dt.Columns.Add(new DataColumn("elevator", typeof(int)));
+            dt.Columns.Add(new DataColumn("stairs", typeof(int)));
+            dt.Columns.Add(new DataColumn("isBilling", typeof(int)));
+            dt.Columns.Add(new DataColumn("addrType", typeof(String)));
+            dt.Columns.Add(new DataColumn("notes", typeof(String)));
+
+            foreach (Address a in orderAddresses)
+                dt.Rows.Add(new string[] { a.orderId+"", a.addrLine, a.city, a.zip, a.province, a.floor+"", a.elevator ? "1":"0",
+                    a.stairs ? "1": "0", a.isBilling? "1":"0", a.addrType+"", a.notes });
+
+            String sql = "INSERT INTO addresses (orderId, addrLine, city, zip, province, floor, elevator, stairs, " +
+                "isBilling, addrType, notes) VALUES ";
+            int x = 0;
+            String comma;
+            foreach (DataRow row in dt.Rows)
+            {
+                comma =  x == 0 ? "" : ",";
+                x++;
+                sql += String.Format(@"{0}('{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')",
+                                          comma,
+                                          row["orderId"],
+                                          row["addrLine"],
+                                          row["city"],
+                                          row["zip"],
+                                          row["province"],
+                                          row["floor"],
+                                          row["elevator"],
+                                          row["stairs"],
+                                          row["isBilling"],
+                                          row["addrType"],
+                                          row["notes"]
+                                          );
+            }
+            sql = sql + "; SELECT LAST_INSERT_ID();";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
                 long id = Convert.ToInt32(cmd.ExecuteScalar());
                 return id;
             }

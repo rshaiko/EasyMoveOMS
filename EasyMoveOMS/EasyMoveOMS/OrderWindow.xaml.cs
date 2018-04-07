@@ -27,7 +27,7 @@ namespace EasyMoveOMS
     {
         //DECLARATIONS
         Order currentOrder;
-        List <Address> orderAddresses = new List<Address>();
+        List <Address> orderAddresses = new List<Address>() { new Address(), new Address(), new Address() };
         Order.OrderStatus os;
         Client orderClient;
         Truck orderTruck;
@@ -36,6 +36,7 @@ namespace EasyMoveOMS
         bool isValid = false;
         bool isNewOrder=false;
         bool isNewClient = true;
+        //bool isFirstAddrInsert = false;
         bool tbZipEventsOn = true; //off events if not manual changes
         bool cbDoneEventsOn = true; //off events if not manual changes
         bool movingDateIsChanged = false;
@@ -48,6 +49,9 @@ namespace EasyMoveOMS
         //Regex for Canadian Postal Code
         static String rexZip = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
         static Regex rZip = new Regex(rexZip);
+        //Regex for Canadian Province
+        static String rexProv = @"^(?:AB|BC|MB|N[BLTSU]|ON|PE|QC|SK|YT)$";
+        static Regex rProv = new Regex(rexProv);
         
         //Regex for Email
         //static String rexEmail = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
@@ -57,8 +61,8 @@ namespace EasyMoveOMS
         //MOVING INFORMATION
         long orderId, truckId;
         DateTime moveDate;
-        TimeSpan moveTime, maxTime, minTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
-        int startHour, startMinute, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
+        TimeSpan moveTime, maxTime, minTime, workTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
+        int startHour, startMinute, workTimeH, workTimeM, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
         String phoneHome, phoneWork, email, googleTime, googleDistance;
         int workers;
         bool payPerHour;
@@ -84,6 +88,7 @@ namespace EasyMoveOMS
         //ADDRESS INFORMATION 
         String addrLine, addrCity, addrProvince, addrZip, addrNotes;
         int addrFloor;
+        bool useIntAddress;
         bool addrStairs, addrElevator, addrIsBilling;
         Address.AddrType addrType;
 
@@ -93,11 +98,15 @@ namespace EasyMoveOMS
             currentOrder = order;
             if (currentOrder == null)  
             {
+                currentOrder = new Order();
                 isNewOrder = true;
                 orderClient = new Client();
                 orderClient.id = 0;
                 orderTruck = new Truck();
                 orderTruck.id = 0;
+                //orderAddresses.Add(new Address());
+                //orderAddresses.Add(new Address());
+                //orderAddresses.Add(new Address());
             }
             else
             {
@@ -122,37 +131,120 @@ namespace EasyMoveOMS
         //SAVE
         private void btSave_Click(object sender, RoutedEventArgs e)
         {
+            String confirmation = "";
+
             isValid = false;
             validateOrder();
             if (!isValid) return;
-            String confirmation;
 
-            //Save new Client if it is NEW
+            // ==> Save new Client if it is NEW
             if (orderClient.id == 0)
             {
+                orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
                 try
                 {
                     clientId = MainWindow.db.saveNewClient(orderClient);
                     orderClient.id = clientId;
-                    confirmation = "1) Database: New client " + orderClient.name + " was saved \n";
-                    System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
+                    confirmation = "==> Database: New client <" + orderClient.name + "> was saved\n";
+                    //System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
                     tbClient.IsEnabled = false;
                     tbEmail.IsEnabled = false;
                     tbPhoneH.IsEnabled = false;
                     tbPhoneW.IsEnabled = false;
+                    btSelectClient.Content = "Edit/Change";
                 }
-                catch (SqlException er)
+                catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show("Database error. New client was not added! \n" + er.Message);
+                    System.Windows.MessageBox.Show("Database: Error saving order data \n" + er.Message);
                     return;
                 }
             }
 
-            if (isNewOrder) 
+            // ==> SAVE ORDER data (or create new) in the database
+            if (isNewOrder) currentOrder = new Order();
+            fillCurrentOrderFromForm();
+            if (isNewOrder)
             {
-                currentOrder = new Order();
-                currentOrder.id = 0;
+                try
+                {
+                    orderId = MainWindow.db.saveNewOrder(currentOrder);
+                    currentOrder.id = orderId;
+                    isNewOrder = false;
+                    lblTitle.Content = "Order #" + currentOrder.id;
+                    confirmation += "==> Database: New Order #" + currentOrder.id + " was created.\n";
+                }
+                catch (MySqlException ex)
+                {
+                    System.Windows.MessageBox.Show(confirmation + "Database error. Error saving new order.\n" + ex.Message);
+                }
             }
+            else
+            {
+                try
+                {
+                    MainWindow.db.updateOrder(currentOrder);
+                    confirmation += "==> Order #" + currentOrder.id + " - Saved Ok\n";
+                    //System.Windows.MessageBox.Show(confirmation);
+                }
+                catch (MySqlException ex)
+                {
+                    System.Windows.MessageBox.Show(confirmation + "Order - Error!\nAddresses - Error!" + ex.Message);
+                }
+
+            }
+
+            // ==> SAVE ADDRESS data 
+            if (orderAddresses[0].id==0)
+            {
+                // initial (new addresses) insert into database
+                try
+                {
+                    foreach (Address addr in orderAddresses)
+                    {
+                        addr.orderId = currentOrder.id;
+                    }
+                    long lastId = MainWindow.db.insertAddresses(orderAddresses);
+
+                    //changing id-s from 0 to real
+                    orderAddresses[0].id = lastId;
+                    orderAddresses[1].id = lastId+1;
+                    orderAddresses[2].id = lastId+2;
+                    confirmation += "Addresses - Ok";
+                    System.Windows.MessageBox.Show(confirmation);
+                }
+                catch (MySqlException ex)
+                {
+                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                }
+            }
+            else // order is already saved
+            {
+                try
+                {
+                    //foreach (Address a in orderAddresses)
+                    //{
+                        MainWindow.db.updateAddresses(orderAddresses);
+                    //}
+                    confirmation += "Addresses - Ok";
+                    System.Windows.MessageBox.Show(confirmation);
+                }
+                catch (MySqlException ex)
+                {
+                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                }
+                catch (InvalidDataException ex)
+                {
+                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                }
+            }
+            
+
+
+
+        }
+
+        private void fillCurrentOrderFromForm()
+        {
             currentOrder.orderAddresses = orderAddresses;
             currentOrder.moveDate = moveDate;
             currentOrder.moveTime = moveTime;
@@ -165,6 +257,7 @@ namespace EasyMoveOMS
             currentOrder.maxTime = maxTime;
             currentOrder.minTime = minTime;
             currentOrder.deposit = deposit;
+            currentOrder.workTime = workTime;
             currentOrder.travelTime = travelTime;
             currentOrder.arriveTimeFrom = arriveTimeFrom;
             currentOrder.arriveTimeTo = arriveTimeTo;
@@ -189,20 +282,7 @@ namespace EasyMoveOMS
             currentOrder.doneEndTime = doneEndTime;
             currentOrder.doneBreaksTime = doneBreaksTime;
             currentOrder.doneTotalTime = doneTotalTime;
-
-            //Save new order
-            try
-            {
-                orderId = MainWindow.db.saveNewOrder(currentOrder);
-                currentOrder.id = orderId;
-                isNewOrder = false;
-                lblTitle.Content = "Order #" + currentOrder.id;
-            }
-            catch(MySqlException ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
-            }
-
+            currentOrder.useIntAddress = useIntAddress;
         }
 
         private void validateOrder()
@@ -237,7 +317,7 @@ namespace EasyMoveOMS
                 moveTime = new TimeSpan(startHour, startMinute, 0);
 
                 // ==> CUSTOMER
-                if (orderClient == null)
+                if (orderClient.id == 0)
                 {
                     clientName = tbClient.Text;
                     clientPhoneH = tbPhoneH.Text;
@@ -258,10 +338,9 @@ namespace EasyMoveOMS
                         tbEmail.Background = Brushes.Red;
                         throw new InvalidDataException("Entered email is not valid");
                     }
-                    if (isNewClient)
-                    {
-                        orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
-                    }
+                    
+                    
+                    
                 }
 
                 // ==> TRUCK AND WORKERS
@@ -333,6 +412,20 @@ namespace EasyMoveOMS
                 }
                 if (!int.TryParse(cbTravelMinutes.Text, out travelTimeM )) travelTimeM = 0 ;
                 travelTime = new TimeSpan(travelTimeH, travelTimeM, 0);
+
+                //WORK TIME
+                if (!int.TryParse(tbWorkTimeH.Text, out workTimeH))
+                {
+                    tbWorkTimeH.Background = Brushes.Red;
+                    return;
+                }
+                if (workTimeH < 0)
+                {
+                    tbWorkTimeH.Background = Brushes.Red;
+                    return;
+                }
+                if (!int.TryParse(cbTravelMinutes.Text, out workTimeM )) workTimeM = 0 ;
+                workTime = new TimeSpan(workTimeH, workTimeM, 0);
 
                 //ARRIVE TIME
                 //--> from
@@ -435,7 +528,7 @@ namespace EasyMoveOMS
                 else throw new InvalidDataException("Order status is not selected");
 
                 // ADDRESSES TO the LIST
-                orderAddresses.Clear();
+
                 // ==> Actual address
                 addrIsBilling = (cbIsBillingAct.IsChecked == true) ?  true: false;
                 if (tbAddrLineAct.Text == "")
@@ -464,7 +557,7 @@ namespace EasyMoveOMS
                 }
                 addrCity = tbCityAct.Text;
 
-                addrProvince = cbProvinceAct.Text;
+                if (checkProvince(cbProvinceAct)) addrProvince = cbProvinceAct.Text.ToUpper();
 
                 addrZip = tbZipAct.Text;
                 if (addrZip == "")
@@ -478,9 +571,11 @@ namespace EasyMoveOMS
                 }
                 addrNotes = tbNotesAct.Text;
                 addrType = Address.AddrType.Actual;
-                //add act address to the list
-                orderAddresses.Add(new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes));
+                //new actual address 
+                Address newActual = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
 
+                newActual.id = orderAddresses[0].id;
+                newActual.orderId = orderAddresses[0].orderId;
 
                 // ==> Destination address
                 addrIsBilling = (cbIsBillingDest.IsChecked == true) ? true : false;
@@ -510,8 +605,8 @@ namespace EasyMoveOMS
                 }
                 addrCity = tbCityDest.Text;
 
-                addrProvince = cbProvinceDest.Text;
-
+                if (checkProvince(cbProvinceDest)) addrProvince = cbProvinceDest.Text.ToUpper();
+                
                 addrZip = tbZipDest.Text;
                 if (addrZip == "")
                 {
@@ -525,13 +620,16 @@ namespace EasyMoveOMS
                 addrNotes = tbNotesDest.Text;
                 addrType = Address.AddrType.Destination;
                 //add dest address to the list
-                orderAddresses.Add(new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes));
-
-
+                Address newDestination = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
+                newDestination.id = orderAddresses[1].id;
+                newDestination.orderId = orderAddresses[1].orderId;
+                
                 // ==> Intermediate address
-                addrIsBilling = (cbIsBillingInt.IsChecked == true) ? true : false;
+                useIntAddress = false;
                 if (cbUseIntermediateAddress.IsChecked == true)
                 {
+                    useIntAddress = true;
+                    addrIsBilling = (cbIsBillingInt.IsChecked == true) ? true : false;
                     if (tbAddrLineInt.Text == "")
                     {
                         throw new InvalidDataException("Customer intermediate address is missing");
@@ -558,7 +656,7 @@ namespace EasyMoveOMS
                     }
                     addrCity = tbCityInt.Text;
 
-                    addrProvince = cbProvinceInt.Text;
+                    if (checkProvince(cbProvinceInt)) addrProvince = cbProvinceInt.Text.ToUpper();
 
                     addrZip = tbZipInt.Text;
                     if (addrZip == "")
@@ -572,12 +670,27 @@ namespace EasyMoveOMS
                     }
                     addrNotes = "";
                     addrType = Address.AddrType.Intermediate;
-                    //add int address to the list
+                    
                     orderAddresses.Add(new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes));
                 }
+                else
+                {
+                    useIntAddress = false;
+                    addrLine = ""; addrCity = ""; addrProvince = "QC"; addrNotes = "";
+                    addrZip = ""; addrFloor = 1; addrStairs = false;
+                    addrElevator = false; addrIsBilling = false; addrType = Address.AddrType.Intermediate;
+                }
+                //add int address to the list
+                Address newIntermediate = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
+                newIntermediate.id = orderAddresses[2].id;
+                newIntermediate.orderId = orderAddresses[2].orderId;
+                orderAddresses.Clear();
+                orderAddresses.Add(newActual);
+                orderAddresses.Add(newDestination);
+                orderAddresses.Add(newIntermediate);
 
-                isValid = true; // All order information is valid
-
+                // HERE ALL order information is valid
+                isValid = true; 
             }
             catch (InvalidDataException ex)
             {
@@ -585,6 +698,19 @@ namespace EasyMoveOMS
                 System.Windows.MessageBox.Show(ex.Message);
                 return; // MAYBE 
             }
+        }
+
+        private bool checkProvince(ComboBox cb)
+        {
+            string pr = cb.Text.ToUpper();
+            Match mProv = rProv.Match(pr);
+            if (!mProv.Success)
+            {
+                cb.Background = Brushes.Red;
+                throw new InvalidDataException("Invalid province code entered");
+            }
+            cb.Background = Brushes.LightGreen;
+            return true;
         }
 
         private int getHours(ComboBox cbH)
@@ -708,6 +834,11 @@ namespace EasyMoveOMS
 
         }
 
+        private void cbProvince_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((ComboBox)sender).Background = Brushes.White;
+        }
+
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
         {
             cbDoneEventsOn = false;
@@ -759,6 +890,11 @@ namespace EasyMoveOMS
             contactOnDateIsChanged = false;
 
             cbDoneEventsOn = true;
+        }
+
+        private void tbWorkTimeH_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            tbWorkTimeH.Background = Brushes.White;
         }
 
         //Calculation of total working time for the DONE order
@@ -1004,6 +1140,10 @@ namespace EasyMoveOMS
         {
             getNewSpinValue(tbMinHours, e);
         }
+        private void spinWorkTimeH_Spin(object sender, SpinEventArgs e)
+        {
+            getNewSpinValue(tbWorkTimeH, e);
+        }
 
         private void getNewSpinValue(TextBox tb, SpinEventArgs e)
         {
@@ -1039,7 +1179,7 @@ namespace EasyMoveOMS
 
         private void tbZipInt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tbZipEventsOn) checkZip(tbZipDest.Text, 2, sender);
+            if (tbZipEventsOn) checkZip(tbZipInt.Text, 2, sender);
         }
 
         private void checkZip(string tmp, int i, object sender)
@@ -1049,6 +1189,13 @@ namespace EasyMoveOMS
             if (mZip.Success)
             {
                 zipsOk[i] = true;
+                //calculateGoogle
+                if (tb.Background != Brushes.LightGreen)
+                {
+                    //calculate Google Data
+                    googleData(tmp, i);
+                }
+
                 tb.Background = Brushes.LightGreen;
                 tbZipEventsOn = false;
                 if (tb.Text.Length == 6)
@@ -1064,13 +1211,13 @@ namespace EasyMoveOMS
                     {
                         string json = Api.getJson(url);
                         GoogleMatrixData goo = JsonConvert.DeserializeObject<GoogleMatrixData>(json);
-                        tbGoogleDistance.Text = goo.rows[0].elements[0].distance.text.ToString();
-                        tbGoogleTime.Text = goo.rows[0].elements[0].duration.text.ToString();
+                        tbGoogleDistance.Content = goo.rows[0].elements[0].distance.text.ToString();
+                        tbGoogleTime.Content = goo.rows[0].elements[0].duration.text.ToString();
                     }
                     catch (Exception ex)
                     {
-                        tbGoogleDistance.Text = "";
-                        tbGoogleTime.Text = "";
+                        tbGoogleDistance.Content = "...";
+                        tbGoogleTime.Content = "...";
                     }
                 }
             }
@@ -1079,10 +1226,54 @@ namespace EasyMoveOMS
                 zipsOk[i] = false;
                 if (i == 0 || i == 1)
                 {
-                    tbGoogleDistance.Text = "";
-                    tbGoogleTime.Text = "";
+                    tbGoogleDistance.Content = "...";
+                    tbGoogleTime.Content = "...";
                 }
                 tb.Background = Brushes.LightYellow;
+            }
+        }
+
+        private void googleData(string tmp, int i)
+        {
+            if (i == 0)
+            {
+                string url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + Globals.truckParkingZip + "&destinations=" + tmp + "&key=" + Globals.APIkey;
+                try
+                {
+                    string json = Api.getJson(url);
+                    GoogleMatrixData goo = JsonConvert.DeserializeObject<GoogleMatrixData>(json);
+                    tbGoogleDistanceTo.Content = goo.rows[0].elements[0].distance.text.ToString();
+                    tbGoogleTimeTo.Content = goo.rows[0].elements[0].duration.text.ToString();
+                    String s;
+                    s = goo.origin_addresses.ToString();
+                    String[] sa = s.Split(',');
+                    cbProvinceAct.Text = sa[1];
+                    cbProvinceAct.Background = Brushes.LightGreen;
+                    tbCityAct.Text = sa[0];
+                    tbCityAct.Background = Brushes.LightGreen;
+                }
+                catch (Exception ex)
+                {
+                    tbGoogleDistanceTo.Content = "...";
+                    tbGoogleTimeTo.Content = "...";
+                    cbProvinceAct.Background = Brushes.OrangeRed;
+                    tbCityAct.Background = Brushes.OrangeRed;
+                }
+            }
+            else if (i == 1){
+                string url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + tmp + "&destinations=" + Globals.truckParkingZip + "&key=" + Globals.APIkey;
+                try
+                {
+                    string json = Api.getJson(url);
+                    GoogleMatrixData goo = JsonConvert.DeserializeObject<GoogleMatrixData>(json);
+                    tbGoogleDistanceFrom.Content = goo.rows[0].elements[0].distance.text.ToString();
+                    tbGoogleTimeFrom.Content = goo.rows[0].elements[0].duration.text.ToString();
+                }
+                catch (Exception ex)
+                {
+                    tbGoogleDistance.Content = "...";
+                    tbGoogleTime.Content = "...";
+                }
             }
         }
 
