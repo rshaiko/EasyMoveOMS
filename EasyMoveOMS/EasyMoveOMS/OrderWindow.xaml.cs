@@ -152,6 +152,7 @@ namespace EasyMoveOMS
                 {
                     clientId = Globals.db.saveNewClient(orderClient);
                     orderClient.id = clientId;
+                    currentOrder.orderClient = orderClient;
                     confirmation = "==> Database: New client <" + orderClient.name + "> was saved\n";
                     //System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
                     tbClient.IsEnabled = false;
@@ -216,6 +217,7 @@ namespace EasyMoveOMS
                     orderAddresses[0].id = lastId;
                     orderAddresses[1].id = lastId + 1;
                     orderAddresses[2].id = lastId + 2;
+                    
                     confirmation += "Addresses - Ok";
                     System.Windows.MessageBox.Show(confirmation);
                 }
@@ -241,6 +243,7 @@ namespace EasyMoveOMS
                     System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
                 }
             }
+            currentOrder.orderAddresses = orderAddresses;
         }
 
         private void fillCurrentOrderFromForm()
