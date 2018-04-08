@@ -27,48 +27,69 @@ namespace EasyMoveOMS
         public static double TPS=0.05;
         public static double TVQ = 0.09975;
         public static double totalTax = 1.14975;
-
+        long cAId=0;
+        long orId;
 
         public InvoiceWindow(Order currOrder)
         {
             InitializeComponent();
-           
-           
-            
-            //populating the fields
-            //lblName.Content = currentOrder.Name;   .......
 
-
-            //if(not fixed price)
-            lblTotalBeforeTax.Content = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
-            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
-            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
-            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax + "";
-
-
-
-            services.Add(new Service() { Description = "Moving", Price = 85, Quantity = 4, Amount = 85 * 4 });
-            services.Add(new Service() { Description = "Travel", Price = 85, Quantity = 1, Amount = 85 * 1 });
-
-            // services.Add(new Service() { Description = "", Amount = 0 });
-            //dgInvoice.Items.Add(new Service() { Description = "", Amount = 0 });
-
-            dgInvoice.ItemsSource = services;
-
-            for (int i = 0; i < services.Count; i++)
+            if (currOrder != null && currOrder.orderClient!=null && currOrder.orderAddresses!=null)
             {
-                sum += services[i].Amount;
+
+                //populating the fields
+                lblName.Content = currOrder.orderClient.name;
+                lblDate.Content = new DateTime();
+                foreach (Address a in currOrder.orderAddresses)
+                {
+                    if (a.isBilling)
+                    {
+                        tbAddress.Text = a.addrLine;
+                        tbCity.Text = a.city;
+                        cmbProvince.Text = a.province;
+                        tbPostal.Text = a.zip;
+                        cmbAddrType.SelectedValue = a.addrType;
+
+                        cAId =a.id;
+                    }
+                }
+                orId = currOrder.id;
+                //TimeSpan.Parse(time).TotalSeconds
+
+
+                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.workTime.TotalHours)) +
+                    (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
+                lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
+                lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
+                tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax + "";
+
+
+
+                services.Add(new Service() { Description = "Moving", Price = Convert.ToDouble(currOrder.pricePerHour),
+                    Quantity = Convert.ToDouble(currOrder.workTime.TotalHours), Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.workTime.TotalHours))
+                });
+                services.Add(new Service() { Description = "Travel", Price = Convert.ToDouble(currOrder.pricePerHour),
+                    Quantity = Convert.ToDouble(currOrder.travelTime.TotalHours),
+                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours))
+                });
+
+
+                dgInvoice.ItemsSource = services;
+
+                for (int i = 0; i < services.Count; i++)
+                {
+                    sum += services[i].Amount;
+                }
+                sum = Math.Round(sum, 2);
+
+                lblTotalBeforeTax.Content = sum;
+                lblTPS.Content = Math.Round(sum * TPS, 2);
+                lblTVQ.Content = Math.Round(sum * TVQ, 2);
+                tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
+
+                sum = 0;
+                btnReset.IsEnabled = false;
             }
-            sum= Math.Round(sum, 2);
-
-            lblTotalBeforeTax.Content = sum;
-            lblTPS.Content = Math.Round(sum * TPS, 2);
-            lblTVQ.Content = Math.Round(sum * TVQ, 2);
-            tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
-
-            sum = 0;
-            btnReset.IsEnabled = false;
-
         }
 
 
@@ -336,12 +357,15 @@ namespace EasyMoveOMS
 
             if ((total - localTotal) > 0)
             {
-                if (services[services.Count - 1].Description == "Other" || services[services.Count - 1].Description == "Discount")
+                for (int i = 0; i < services.Count; i++)
                 {
-                    services.RemoveAt(services.Count - 1);
+                    if (services[i].Description == "Other" || services[i].Description == "Discount")
+                    {
+                        services.RemoveAt(i);
 
-                    dgInvoice.ItemsSource = services;
-                    dgInvoice.Items.Refresh();
+                        dgInvoice.ItemsSource = services;
+                        dgInvoice.Items.Refresh();
+                    }
                 }
                     services.Add(new Service() { Description = "Other", Price = total - localTotal, Quantity = 1, Amount = (total - localTotal) * 1 });
                     
@@ -358,12 +382,15 @@ namespace EasyMoveOMS
 
             if ((localTotal - total) > 0)
             {
-                if (services[services.Count - 1].Description == "Other" || services[services.Count - 1].Description == "Discount")
+                for (int i = 0; i < services.Count; i++)
                 {
-                    services.RemoveAt(services.Count - 1);
+                    if (services[i].Description == "Other" || services[i].Description == "Discount")
+                    {
+                        services.RemoveAt(i);
 
-                    dgInvoice.ItemsSource = services;
-                    dgInvoice.Items.Refresh();
+                        dgInvoice.ItemsSource = services;
+                        dgInvoice.Items.Refresh();
+                    }
                 }
                 services.Add(new Service() { Description = "Discount", Price = localTotal - total, Quantity = 1, Amount = (localTotal - total) * 1 });
                 dgInvoice.ItemsSource = services;
@@ -409,27 +436,33 @@ namespace EasyMoveOMS
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-        //    public long id { get; set; }
-        //public long orderId { get; set; }
-        //public DateTime invoiceDate { get; set; }
-        //public long clientAddrId { get; set; }
-        //public bool noTax { get; set; }
-
-
+       
             long id= 0;
-            long orId = 1;//order
-            DateTime invDate = new DateTime();//order
-            long clientAddrId = 1;
-            bool noT= (bool)chbCalculateTax.IsChecked;
-            Invoice inv = new Invoice(id, orId, invDate, clientAddrId, noT);
+            long orId1 = orId;// currOrder
+            DateTime invDate = new DateTime();
+            long clientAddrId;
+            if (cAId != 0)
+            {
+              clientAddrId = cAId;// currOrder
+            }
+            else
+            {//adding new address to DB
+                string addr = tbAddress.Text;
+                string city = tbCity.Text;
+                string pc = tbPostal.Text;
+                string pr = cmbProvince.Text;
+                bool isB = true;
+                Address.AddrType at = (Address.AddrType)Enum.Parse(typeof(Address.AddrType), cmbAddrType.Text); 
+                Address a = new Address(id,orId1, addr, city, pc, pr, 1, false, false,isB, at,"");
+
+                clientAddrId = Globals.db.AddNewBillingAddress(a);
+            }
+                bool noT= (bool)chbCalculateTax.IsChecked;
+            Invoice inv = new Invoice(id, orId1, invDate, clientAddrId, noT);
            
 
             long  invoiceId= Globals.db.AddInvoice(inv);
-
-            
-
             long id1 = 0;
-
             string[] name = new string[services.Count];
             double[] price = new double[services.Count];
             for (int i = 0; id < services.Count - 1; i++)
@@ -438,7 +471,7 @@ namespace EasyMoveOMS
                 price[i] = services[i].Amount;
 
                 InvoiceItem ii = new InvoiceItem(id1, invoiceId, name[i], price[i]);
-               // Globals.db.AddInvoiceItems(ii);
+                Globals.db.AddInvoiceItems(ii);
             }
             
 
