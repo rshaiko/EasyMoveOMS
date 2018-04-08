@@ -49,6 +49,7 @@ namespace EasyMoveOMS
         //Regex for Canadian Postal Code
         static String rexZip = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
         static Regex rZip = new Regex(rexZip);
+        
         //Regex for Canadian Province
         static String rexProv = @"^(?:AB|BC|MB|N[BLTSU]|ON|PE|QC|SK|YT)$";
         static Regex rProv = new Regex(rexProv);
@@ -63,7 +64,9 @@ namespace EasyMoveOMS
         DateTime moveDate;
         TimeSpan moveTime, maxTime, minTime, workTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
         int startHour, startMinute, workTimeH, workTimeM, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
-        String phoneHome, phoneWork, email, googleTime, googleDistance;
+        int[] minGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of minutes
+        int[] meterGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google distance - arr of seconds
+        String phoneHome, phoneWork, email, googleTime, googleDistance;  
         int workers;
         bool payPerHour;
         decimal pricePerHour, deposit;
@@ -131,8 +134,12 @@ namespace EasyMoveOMS
         //SAVE
         private void btSave_Click(object sender, RoutedEventArgs e)
         {
-            String confirmation = "";
+            saveOrder();
+        }
 
+        private void saveOrder()
+        {
+            String confirmation = "";
             isValid = false;
             validateOrder();
             if (!isValid) return;
@@ -143,7 +150,7 @@ namespace EasyMoveOMS
                 orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
                 try
                 {
-                    clientId = MainWindow.db.saveNewClient(orderClient);
+                    clientId = Globals.db.saveNewClient(orderClient);
                     orderClient.id = clientId;
                     confirmation = "==> Database: New client <" + orderClient.name + "> was saved\n";
                     //System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
@@ -167,7 +174,7 @@ namespace EasyMoveOMS
             {
                 try
                 {
-                    orderId = MainWindow.db.saveNewOrder(currentOrder);
+                    orderId = Globals.db.saveNewOrder(currentOrder);
                     currentOrder.id = orderId;
                     isNewOrder = false;
                     lblTitle.Content = "Order #" + currentOrder.id;
@@ -182,7 +189,7 @@ namespace EasyMoveOMS
             {
                 try
                 {
-                    MainWindow.db.updateOrder(currentOrder);
+                    Globals.db.updateOrder(currentOrder);
                     confirmation += "==> Order #" + currentOrder.id + " - Saved Ok\n";
                     //System.Windows.MessageBox.Show(confirmation);
                 }
@@ -194,7 +201,7 @@ namespace EasyMoveOMS
             }
 
             // ==> SAVE ADDRESS data 
-            if (orderAddresses[0].id==0)
+            if (orderAddresses[0].id == 0)
             {
                 // initial (new addresses) insert into database
                 try
@@ -203,12 +210,12 @@ namespace EasyMoveOMS
                     {
                         addr.orderId = currentOrder.id;
                     }
-                    long lastId = MainWindow.db.insertAddresses(orderAddresses);
+                    long lastId = Globals.db.insertAddresses(orderAddresses);
 
                     //changing id-s from 0 to real
                     orderAddresses[0].id = lastId;
-                    orderAddresses[1].id = lastId+1;
-                    orderAddresses[2].id = lastId+2;
+                    orderAddresses[1].id = lastId + 1;
+                    orderAddresses[2].id = lastId + 2;
                     confirmation += "Addresses - Ok";
                     System.Windows.MessageBox.Show(confirmation);
                 }
@@ -221,10 +228,7 @@ namespace EasyMoveOMS
             {
                 try
                 {
-                    //foreach (Address a in orderAddresses)
-                    //{
-                        MainWindow.db.updateAddresses(orderAddresses);
-                    //}
+                    Globals.db.updateAddresses(orderAddresses);
                     confirmation += "Addresses - Ok";
                     System.Windows.MessageBox.Show(confirmation);
                 }
@@ -237,10 +241,6 @@ namespace EasyMoveOMS
                     System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
                 }
             }
-            
-
-
-
         }
 
         private void fillCurrentOrderFromForm()
@@ -826,7 +826,8 @@ namespace EasyMoveOMS
         
         private void tbInvoice_Click(object sender, RoutedEventArgs e)
         {
-            InvoiceWindow dlg1 = new InvoiceWindow();
+            saveOrder();
+            InvoiceWindow dlg1 = new InvoiceWindow(currentOrder);
             if (dlg1.ShowDialog() == true)
             {
 
@@ -1242,21 +1243,27 @@ namespace EasyMoveOMS
                 {
                     string json = Api.getJson(url);
                     GoogleMatrixData goo = JsonConvert.DeserializeObject<GoogleMatrixData>(json);
+                    if(goo.rows[0].elements[0].status!="OK") throw new Exception();
                     tbGoogleDistanceTo.Content = goo.rows[0].elements[0].distance.text.ToString();
                     tbGoogleTimeTo.Content = goo.rows[0].elements[0].duration.text.ToString();
+                    int.TryParse(goo.rows[0].elements[0].distance.value+"", out meterGoo[0]);
+                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out minGoo[0]);
+                    tryCalculateGooEstimation();
                     String s;
-                    s = goo.origin_addresses.ToString();
+                    s = goo.destination_addresses[0];
                     String[] sa = s.Split(',');
-                    cbProvinceAct.Text = sa[1];
-                    cbProvinceAct.Background = Brushes.LightGreen;
+                    cbProvinceAct.Text = sa[1].Substring(1, 2);
                     tbCityAct.Text = sa[0];
                     tbCityAct.Background = Brushes.LightGreen;
+
                 }
                 catch (Exception ex)
                 {
+                    meterGoo[0] = 0;
+                    minGoo[0] = 0;
+                    tryCalculateGooEstimation();
                     tbGoogleDistanceTo.Content = "...";
                     tbGoogleTimeTo.Content = "...";
-                    cbProvinceAct.Background = Brushes.OrangeRed;
                     tbCityAct.Background = Brushes.OrangeRed;
                 }
             }
@@ -1266,14 +1273,53 @@ namespace EasyMoveOMS
                 {
                     string json = Api.getJson(url);
                     GoogleMatrixData goo = JsonConvert.DeserializeObject<GoogleMatrixData>(json);
+                    if (goo.rows[0].elements[0].status != "OK") throw new Exception();
                     tbGoogleDistanceFrom.Content = goo.rows[0].elements[0].distance.text.ToString();
                     tbGoogleTimeFrom.Content = goo.rows[0].elements[0].duration.text.ToString();
+                    int.TryParse(goo.rows[0].elements[0].distance.value + "", out meterGoo[1]);
+                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out minGoo[1]);
+                    tryCalculateGooEstimation();
+                    String s;
+                    s = goo.origin_addresses[0];
+                    String[] sa = s.Split(',');
+                    cbProvinceDest.Text = sa[1].Substring(1, 2);
+                    tbCityDest.Text = sa[0];
+                    tbCityDest.Background = Brushes.LightGreen;
+
                 }
                 catch (Exception ex)
                 {
-                    tbGoogleDistance.Content = "...";
-                    tbGoogleTime.Content = "...";
+                    meterGoo[1] = 0;
+                    minGoo[1] = 0;
+                    tryCalculateGooEstimation();
+                    tbGoogleDistanceFrom.Content = "...";
+                    tbGoogleTimeFrom.Content = "...";
+                    tbCityDest.Background = Brushes.OrangeRed;
                 }
+            }
+        }
+
+        private void tryCalculateGooEstimation()
+        {
+            if (meterGoo[0] > 0 && meterGoo[1] > 0 && minGoo[0] > 0 && minGoo[1] > 0)
+            {
+                meterGoo[2] = meterGoo[0] + meterGoo[1];
+                double fkm = (double)meterGoo[2] / 1000;
+                String km = Math.Round(fkm, 1) + " km";
+
+                minGoo[2] = minGoo[0] + minGoo[1];
+                double h = minGoo[2] / 3600;
+                String hh = Math.Round(h, 0) + " h  ";
+                double m = (minGoo[2] - (h * 3600)) / 60;
+                String mm = Math.Round(m, 0) + " m";
+
+                tbGoogleDistanceTT.Content = km;
+                tbGoogleTimeTT.Content = hh + mm;
+            }
+            else
+            {
+                tbGoogleDistanceTT.Content = "......";
+                tbGoogleTimeTT.Content = "......";
             }
         }
 

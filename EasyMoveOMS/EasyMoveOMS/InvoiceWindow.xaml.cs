@@ -29,7 +29,7 @@ namespace EasyMoveOMS
         public static double totalTax = 1.14975;
 
 
-        public InvoiceWindow()
+        public InvoiceWindow(Order currOrder)
         {
             InitializeComponent();
            

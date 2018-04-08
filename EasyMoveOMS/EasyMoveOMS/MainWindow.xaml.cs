@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using EasyMoveOMS.Properties;
 
 
+
 namespace EasyMoveOMS
 {
     /// <summary>
@@ -23,20 +24,20 @@ namespace EasyMoveOMS
     /// </summary>
     public partial class MainWindow : Window
     {
-       public static Database db;
+       //public static Database db;
 
         public MainWindow()
         {
             try
             {
              
-                db = new Database();
+                Globals.db = new Database();
                 InitializeComponent();
                 //reloadClientsList();
                 chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
 
                 //Rom@
-                Globals.truckList = db.GetWorkingTrucks();
+                Globals.truckList = Globals.db.GetWorkingTrucks();
 
             }
             catch (SqlException e)
@@ -59,7 +60,7 @@ namespace EasyMoveOMS
 
         private void reloadClientsList()
         {
-            lvOrders.ItemsSource = db.GetAllClients();
+            lvOrders.ItemsSource = Globals.db.GetAllClients();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
