@@ -19,6 +19,7 @@ namespace EasyMoveOMS
         public TimeSpan maxTime { get; set; }
         
         public decimal deposit { get; set; }
+        public TimeSpan workTime { get; set; }
         public TimeSpan travelTime { get; set; }
         public TimeSpan arriveTimeFrom { get; set; }
         public TimeSpan arriveTimeTo { get; set; }
@@ -43,6 +44,7 @@ namespace EasyMoveOMS
         public TimeSpan doneEndTime { get; set; }
         public TimeSpan doneBreaksTime { get; set; }
         public TimeSpan doneTotalTime { get; set; }
+        public bool useIntAddress { get; set; }
 
         public List<Address> orderAddresses { get; set; } //= new List<Address>();
         public Client orderClient { get; set; }// = new Client();
@@ -55,16 +57,16 @@ namespace EasyMoveOMS
 
         public Order()
         {
-
+            id = 0;
         }
 
-        public Order ( long id, DateTime moveDate, TimeSpan moveTime, long truckId, int workers,
-            decimal pricePerHour, TimeSpan minTime, TimeSpan maxTime,  decimal deposit, TimeSpan travelTime, TimeSpan arriveTimeFrom, TimeSpan arriveTimeTo, int boxes, int beds, int sofas, int frigos, int wds, int desks, int tables,
-            int chairs, int other, bool oversized, bool overweight, bool fragile, bool expensive, String details, bool isPaid, OrderStatus orderStatus,
-            DateTime contactOnDate, TimeSpan doneStartTime, TimeSpan doneEndTime, TimeSpan doneBreaksTime, TimeSpan doneTotalTime)
-        {
+        //public Order ( long id, DateTime moveDate, TimeSpan moveTime, long truckId, int workers,
+        //    decimal pricePerHour, TimeSpan minTime, TimeSpan maxTime,  decimal deposit, TimeSpan travelTime, TimeSpan arriveTimeFrom, TimeSpan arriveTimeTo, int boxes, int beds, int sofas, int frigos, int wds, int desks, int tables,
+        //    int chairs, int other, bool oversized, bool overweight, bool fragile, bool expensive, String details, bool isPaid, OrderStatus orderStatus,
+        //    DateTime contactOnDate, TimeSpan doneStartTime, TimeSpan doneEndTime, TimeSpan doneBreaksTime, TimeSpan doneTotalTime)
+        //{
 
-        }
+        //}
 
         
     }

@@ -6,25 +6,25 @@
         xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="New order - EasyMove OMS" Height="680" Width="1200" FontSize="12"
+        Title="New order - EasyMove OMS" Height="750" Width="1200" FontSize="12"
         WindowStartupLocation="CenterScreen">
     <DockPanel>
-        <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="20" Content="New order | Order  #120055"  HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
+        <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="25" Padding="0,5,0,0" FontWeight="DemiBold" FontFamily="Garamond"  Content="New order"  HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
         <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0,10,0,10">
 
-            <Button Content="Cancel" Width="110" Height="30"/>
+            <Button Content="Cancel" Width="110" Height="30" BorderBrush="#356894" />
             <Label/>
             <Label/>
-            <Button Name="btSave" Click="btSave_Click" Content="Save" Width="110" Height="30"/>
+            <Button Name="btSave" Click="btSave_Click" Content="Save" Width="110" Height="30" BorderBrush="#356894"/>
             <Label/>
             <Label/>
-            <Button Content="Export to..." Width="110" Height="30"/>
+            <Button Content="Export to..." Width="110" Height="30" BorderBrush="#356894"/>
             <Label/>
             <Label/>
-            <Button Name="tbInvoice" Click="tbInvoice_Click" Content="Create invoice" Width="110" Height="30"/>
+            <Button Name="tbInvoice" Click="tbInvoice_Click" Content="Create invoice" Width="110" Height="30" BorderBrush="#356894"/>
         </WrapPanel>
-        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" BorderBrush="DarkBlue" BorderThickness="0,0,0,5" VerticalAlignment="Top" Margin="0"/>
-        <Label DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" BorderBrush="#d4d0c8" BorderThickness="0,5,0,0" VerticalAlignment="Top" Margin="0"/>
+        <Label DockPanel.Dock="Top" HorizontalAlignment="Stretch" BorderBrush="#356894" BorderThickness="0,0,0,5" VerticalAlignment="Top" Margin="0"/>
+        <Label DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" BorderBrush="#356894" BorderThickness="0,5,0,0" VerticalAlignment="Top" Margin="0"/>
 
         <Grid MaxWidth="1200" Background="#edeeef">
             <Grid.ColumnDefinitions>
@@ -37,6 +37,7 @@
                 <ColumnDefinition Width="25" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" MinWidth="364">
+                 <Label />
                 <Label Content="MOVING INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label />
                 <WrapPanel MinWidth="380">
@@ -106,20 +107,20 @@
                 <Label/>
                 <WrapPanel MinWidth="370" Height="23">
                     <Label Content="Price:   "  />
-                    <TextBox Name="tbPricePrHour" Height="23" Width="40" IsEnabled="False"/>
+                    <TextBox Name="tbPricePrHour" Height="23" Width="40" />
                     <Label Content="Max:"/>
-                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
-                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" IsEnabled="False"  />
-                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00" IsEnabled="False" >
+                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
+                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" />
+                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00">
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" Min:"/>
-                    <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" IsEnabled="False"/>
-                    <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" IsEnabled="False"  />
-                    <ComboBox Name="cbMinMinutes" Padding="3,3" Width="40" Text="00" IsEnabled="False" >
+                    <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
+                    <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" />
+                    <ComboBox Name="cbMinMinutes" Padding="3,3" Width="40" Text="00"  >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -128,9 +129,9 @@
 
                 </WrapPanel>
                 <Label/>
-
-                <Label BorderBrush="Gray" BorderThickness="0,0,0,2" Margin="0,0" Height="18" Padding="0,0" HorizontalContentAlignment="Center" Background="#d4d0c8" FontWeight="DemiBold">Google estimation</Label>
-                <Grid Background="#d4d0c8">
+                <Label/>
+                <Label Content="TIME AND DISTANCE" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
+                <Grid Width="340" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="2*" />
@@ -138,34 +139,44 @@
                         
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*"  />
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">From EasyMove to Client</Label>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left"> >> ... moving ... >></Label>
-                    <TextBox Name="tbGoogleTime" Grid.Column="1" Grid.Row="1" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
-                    <TextBox Name="tbGoogleDistance"  Grid.Column="2" Grid.Row="1" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">  EasyMove >> Client</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">  >> ... moving ... >></Label>
+                    <Label Name="tbGoogleTime" Grid.Column="1" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left" Height="23"  Content="..." Width="85"  Foreground="Black"/>
+                    <Label Name="tbGoogleDistance"  Grid.Column="2" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left"  Height="23" Content="..." Width="85"  Foreground="Black"/>
 
-                    <TextBox Name="tbGoogleTimeTo" Grid.Column="1" Grid.Row="0" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
-                    <TextBox Name="tbGoogleDistanceTo"  Grid.Column="2" Grid.Row="0" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <Label Name="tbGoogleTimeTo" Grid.Column="1" Grid.Row="0" Background="#edeeef" HorizontalAlignment="Left" Height="23"  Content="..." Width="85"  Foreground="Black"/>
+                    <Label Name="tbGoogleDistanceTo"  Grid.Column="2" Grid.Row="0" Background="#edeeef" HorizontalAlignment="Left"  Height="23" Content="..." Width="85"  Foreground="Black"/>
 
-                    <TextBox Name="tbGoogleTimeFrom" Grid.Column="1" Grid.Row="2" Background="#d4d0c8" HorizontalAlignment="Left" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
-                    <TextBox Name="tbGoogleDistanceFrom"  Grid.Column="2" Grid.Row="2" Background="#d4d0c8" HorizontalAlignment="Left"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <Label Name="tbGoogleTimeFrom" Grid.Column="1" Grid.Row="2" Background="#edeeef" HorizontalAlignment="Left" Height="23"  Content="..." Width="85"  Foreground="Black"/>
+                    <Label Name="tbGoogleDistanceFrom"  Grid.Column="2" Grid.Row="2" Background="#edeeef" HorizontalAlignment="Left"  Height="23" Content="..." Width="85" Foreground="Black"/>
 
-                    <TextBox Name="tbGoogleTimeTT" Grid.Column="1" Grid.Row="3" Background="#d4d0c8" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold" Height="23"  Text="" Width="85" IsEnabled="False" Foreground="Black"/>
-                    <TextBox Name="tbGoogleDistanceTT"  Grid.Column="2" Grid.Row="3" Background="#d4d0c8" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold"  Height="23" Text="" Width="85" IsEnabled="False" Foreground="Black"/>
+                    <Label Name="tbGoogleTimeTT" Grid.Column="1" Grid.Row="3" Background="#edeeef" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold" Height="23"  Content="......" Width="85" Foreground="Black"/>
+                    <Label Name="tbGoogleDistanceTT"  Grid.Column="2" Grid.Row="3" Background="#edeeef" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold"  Height="23" Content="......" Width="85"  Foreground="Black"/>
                     
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">From destination to EasyMove</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">  Destination >> EasyMove</Label>
                     <Label Padding="2,2" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" FontWeight="DemiBold">Estimated travel time</Label>
                 </Grid>
-                <Label Padding="0,3"></Label>
+                <Label Padding="0,5"></Label>
                 <WrapPanel MinWidth="370">
+                    <Label Content="Work time:" Height="23" VerticalAlignment="Top"/>
+                    <TextBox Name="tbWorkTimeH" Height="23" Text="3" TextChanged="tbWorkTimeH_TextChanged" Width="35" Background="OrangeRed"/>
+                    <wpfx:ButtonSpinner Name="spinWorkTimeH" Width="20" Spin="spinWorkTimeH_Spin"  />
+                    <ComboBox Name="cbWorkMinutes"  Width="40" Text="00" >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <Label/>
                     <Label Content="Travel time:" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Name="tbTravelTimeH" MouseEnter="tbTravelTimeH_MouseEnter" Height="23" Text="1" Width="22"/>
+                    <TextBox Name="tbTravelTimeH" MouseEnter="tbTravelTimeH_MouseEnter" Height="23" Text="1" Width="35"/>
                     <wpfx:ButtonSpinner Name="spinTravelTimeH" Width="20" Spin="spinTravelTimeH_Spin"  />
-                    <ComboBox Name="cbTravelMinutes"  Width="45" Text="00" >
+                    <ComboBox Name="cbTravelMinutes"  Width="40" Text="00" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
@@ -205,7 +216,7 @@
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    <Label Content=" and " Height="23" VerticalAlignment="Top"/>
+                    <Label Content="  and " Height="23" VerticalAlignment="Top"/>
                     <TextBox Name="tbArriveToH" MouseEnter="tbArriveToH_MouseEnter" Height="23"  Padding="2,3,0,0" Text="" Width="35"/>
                     <wpfx:ButtonSpinner Name="spinArriveToH" Width="20" Spin="spinArriveToH_Spin"  />
                     <ComboBox Name="cbArriveToM" MouseEnter="cbArriveFromM_MouseEnter" Padding="3,3" TabIndex="3" Width="40" Text="00" >
@@ -230,11 +241,12 @@
             </StackPanel>
 
             <GridSplitter Grid.Column="0" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
-            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
-            <GridSplitter Grid.Column="4" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Margin="3,0" Background="#356894" />
+            <GridSplitter Grid.Column="4" Width="5" HorizontalAlignment="Stretch" Margin="3,0" Background="#356894" />
             <GridSplitter Grid.Column="6" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
 
             <StackPanel Grid.Column="5" MinWidth="364">
+                <Label/>
                 <Label Content="ADDRESS INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <WrapPanel>
                     <Label Content="1. Customer actual address" Height="25" VerticalAlignment="Top" FontWeight="Bold" Margin="0,0"/>
@@ -263,9 +275,20 @@
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbCityAct" Height="23"  Text="LaSalle" Width="140"/>
                     <Label></Label>
-                    <ComboBox Name="cbProvinceAct" Width="45" Text="QC" IsEditable="True">
+                    <ComboBox Name="cbProvinceAct" TextBoxBase.TextChanged="cbProvince_TextChanged" Width="45" Text="QC" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="AB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="BC" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="MB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NS" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="PE" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="SK" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NL" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NT" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NU" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" Text="H8N 2K6" Width="80"/>
@@ -304,9 +327,20 @@
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbCityDest" Height="23"  Text="LaSalle" Width="140"/>
                     <Label></Label>
-                    <ComboBox Name="cbProvinceDest" Width="45" Text="QC" IsEditable="True">
+                    <ComboBox Name="cbProvinceDest" Width="45" Text="QC" TextBoxBase.TextChanged="cbProvince_TextChanged" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="AB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="BC" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="MB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NS" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="PE" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="SK" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NL" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NT" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NU" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23"  Text="H8N 2K6" Width="80"/>
@@ -347,15 +381,27 @@
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbCityInt" Height="23" Text="" Width="140" IsEnabled="False"/>
                     <Label></Label>
-                    <ComboBox Name="cbProvinceInt" Width="45" Text="QC"  IsEnabled="False" IsEditable="True">
+                    <ComboBox Name="cbProvinceInt" Width="45" Text="QC" TextBoxBase.TextChanged="cbProvince_TextChanged"  IsEnabled="False" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="AB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="BC" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="MB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NB" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NS" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="PE" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="SK" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NL" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NT" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="NU" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
                     <TextBox Name="tbZipInt" TextChanged="tbZipInt_TextChanged" Height="23" Text="" Width="80" IsEnabled="False"/>
                 </WrapPanel>
             </StackPanel>
             <StackPanel Grid.Column="3" MinWidth="364">
+                <Label/>
                 <Label Content="DESCRIPTION OF ITEMS TO MOVE" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label/>
                 <WrapPanel Height="23">
