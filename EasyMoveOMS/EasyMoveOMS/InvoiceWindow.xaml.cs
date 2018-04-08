@@ -24,6 +24,11 @@ namespace EasyMoveOMS
     {
         List<Service> services = new List<Service>();
         double sum = 0;
+        public static double TPS=0.05;
+        public static double TVQ = 0.09975;
+        public static double totalTax = 1.14975;
+
+
         public InvoiceWindow()
         {
             InitializeComponent();
@@ -36,9 +41,9 @@ namespace EasyMoveOMS
 
             //if(not fixed price)
             lblTotalBeforeTax.Content = (Convert.ToDouble("85")) * (Convert.ToDouble("4")) + "";//add travel time
-            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.05;
-            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.09975;
-            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.14975 + "";
+            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
+            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
+            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax + "";
 
 
 
@@ -54,13 +59,15 @@ namespace EasyMoveOMS
             {
                 sum += services[i].Amount;
             }
+            sum= Math.Round(sum, 2);
 
             lblTotalBeforeTax.Content = sum;
-            lblTPS.Content = sum * 0.05;
-            lblTVQ.Content = sum * 0.09975;
-            tbTotal.Text = sum * 1.14975 + "";
-            sum = 0;
+            lblTPS.Content = Math.Round(sum * TPS, 2);
+            lblTVQ.Content = Math.Round(sum * TVQ, 2);
+            tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
 
+            sum = 0;
+            btnReset.IsEnabled = false;
 
         }
 
@@ -74,7 +81,8 @@ namespace EasyMoveOMS
                  lblAmount.Content = rowSelected.Row[1].ToString();
              }
          }*/
-
+        
+            //int rowIndex;
         private void dgInvoice_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (e.EditAction == DataGridEditAction.Commit)
@@ -90,7 +98,7 @@ namespace EasyMoveOMS
 
                     if (bindingPath == "Price")
                     {
-                        int rowIndex = e.Row.GetIndex();
+                      int rowIndex = e.Row.GetIndex();
                         var el = e.EditingElement as TextBox;
 
 
@@ -103,7 +111,7 @@ namespace EasyMoveOMS
                             MessageBox.Show("Amount must be a number.");
                             return;
                         }
-                        services[rowIndex].Amount = price * services[rowIndex].Quantity;
+                        services[rowIndex].Amount = Math.Round(price * services[rowIndex].Quantity,2);
 
 
                         //recalculating the new total and other values
@@ -114,11 +122,14 @@ namespace EasyMoveOMS
                         {
                             sum += services[i].Amount;
                         }
+                        sum = Math.Round(sum, 2);
+
 
                         lblTotalBeforeTax.Content = sum;
-                        lblTPS.Content = sum * 0.05;
-                        lblTVQ.Content = sum * 0.09975;
-                        tbTotal.Text = sum * 1.14975 + "";
+                        lblTPS.Content = Math.Round(sum * TPS, 2);
+                        lblTVQ.Content = Math.Round(sum * TVQ, 2);
+                        tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
+
                         sum = 0;
 
                     }
@@ -146,11 +157,13 @@ namespace EasyMoveOMS
                         {
                             sum += services[i].Amount;
                         }
+                        sum = Math.Round(sum, 2);
+
 
                         lblTotalBeforeTax.Content = sum;
-                        lblTPS.Content = sum * 0.05;
-                        lblTVQ.Content = sum * 0.09975;
-                        tbTotal.Text = sum * 1.14975 + "";
+                        lblTPS.Content = Math.Round(sum * TPS, 2);
+                        lblTVQ.Content = Math.Round(sum * TVQ, 2);
+                        tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
 
                         sum = 0;
                     }
@@ -178,19 +191,19 @@ namespace EasyMoveOMS
                 {
                     lblTotalBeforeTax.Content = local;
                     
-                    lblTPS.Content = local * 0.05;
-                    lblTVQ.Content = local * 0.09975;
-                    tbTotal.Text = local * 1.14975 + "";
+                    lblTPS.Content = Math.Round(local * TPS, 2);
+                    lblTVQ.Content = Math.Round(local * TVQ, 2);
+                    tbTotal.Text = Math.Round(local * totalTax, 2) + "";
                     return;
                 }
                 MessageBox.Show("Discount must be a number.");
                 return;
             }
             double temp = local - local * discount / 100;//Convert.ToDouble(lblTotalBeforeTax.Content) - Convert.ToDouble(lblTotalBeforeTax.Content) * discount / 100;//sum - sum * discount / 100;
-            lblTotalBeforeTax.Content = temp;
-            lblTPS.Content = temp * 0.05;
-            lblTVQ.Content = temp * 0.09975;
-            tbTotal.Text = temp * 1.14975 + "";
+            lblTotalBeforeTax.Content = Math.Round(temp, 2);
+            lblTPS.Content = Math.Round(temp * TPS, 2);
+            lblTVQ.Content = Math.Round(temp * TVQ, 2);
+            tbTotal.Text = Math.Round(temp * totalTax, 2) + "";
 
 
         }
@@ -198,8 +211,9 @@ namespace EasyMoveOMS
         private void miDelete_Click(object sender, RoutedEventArgs e)
         {
             //dgInvoice.CancelEdit();
-                
-            
+            //if (dgInvoice.CancelEdit(DataGridEditingUnit.Cell)) { return; }
+
+            //if (rowIndex != (services.Count - 1)) { return; }
             MessageBoxResult result = MessageBox.Show("Would you like to delete the selected row?", "Alert", MessageBoxButton.YesNo);
             switch (result)
             {
@@ -229,10 +243,13 @@ namespace EasyMoveOMS
                             sum += services[i].Amount;
                         }
 
+                        sum = Math.Round(sum, 2);
+
+
                         lblTotalBeforeTax.Content = sum;
-                        lblTPS.Content = sum * 0.05;
-                        lblTVQ.Content = sum * 0.09975;
-                        tbTotal.Text = sum * 1.14975 + "";
+                        lblTPS.Content = Math.Round(sum * TPS, 2);
+                        lblTVQ.Content = Math.Round(sum * TVQ, 2);
+                        tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
 
                         sum = 0;
                     //}
@@ -265,39 +282,42 @@ namespace EasyMoveOMS
         }
 
         double localTotal;
-        //private void tbTotal_TextChanged(object sender, TextChangedEventArgs e)//if the total amount is agreed
-        //{
-        //    string value = tbTotal.Text;
-        //    double total;
+        private void tbTotal_TextChanged_1(object sender, TextChangedEventArgs e)//if the total amount is agreed
+        {
+            if(localTotal!=0)
+            lblLocalTotal.Content =localTotal;
+            btnReset.IsEnabled = true;
+            //string value = tbTotal.Text;
+            //double total;
 
-        //    if (!double.TryParse(value, out total))
-        //    {
+            //if (!double.TryParse(value, out total))
+            //{
 
-        //        MessageBox.Show("Discount must be a number.");
-        //        return;
-        //    }
-        //    if ((localTotal - total) > 0)
-        //    {
-        //        double temp = (localTotal - total) * 100 / localTotal;
+            //    MessageBox.Show("Discount must be a number.");
+            //    return;
+            //}
+            //if ((localTotal - total) > 0)
+            //{
+            //    double temp = (localTotal - total) * 100 / localTotal;
 
 
-        //        lblTotalBeforeTax.Content = (1 - temp / 100) * total;
-        //        lblTPS.Content = (1 - temp / 100) * total * 0.05;
-        //        lblTVQ.Content = (1 - temp / 100) * total * 0.09975;
+            //    lblTotalBeforeTax.Content = (1 - temp / 100) * total;
+            //    lblTPS.Content = (1 - temp / 100) * total * TPS;
+            //    lblTVQ.Content = (1 - temp / 100) * total * TVQ;
 
-        //    }
+            //}
             //if ((localTotal - total) < 0)
             //{
             //    lblDiscount.Content = "";
-            //    double temp = (total-localTotal) * 100 / localTotal;
+            //    double temp = (total - localTotal) * 100 / localTotal;
 
 
             //    lblTotalBeforeTax.Content = (1 + temp / 100) * total;
-            //    lblTPS.Content = (1 + temp / 100) * total * 0.05;
-            //    lblTVQ.Content = (1 + temp / 100) * total * 0.09975;
+            //    lblTPS.Content = (1 + temp / 100) * total * TPS;
+            //    lblTVQ.Content = (1 + temp / 100) * total * TVQ;
             //}
 
-        //}
+        }
         private void btnSetNew_Click(object sender, RoutedEventArgs e)
         {
             string value = tbTotal.Text;
@@ -329,10 +349,10 @@ namespace EasyMoveOMS
                     dgInvoice.ItemsSource = services;
                     dgInvoice.Items.Refresh();
 
-                    double temp = total / 1.14975;
-                    lblTotalBeforeTax.Content = temp;
-                    lblTPS.Content = temp * 0.05;
-                    lblTVQ.Content = temp * 0.09975;
+                    double temp = total / totalTax;
+                    lblTotalBeforeTax.Content = Math.Round(temp, 2);
+                    lblTPS.Content = Math.Round(temp * TPS, 2);
+                    lblTVQ.Content = Math.Round(temp * TVQ, 2);
                 
             }
 
@@ -349,10 +369,10 @@ namespace EasyMoveOMS
                 dgInvoice.ItemsSource = services;
                 dgInvoice.Items.Refresh();
 
-                double temp = total / 1.14975;
-                lblTotalBeforeTax.Content = temp;
-                lblTPS.Content = temp * 0.05;
-                lblTVQ.Content = temp * 0.09975;
+                double temp = total / totalTax;
+                lblTotalBeforeTax.Content = Math.Round(temp, 2);
+                lblTPS.Content = Math.Round(temp * TPS, 2);
+                lblTVQ.Content = Math.Round(temp * TVQ, 2);
 
             }
         }
@@ -367,13 +387,66 @@ namespace EasyMoveOMS
 
         private void chbCalculateTax_Unchecked(object sender, RoutedEventArgs e)
         {
-            lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content)*0.05+ "";
-            lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * 0.09975 + "";
-            tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * 1.14975 + "";
+            lblTPS.Content = Math.Round(Convert.ToDouble(lblTotalBeforeTax.Content)*TPS, 2)+ "";
+            lblTVQ.Content = Math.Round(Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ, 2) + "";
+            tbTotal.Text = Math.Round(Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax,2) + "";
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (lblLocalTotal.Content!="")
+            {
+                tbTotal.Text = Math.Round(Convert.ToDouble(lblLocalTotal.Content), 2) + "";
+
+                double temp = Convert.ToDouble(lblLocalTotal.Content) / totalTax;
+                lblTotalBeforeTax.Content = Math.Round(temp, 2);
+                lblTPS.Content = Math.Round(temp * TPS, 2);
+                lblTVQ.Content = Math.Round(temp * TVQ, 2);
+
+
+            }
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+        //    public long id { get; set; }
+        //public long orderId { get; set; }
+        //public DateTime invoiceDate { get; set; }
+        //public long clientAddrId { get; set; }
+        //public bool noTax { get; set; }
+
+
+            long id= 0;
+            long orId = 1;//order
+            DateTime invDate = new DateTime();//order
+            long clientAddrId = 1;
+            bool noT= (bool)chbCalculateTax.IsChecked;
+            Invoice inv = new Invoice(id, orId, invDate, clientAddrId, noT);
+           
+
+            long  invoiceId= Globals.db.AddInvoice(inv);
+
+            
+
+            long id1 = 0;
+
+            string[] name = new string[services.Count];
+            double[] price = new double[services.Count];
+            for (int i = 0; id < services.Count - 1; i++)
+            { 
+                name[i] = services[i].Description;
+                price[i] = services[i].Amount;
+
+                InvoiceItem ii = new InvoiceItem(id1, invoiceId, name[i], price[i]);
+               // Globals.db.AddInvoiceItems(ii);
+            }
+            
+
+
         }
     }
 
-    public class Service : INotifyPropertyChanged
+    public class Service : INotifyPropertyChanged//,  IEditableObject
     {
         public Service() { Quantity = 1; }
         public string Description { get; set; }
@@ -391,6 +464,9 @@ namespace EasyMoveOMS
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
