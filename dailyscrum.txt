@@ -171,3 +171,11 @@ settings to(from) XML
 - start monthly scheduling
 3. Need assistance / figure things out
 
+2018.04.09 Dmitrii
+1. Done since last scrum
+- export data to PDF and printing the page
+-saving data to database
+2. Plan until next Scrum
+-export data to Excel/Word
+-generate new invoice
+3. Need assistance / figure things out
