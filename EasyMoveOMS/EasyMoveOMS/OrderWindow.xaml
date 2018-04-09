@@ -105,31 +105,6 @@
 
                 </WrapPanel>
                 <Label/>
-                <WrapPanel MinWidth="370" Height="23">
-                    <Label Content="Price:   "  />
-                    <TextBox Name="tbPricePrHour" Height="23" Width="40" />
-                    <Label Content="Max:"/>
-                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
-                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" />
-                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00">
-                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
-                    </ComboBox>
-                    <Label Content=" Min:"/>
-                    <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
-                    <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" />
-                    <ComboBox Name="cbMinMinutes" Padding="3,3" Width="40" Text="00"  >
-                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
-                    </ComboBox>
-
-                </WrapPanel>
-                <Label/>
-                <Label/>
                 <Label Content="TIME AND DISTANCE" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Grid Width="340" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
@@ -164,7 +139,7 @@
                 <Label Padding="0,5"></Label>
                 <WrapPanel MinWidth="370">
                     <Label Content="Work time:" Height="23" VerticalAlignment="Top"/>
-                    <TextBox Name="tbWorkTimeH" Height="23" Text="3" TextChanged="tbWorkTimeH_TextChanged" Width="35" Background="OrangeRed"/>
+                    <TextBox Name="tbWorkTimeH" Height="23" Text="3" TextChanged="tbWorkTimeH_TextChanged" Width="35" Background="Yellow"/>
                     <wpfx:ButtonSpinner Name="spinWorkTimeH" Width="20" Spin="spinWorkTimeH_Spin"  />
                     <ComboBox Name="cbWorkMinutes"  Width="40" Text="00" >
                         <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
@@ -227,17 +202,28 @@
                     </ComboBox>
                 </WrapPanel>
                 <Label />
-                <Label />
                 <WrapPanel HorizontalAlignment="Center">
                     <Button Content="&lt;&lt;"/>
                     <Label Content="On the date schedule" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <Button Content="&gt;&gt;"/>
                 </WrapPanel>
-                <ListBox />
                 <Label />
+
+
+                <Grid MaxHeight="150" MinHeight="65">
+                    <ListView Margin="5,5,5,5" Name="lvSchedule" SelectionMode="Single" Grid.ColumnSpan="3" MaxHeight="250">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Truck" Width="90" DisplayMemberBinding="{Binding truckName}" />
+                                <GridViewColumn Header="Start" Width="60" DisplayMemberBinding="{Binding start}" />
+                                <GridViewColumn Header="Finish" Width="60" DisplayMemberBinding="{Binding finish}" />
+                                <GridViewColumn Header="Workers" Width="60" DisplayMemberBinding="{Binding workers}" />
+                                <GridViewColumn Header="Order" Width="80" DisplayMemberBinding="{Binding orderId}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
                 <Label />
-                <Label />
-                <Label Content="(List of moves will be here)" FontWeight="Bold" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <GridSplitter Grid.Column="0" Width="5" HorizontalAlignment="Stretch" Margin="3,0" />
@@ -475,23 +461,56 @@
                 <Label Content="PAYMENT INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
 
                 <Label/>
+                <WrapPanel MinWidth="370" Height="23">
+                    <Label Content="Price:    "  />
+                    <TextBox Name="tbPricePrHour" Height="23" Width="40" />
+                    <Label Content="  Max:"/>
+                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
+                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" />
+                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00">
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+                    <Label Content="  Min:"/>
+                    <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
+                    <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" />
+                    <ComboBox Name="cbMinMinutes" Padding="3,3" Width="40" Text="00"  >
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
+
+                </WrapPanel>
+                <Label/>
+                <Label/>
                 <WrapPanel Height="23">
 
-                    <Label Content="Total, $" Padding="0,2" />
+                    <Label Content="  Total,  $" Padding="0,2" />
                     <TextBox Name="tbPaymentsTotal" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
                     <Label/>
-                    <CheckBox Name="cbComplete"  Height="14" Content="complete     " IsEnabled="False"/>
+                    <CheckBox Name="cbComplete"  Height="14" Content="complete   " IsEnabled="False" Checked="cbComplete_Checked" Unchecked="cbComplete_Unchecked"/>
                    
-                    <Button Name="btAddPayment" Content="Add >" Padding="0,2"/>
-                    <Label Content="    Deposit, $: " Padding="0,2" />
+                    <Button Name="btAddPayment" Click="btAddPayment_Click" Content="Add >" Padding="0,2"/>
+                    <Label Content="     Deposit, $: " Padding="0,2" />
                     <TextBox x:Name="tbDeposit" Text="" Width="40" />
                     <Label/>
+                    
                 </WrapPanel>
-                <Label />
-                <Label />
-                <Label Content="(List of payments will be here)" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <Label/>
-                <Label/>
+                <Grid MaxHeight="150" MinHeight="65">
+                    <ListView Margin="10,10,10,10" Name="lvPayments" SelectionMode="Single" Grid.ColumnSpan="3" MaxHeight="250" MouseDoubleClick="lvPayments_MouseDoubleClick">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date" Width="110" DisplayMemberBinding="{Binding formattedDate}" />
+                                <GridViewColumn Header="Amount" Width="120" DisplayMemberBinding="{Binding amount}" />
+                                <GridViewColumn Header="Method" Width="112" DisplayMemberBinding="{Binding formattedMethod}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
 
                 <Label Content="ORDER STATUS" Height="30" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label/>

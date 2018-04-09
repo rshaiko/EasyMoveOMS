@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Data;
 using System.IO;
+using System.Collections;
 
 namespace EasyMoveOMS
 {
@@ -65,6 +66,92 @@ namespace EasyMoveOMS
             return result;
         }
 
+        internal void updatePayment(Payment p)
+        {
+            String sql = "UPDATE payments SET orderId=@orderId, method=@method, paymentDate=@paymentDate, amount=@amount, notes=@notes WHERE id=@id;";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", p.id);
+                cmd.Parameters.AddWithValue("@orderId", p.orderId);
+                cmd.Parameters.AddWithValue("@method", p.method+"");
+                cmd.Parameters.AddWithValue("@paymentDate", p.paymentDate);
+                cmd.Parameters.AddWithValue("@amount", p.amount);
+                cmd.Parameters.AddWithValue("@notes", p.notes);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        internal long addPayment(Payment p)
+        {
+            String sql = "INSERT INTO payments (orderId, method, paymentDate, amount, notes) VALUES (@orderId, @method, @paymentDate, @amount, @notes); " +
+                "SELECT LAST_INSERT_ID();";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId", p.orderId);
+                cmd.Parameters.AddWithValue("@method", p.method+"");
+                cmd.Parameters.AddWithValue("@paymentDate", p.paymentDate);
+                cmd.Parameters.AddWithValue("@amount", p.amount);
+                cmd.Parameters.AddWithValue("@notes", p.notes);
+
+                long id = Convert.ToInt32(cmd.ExecuteScalar());
+                return id;
+            }
+        }
+
+        internal List<Payment> getAllPayments(long oId)
+        {
+            String sql = "SELECT * FROM payments WHERE orderId=" + oId + ";";
+            List<Payment> payments = new List<Payment>();
+            using (MySqlCommand command = new MySqlCommand(sql, conn))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    long id = Convert.ToInt32(reader["id"]);
+                    long orderId = Convert.ToInt32(reader["orderId"]);
+                    Payment.PayMethod method = (Payment.PayMethod)Enum.Parse(typeof(Payment.PayMethod), reader["method"]+"");
+                    DateTime paymentDate = (DateTime)reader["paymentDate"];
+                    decimal amount = Convert.ToDecimal(reader["amount"]);
+                    String notes = reader["notes"]+"";
+                    Payment p = new Payment(id, orderId, method, paymentDate, amount, notes);
+                    payments.Add(p);
+                }
+            }
+            return payments;
+        }
+
+        internal void deletePayment(long id)
+        {
+            string sql = "DELETE FROM payments WHERE id=@Id";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.Add("@Id", MySqlDbType.Int16).Value = id;
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+        }
+
+        internal List<DayScheduleItem> getDayScheduleData(DateTime dt)
+        {
+            List<DayScheduleItem> dsi = new List<DayScheduleItem>();
+            String dd = dt.ToString("yyyy-MM-dd");
+            String sql = "SELECT o.id, o.timeTruckFrom, o.arriveTimeTo, o.workers, t.name FROM orders AS o JOIN trucks AS t ON o.truckId = t.id WHERE o.moveDate = '"+dd+"';";
+            using (MySqlCommand command = new MySqlCommand(sql, conn))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    long orderId = Convert.ToInt32(reader["id"]);
+                    TimeSpan timeTruckFrom = (TimeSpan)(reader["timeTruckFrom"]);
+                    TimeSpan timeTruckTo = (TimeSpan)(reader["timeTruckTo"]);
+                    int workers = Convert.ToInt16(reader["workers"]);
+                    String name = reader["name"] + "";
+                    DayScheduleItem item = new DayScheduleItem(orderId, name,timeTruckFrom, timeTruckTo, workers);
+                    dsi.Add(item);
+                }
+            }
+            return dsi;
+        }
+
         internal long saveNewClient(Client c)
         {
             String sql = "INSERT INTO clients (name, email, phoneHome, phoneWork) VALUES (@name, @email, @phoneH, @phoneW); " +
@@ -84,12 +171,12 @@ namespace EasyMoveOMS
         internal long saveNewOrder(Order o)
         {
             String sql = "INSERT INTO orders (moveDate, moveTime, clientId, truckId, workers, pricePerHour, " +
-                "minTime, maxTime, deposit, workTime, travelTime, arriveTimeFrom, arriveTimeTo, " +
+                "minTime, maxTime, deposit, workTime, travelTime, timeTruckFrom, timeTruckTo, arriveTimeFrom, arriveTimeTo, " +
                 "boxes, beds, sofas, frigos, wds, desks, tables, chairs, other, oversized, overweight, fragile, expensive, details, " +
                 "isPaid, orderStatus, contactOnDate, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime, useIntAddress) " +
                 "VALUES " +
                 "(@moveDate, @moveTime, @clientId, @truckId, @workers, @pricePerHour, " +
-                "@minTime, @maxTime, @deposit, @workTime, @travelTime, @arriveTimeFrom, @arriveTimeTo, " +
+                "@minTime, @maxTime, @deposit, @workTime, @travelTime, @timeTruckFrom, @timeTruckTo, @arriveTimeFrom, @arriveTimeTo, " +
                 "@boxes, @beds, @sofas, @frigos, @wds, @desks, @tables, @chairs, @other, @oversized, @overweight, @fragile, @expensive, @details, " +
                 "@isPaid, @orderStatus, @contactOnDate, @doneStartTime, @doneEndTime, @doneBreaksTime, @doneTotalTime, @useIntAddress); " +
                 "SELECT LAST_INSERT_ID();";
@@ -107,6 +194,8 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@deposit", o.deposit);
                 cmd.Parameters.AddWithValue("@workTime", o.workTime);
                 cmd.Parameters.AddWithValue("@travelTime", o.travelTime);
+                cmd.Parameters.AddWithValue("@timeTruckFrom", o.timeTruckFrom);
+                cmd.Parameters.AddWithValue("@timeTruckTo", o.timeTruckTo);
                 cmd.Parameters.AddWithValue("@arriveTimeFrom", o.arriveTimeFrom);
                 cmd.Parameters.AddWithValue("@arriveTimeTo", o.arriveTimeTo);
                 cmd.Parameters.AddWithValue("@boxes", o.boxes);
@@ -141,6 +230,7 @@ namespace EasyMoveOMS
         {
             String sql = "UPDATE orders SET  moveDate=@moveDate, moveTime=@moveTime, clientId=@clientId, truckId=@truckId, workers=@workers, " +
                 "pricePerHour=@pricePerHour, minTime=@minTime, maxTime=@maxTime, deposit=@deposit, workTime=@workTime, travelTime=@travelTime, " +
+                "timeTruckFrom=@timeTruckFrom, timeTruckTo=@timeTruckTo, " +
                 "arriveTimeFrom=@arriveTimeFrom, arriveTimeTo=@arriveTimeTo, boxes=@boxes, beds=@beds, sofas=@sofas, " +
                 "frigos=@frigos, wds=@wds, desks=@desks, tables=@tables, chairs=@chairs, other=@other, oversized=@oversized, " +
                 "overweight=@overweight, fragile=@fragile, expensive=@expensive, details=@details, isPaid=@isPaid, " +
@@ -162,6 +252,8 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@deposit", o.deposit);
                 cmd.Parameters.AddWithValue("@workTime", o.workTime);
                 cmd.Parameters.AddWithValue("@travelTime", o.travelTime);
+                cmd.Parameters.AddWithValue("@timeTruckFrom", o.timeTruckFrom);
+                cmd.Parameters.AddWithValue("@timeTruckTo", o.timeTruckTo);
                 cmd.Parameters.AddWithValue("@arriveTimeFrom", o.arriveTimeFrom);
                 cmd.Parameters.AddWithValue("@arriveTimeTo", o.arriveTimeTo);
                 cmd.Parameters.AddWithValue("@boxes", o.boxes);
@@ -352,7 +444,7 @@ namespace EasyMoveOMS
             }
         }
 
-
+        
     }
 
 }

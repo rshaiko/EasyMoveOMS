@@ -62,10 +62,12 @@ namespace EasyMoveOMS
         //MOVING INFORMATION
         long orderId, truckId;
         DateTime moveDate;
-        TimeSpan moveTime, maxTime, minTime, workTime, travelTime, arriveTimeFrom, arriveTimeTo, doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime;
+        TimeSpan moveTime, maxTime, minTime, workTime, travelTime, arriveTimeFrom, arriveTimeTo, 
+            doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime,
+            timeTruckFrom, timeTruckTo;
         int startHour, startMinute, workTimeH, workTimeM, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
-        int[] minGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of minutes
-        int[] meterGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google distance - arr of seconds
+        int[] minGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of SECONDS !!!
+        int[] meterGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google distance - arr of meters
         String phoneHome, phoneWork, email, googleTime, googleDistance;  
         int workers;
         bool payPerHour;
@@ -102,7 +104,9 @@ namespace EasyMoveOMS
             if (currentOrder == null)  
             {
                 currentOrder = new Order();
+                lvPayments.ItemsSource = currentOrder.orderPayments;
                 isNewOrder = true;
+
                 orderClient = new Client();
                 orderClient.id = 0;
                 orderTruck = new Truck();
@@ -114,6 +118,9 @@ namespace EasyMoveOMS
             else
             {
                 isNewOrder = false;
+                currentOrder = order;
+                refreshPaymentsList();
+                //lvPayments.ItemsSource = currentOrder.orderPayments;
                 //orderClient = order.orderClient; // TODO LOAD INFO + change to existing client
                 //orderTruck = order.orderTruck; 
             }
@@ -125,7 +132,17 @@ namespace EasyMoveOMS
         private void dpMoveDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             movingDateIsChanged = true;
+            DateTime dt = (DateTime)dpMoveDate.SelectedDate;
+            updateSchedule(dt);
         }
+
+        private void updateSchedule(DateTime dt)
+        {
+            List<DayScheduleItem> dayScheduleItems = new List<DayScheduleItem>();
+            dayScheduleItems = Globals.db.getDayScheduleData(dt);
+            lvSchedule.ItemsSource = dayScheduleItems;
+        }
+
         private void dpContactOn_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             contactOnDateIsChanged = true;
@@ -262,6 +279,8 @@ namespace EasyMoveOMS
             currentOrder.deposit = deposit;
             currentOrder.workTime = workTime;
             currentOrder.travelTime = travelTime;
+            currentOrder.timeTruckFrom = timeTruckFrom;
+            currentOrder.timeTruckTo = timeTruckTo;
             currentOrder.arriveTimeFrom = arriveTimeFrom;
             currentOrder.arriveTimeTo = arriveTimeTo;
             currentOrder.boxes = boxes;
@@ -429,6 +448,38 @@ namespace EasyMoveOMS
                 }
                 if (!int.TryParse(cbTravelMinutes.Text, out workTimeM )) workTimeM = 0 ;
                 workTime = new TimeSpan(workTimeH, workTimeM, 0);
+
+                //TIME TRUCK Schedule - FROM >> TO
+
+                TimeSpan halfOfTravelTime = new TimeSpan(travelTime.Ticks / 2); // in seconds
+
+                //timeTruckFrom
+                if (minGoo[0] > 0) //take Google time if exist
+                {
+                    TimeSpan travelToClient = new TimeSpan(0, 0, minGoo[0]);
+                    
+                    if (travelToClient.Ticks > moveTime.Ticks) timeTruckFrom = new TimeSpan(0, 0, 0);
+                    else timeTruckFrom = moveTime - travelToClient;
+                }
+                else
+                {
+                    if (halfOfTravelTime.Ticks > moveTime.Ticks) timeTruckFrom = new TimeSpan(0, 0, 0);
+                    else timeTruckFrom = moveTime - halfOfTravelTime;
+                }
+
+                //timeTruckTo
+                if (minGoo[1] > 0) //take Google time if exist
+                {
+                    TimeSpan travelFromClient = new TimeSpan(0, 0, minGoo[1]);
+                    if (new TimeSpan(travelFromClient.Ticks + workTime.Ticks+ moveTime.Ticks).Ticks > new TimeSpan(23,59,59).Ticks) timeTruckTo = new TimeSpan(23,59, 59);
+                    else timeTruckTo = moveTime + workTime + travelFromClient;
+                }
+                else
+                {
+                    if ((halfOfTravelTime.Ticks + workTime.Ticks + moveTime.Ticks) > new TimeSpan(23, 59, 59).Ticks) timeTruckTo = new TimeSpan(23, 59, 59);
+                    else timeTruckTo = moveTime + workTime + halfOfTravelTime;
+                }
+
 
                 //ARRIVE TIME
                 //--> from
@@ -843,6 +894,8 @@ namespace EasyMoveOMS
             ((ComboBox)sender).Background = Brushes.White;
         }
 
+        
+
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
         {
             cbDoneEventsOn = false;
@@ -896,9 +949,21 @@ namespace EasyMoveOMS
             cbDoneEventsOn = true;
         }
 
+        
+
         private void tbWorkTimeH_TextChanged(object sender, TextChangedEventArgs e)
         {
             tbWorkTimeH.Background = Brushes.White;
+        }
+
+        private void cbComplete_Checked(object sender, RoutedEventArgs e)
+        {
+            tbPaymentsTotal.Background = Brushes.LightGreen;
+        }
+
+        private void cbComplete_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbPaymentsTotal.Background = Brushes.White;
         }
 
         //Calculation of total working time for the DONE order
@@ -1218,7 +1283,7 @@ namespace EasyMoveOMS
                         tbGoogleDistance.Content = goo.rows[0].elements[0].distance.text.ToString();
                         tbGoogleTime.Content = goo.rows[0].elements[0].duration.text.ToString();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         tbGoogleDistance.Content = "...";
                         tbGoogleTime.Content = "...";
@@ -1260,7 +1325,7 @@ namespace EasyMoveOMS
                     tbCityAct.Background = Brushes.LightGreen;
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     meterGoo[0] = 0;
                     minGoo[0] = 0;
@@ -1290,7 +1355,7 @@ namespace EasyMoveOMS
                     tbCityDest.Background = Brushes.LightGreen;
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     meterGoo[1] = 0;
                     minGoo[1] = 0;
@@ -1415,5 +1480,72 @@ namespace EasyMoveOMS
             tbClient.Background = Brushes.White;
         }
 
+        private void btAddPayment_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentOrder.id == 0)
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show("Order must be saved before adding payments\n\nSave the order?", "Add payment", MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK);
+                if (result == MessageBoxResult.Cancel) return;
+                else saveOrder(); // user pushed OK
+
+                if (currentOrder.id == 0) return; // if saving faled
+            }
+            
+            //creating new Payment
+            Payment p = new Payment();
+            p.orderId = currentOrder.id;
+
+            DlgAddPayment dlgP = new DlgAddPayment(p);
+            if (dlgP.ShowDialog() == true)
+            {
+                refreshPaymentsList();
+            }
+        }
+
+        private void refreshPaymentsList()
+        {
+            try
+            {
+                List<Payment> payments = Globals.db.getAllPayments(currentOrder.id);
+                lvPayments.ItemsSource = payments;
+                currentOrder.orderPayments = payments;
+                //set Total
+                decimal pTotal=0;
+                if (payments.Count > 0)
+                {
+                    foreach(Payment p in payments)
+                    {
+                        pTotal += p.amount;
+                    }
+                    tbPaymentsTotal.Text = pTotal + "";
+                    cbComplete.IsEnabled = true;
+                }
+                else
+                {
+                    tbPaymentsTotal.Text = "";
+                    cbComplete.IsChecked = false;
+                    cbComplete.IsEnabled = false;
+                }
+            }
+            catch (MySqlException exx)
+            {
+                System.Windows.MessageBox.Show("Payments were not loaded:\n\n" + exx.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+        }
+
+        private void lvPayments_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Payment p = (Payment)lvPayments.SelectedItem;
+            if (p == null)
+            {
+                return;
+            }
+            DlgAddPayment dlgP = new DlgAddPayment(p);
+            if (dlgP.ShowDialog() == true)
+            {
+                refreshPaymentsList();
+            }
+        }
     }
 }

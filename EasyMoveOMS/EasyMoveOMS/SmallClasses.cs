@@ -23,30 +23,5 @@ namespace EasyMoveOMS
             }
         }
     }
-    public class Truck
-    {
-        public long id { get; set; }
-        public string name { get; set; }
-        public string make { get; set; }
-        public string model { get; set; }
-        public string year { get; set; }
-
-        public Truck() { }
-
-        public Truck(long id, string name, string make, string model, string year)
-        {
-            this.id = id;
-            this.name = name;
-            this.make = make;
-            this.model = model;
-            this.year = year;
-        }
-
-        public override String ToString()
-        {
-            string cbbTruckItem = String.Format("{0} ({1} {2}, {3})", name, make, model, year);
-            return cbbTruckItem;
-        }
-
-    }
+    
 }
