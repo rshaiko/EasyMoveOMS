@@ -384,7 +384,7 @@ namespace EasyMoveOMS
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@orderId", inv.orderId);
-                cmd.Parameters.AddWithValue("@invoiveDate", inv.invoiceDate);
+                cmd.Parameters.AddWithValue("@invoiceDate", inv.invoiceDate);
                 cmd.Parameters.AddWithValue("@clientAddrId", inv.clientAddrId);
                 cmd.Parameters.AddWithValue("@noTax", inv.noTax ? 1 : 0);
                 long id = Convert.ToInt32(cmd.ExecuteScalar());

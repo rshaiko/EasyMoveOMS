@@ -58,7 +58,8 @@ namespace EasyMoveOMS
                     }
                 }
                 orId = currOrder.id;
-                //TimeSpan.Parse(time).TotalSeconds
+                //MessageBox.Show(orId+"");
+                
 
 
                 lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.workTime.TotalHours)) +
@@ -443,7 +444,8 @@ namespace EasyMoveOMS
        
             long id= 0;
             long orId1 = orId;// currOrder
-            DateTime invDate = new DateTime();
+            //MessageBox.Show(orId1 + "");
+            DateTime invDate = DateTime.Now;
             long clientAddrId;
             if (cAId != 0)
             {
@@ -476,6 +478,7 @@ namespace EasyMoveOMS
 
                 InvoiceItem ii = new InvoiceItem(id1, invoiceId, name[i], price[i]);
                 Globals.db.AddInvoiceItems(ii);
+                MessageBox.Show("Invoice successfully saved.");
             }
             
 
@@ -493,19 +496,36 @@ namespace EasyMoveOMS
             //adding text using different class object to pdf document
             doc.Add(paragraph);
             doc.Close();
-            //MessageBox.Show("Successfully exported to PDF.");
+            MessageBox.Show("Successfully exported to PDF.");
             printPDF();
         }
         private void printPDF()
         {
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.Verb = "print";
+            info.FileName = @"..\..\..\..\Invoice.pdf";
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+
             Process p = new Process();
-            p.StartInfo = new ProcessStartInfo()
-            {
-                CreateNoWindow = true,
-                Verb = "print",
-                FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
-            };
+            p.StartInfo = info;
             p.Start();
+
+            p.WaitForInputIdle();
+            System.Threading.Thread.Sleep(3000);
+            if (false == p.CloseMainWindow())
+                p.Kill();
+
+
+
+            //Process p = new Process();
+            //p.StartInfo = new ProcessStartInfo()
+            //{
+            //    CreateNoWindow = true,
+            //    Verb = "print",
+            //    FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
+            //};
+            //p.Start();
         }
     }
 
