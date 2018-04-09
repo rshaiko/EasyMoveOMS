@@ -158,3 +158,16 @@ settings to(from) XML
 -export data to Excel
 -use library for text formatting when exporting to Word
 3. Need assistance / figure things out
+
+09.04.2018 Roman
+1. What I have done/not done
+- Payments interfase + CRUD
+- Truck day scheduling in Order window and overlapping
+- Estimated time and distances calculations complete
+2. Plan until next Scrum
+- open existing order methods
+- selecting existing user methods and interface
+- generating a contract
+- start monthly scheduling
+3. Need assistance / figure things out
+
