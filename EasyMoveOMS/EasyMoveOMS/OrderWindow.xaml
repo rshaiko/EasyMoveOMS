@@ -203,18 +203,30 @@
                 </WrapPanel>
                 <Label />
                 <WrapPanel HorizontalAlignment="Center">
-                    <Button Content="&lt;&lt;"/>
-                    <Label Content="On the date schedule" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <Button Content="&gt;&gt;"/>
+                    <Button Name="btOneDayBack" Content="&lt;&lt;" Click="btOneDayBack_Click" />
+                    <Label Name="lblSchedule" Content="On the date schedule" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Button Name="btOneDayForward" Content="&gt;&gt;" Click="btOneDayForward_Click" />
                 </WrapPanel>
                 <Label />
 
 
                 <Grid MaxHeight="150" MinHeight="65">
                     <ListView Margin="5,5,5,5" Name="lvSchedule" SelectionMode="Single" Grid.ColumnSpan="3" MaxHeight="250">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding overlap}" Value="True">
+                                        <Setter Property="Background" Value="OrangeRed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding overlap}" Value="False">
+                                        <Setter Property="Background" Value="White" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Truck" Width="90" DisplayMemberBinding="{Binding truckName}" />
+                                <GridViewColumn Header="Truck" Width="80" DisplayMemberBinding="{Binding truckName}" />
                                 <GridViewColumn Header="Start" Width="60" DisplayMemberBinding="{Binding start}" />
                                 <GridViewColumn Header="Finish" Width="60" DisplayMemberBinding="{Binding finish}" />
                                 <GridViewColumn Header="Workers" Width="60" DisplayMemberBinding="{Binding workers}" />

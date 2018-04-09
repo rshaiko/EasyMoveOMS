@@ -21,7 +21,7 @@ namespace EasyMoveOMS
         public AddrType addrType { get; set; }
         public String notes { get; set; }
 
-        public enum AddrType { Actual, Destination, Intermediate };
+        public enum AddrType { Actual=0, Destination=1, Intermediate=2 };
 
 
         public Address()

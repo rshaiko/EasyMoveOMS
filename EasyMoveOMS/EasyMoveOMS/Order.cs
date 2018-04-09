@@ -78,18 +78,19 @@ namespace EasyMoveOMS
         public TimeSpan timeTruckFrom { get; set; }
         public TimeSpan timeTruckTo { get; set; }
         public int workers { get; set; }
+        public bool overlap { get; set; }
         public String start
         {
             get
             {
-                return string.Format("{0:H:mm}", timeTruckFrom);
+                return timeTruckFrom.ToString(@"hh\:mm");
             }
         }
         public String finish
         {
             get
             {
-                return string.Format("{0:H:mm}", timeTruckTo);
+                return timeTruckTo.ToString(@"hh\:mm");
             }
         }
     }
@@ -121,9 +122,9 @@ namespace EasyMoveOMS
                     default:
                         return "Unknown";
                 }
-                
             }
         }
+
         public String formattedDate
         {
             get

@@ -61,7 +61,7 @@ namespace EasyMoveOMS
 
         //MOVING INFORMATION
         long orderId, truckId;
-        DateTime moveDate;
+        DateTime moveDate, currentScheduleDay;
         TimeSpan moveTime, maxTime, minTime, workTime, travelTime, arriveTimeFrom, arriveTimeTo, 
             doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime,
             timeTruckFrom, timeTruckTo;
@@ -128,20 +128,66 @@ namespace EasyMoveOMS
             cbTruck.ItemsSource = Globals.truckList;
         }
 
-        // !!!!!!! --- GET Schedule --- !!!!!!!!!!!!
+        // !!!!!!! --- GET Day Schedule --- !!!!!!!!!!!!
         private void dpMoveDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             movingDateIsChanged = true;
             DateTime dt = (DateTime)dpMoveDate.SelectedDate;
+            if (isNewOrder) lblTitle.Content = "New Order - on " + dt.ToLongDateString();
             updateSchedule(dt);
         }
 
         private void updateSchedule(DateTime dt)
         {
             List<DayScheduleItem> dayScheduleItems = new List<DayScheduleItem>();
-            dayScheduleItems = Globals.db.getDayScheduleData(dt);
+            try
+            {
+                dayScheduleItems = Globals.db.getDayScheduleData(dt);
+            }
+            catch (MySqlException)
+            {
+                return;
+            }
+            currentScheduleDay = dt;
+            checkOverlap(ref dayScheduleItems);
             lvSchedule.ItemsSource = dayScheduleItems;
+            lblSchedule.Content = "On " + dt.ToLongDateString()+ " schedule";// .ToString("yyyy-MM-dd") ;
         }
+
+        private void checkOverlap(ref List<DayScheduleItem> dayScheduleItems)
+        {
+            foreach (DayScheduleItem d0 in dayScheduleItems) d0.overlap = false;
+            foreach (DayScheduleItem d1 in dayScheduleItems)
+            {
+                foreach(DayScheduleItem d2 in dayScheduleItems)
+                {
+                    if (d1.orderId != d2.orderId)
+                    {
+                        //Check for overlaps
+                        if (!((d1.timeTruckFrom.Ticks < d2.timeTruckFrom.Ticks && d1.timeTruckTo.Ticks < d2.timeTruckFrom.Ticks)
+                            || (d1.timeTruckFrom.Ticks > d2.timeTruckTo.Ticks && d1.timeTruckTo.Ticks > d2.timeTruckFrom.Ticks)))
+                        {
+                            d1.overlap = true;
+                            d2.overlap = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btOneDayBack_Click(object sender, RoutedEventArgs e)
+        {
+            currentScheduleDay=currentScheduleDay.AddDays(-1);
+            updateSchedule(currentScheduleDay);
+        }
+
+        private void btOneDayForward_Click(object sender, RoutedEventArgs e)
+        {
+            currentScheduleDay=currentScheduleDay.AddDays(1);
+            updateSchedule(currentScheduleDay);
+        }
+        //END SCHEDULE
+
 
         private void dpContactOn_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -965,6 +1011,8 @@ namespace EasyMoveOMS
         {
             tbPaymentsTotal.Background = Brushes.White;
         }
+
+       
 
         //Calculation of total working time for the DONE order
         private void tryCalculateTheTotalTime()

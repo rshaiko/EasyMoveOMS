@@ -134,7 +134,8 @@ namespace EasyMoveOMS
         {
             List<DayScheduleItem> dsi = new List<DayScheduleItem>();
             String dd = dt.ToString("yyyy-MM-dd");
-            String sql = "SELECT o.id, o.timeTruckFrom, o.arriveTimeTo, o.workers, t.name FROM orders AS o JOIN trucks AS t ON o.truckId = t.id WHERE o.moveDate = '"+dd+"';";
+            String sql = "SELECT o.id, o.timeTruckFrom, o.timeTruckTo, o.workers, t.name FROM orders AS o JOIN trucks AS t ON o.truckId = t.id WHERE o.moveDate = '"+ dd + "' ORDER BY t.name, o.timeTruckFrom;";
+            Console.WriteLine(sql);
             using (MySqlCommand command = new MySqlCommand(sql, conn))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
@@ -145,7 +146,7 @@ namespace EasyMoveOMS
                     TimeSpan timeTruckTo = (TimeSpan)(reader["timeTruckTo"]);
                     int workers = Convert.ToInt16(reader["workers"]);
                     String name = reader["name"] + "";
-                    DayScheduleItem item = new DayScheduleItem(orderId, name,timeTruckFrom, timeTruckTo, workers);
+                    DayScheduleItem item = new DayScheduleItem(orderId, name, timeTruckFrom, timeTruckTo, workers);
                     dsi.Add(item);
                 }
             }
@@ -379,6 +380,7 @@ namespace EasyMoveOMS
         {
             string sql = "INSERT INTO invoices (orderId, invoiceDate, clientAddrId, noTax) VALUES (@orderId, @invoiceDate, @clientAddrId, @noTax);" +
                 "SELECT LAST_INSERT_ID();";
+
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@orderId", inv.orderId);
