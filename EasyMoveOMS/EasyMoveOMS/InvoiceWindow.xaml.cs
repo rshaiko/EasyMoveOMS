@@ -1,8 +1,12 @@
 ﻿using EasyMoveOMS.Properties;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -476,6 +480,32 @@ namespace EasyMoveOMS
             
 
 
+        }
+
+        
+        private void btbExportPrint_Click(object sender, RoutedEventArgs e)
+        {
+            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\..\Invoice.pdf", FileMode.Create));
+            doc.Open();//open document
+            //content
+            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph("Hi there you!");
+            //adding text using different class object to pdf document
+            doc.Add(paragraph);
+            doc.Close();
+            //MessageBox.Show("Successfully exported to PDF.");
+            printPDF();
+        }
+        private void printPDF()
+        {
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo()
+            {
+                CreateNoWindow = true,
+                Verb = "print",
+                FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
+            };
+            p.Start();
         }
     }
 
