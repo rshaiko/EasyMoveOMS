@@ -61,7 +61,7 @@ namespace EasyMoveOMS
                 //MessageBox.Show(orId+"");
 
                 double time;
-                time = currOrder.workTime.Hours + currOrder.workTime.Minutes / 60;
+                time = currOrder.minTime.Hours + currOrder.minTime.Minutes / 60;
                 if (currOrder.doneTotalTime != null)
                 {
 

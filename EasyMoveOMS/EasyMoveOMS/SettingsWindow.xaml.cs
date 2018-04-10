@@ -24,7 +24,14 @@ namespace EasyMoveOMS
         {
             InitializeComponent();
 
-            //newTB.Text=(string) Settings.Default["companyName"];
+            tbCompany.Text=(string) Settings.Default["companyName"];
+            tbAddr.Text= (string)Settings.Default["address"];
+            tbZip.Text= (string)Settings.Default["zip"];
+            tbCity.Text= (string)Settings.Default["city"];
+            tbProvince.Text = (string)Settings.Default["province"];
+            tbParking.Text = (string)Settings.Default["truckParking"];
+            tbPhone.Text = (string)Settings.Default["phoneNumber"];
+  
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -44,7 +51,7 @@ namespace EasyMoveOMS
             if (tbAddr.Text != "")
                 Settings.Default["address"] = tbAddr.Text;
             if (tbZip.Text != "")
-                Settings.Default["address"] = tbZip.Text;
+                Settings.Default["zip"] = tbZip.Text;
 
 
             Settings.Default.Save();
