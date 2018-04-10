@@ -61,22 +61,24 @@ namespace EasyMoveOMS
                 //MessageBox.Show(orId+"");
 
                 double time;
-                time = currOrder.minTime.Hours + currOrder.minTime.Minutes / 60;
+                time = currOrder.minTime.Hours + currOrder.minTime.Minutes / 60.0;
+                MessageBox.Show(time + "");
                 if (currOrder.doneTotalTime != null)
                 {
 
                     if (currOrder.doneTotalTime<currOrder.minTime)
                     {
-                        time = currOrder.minTime.Hours+currOrder.minTime.Minutes/60;
+                        time = currOrder.minTime.Hours+currOrder.minTime.Minutes/60.0;
                     }
                     if (currOrder.doneTotalTime > currOrder.maxTime)
                     {
-                        time = currOrder.maxTime.Hours + currOrder.maxTime.Minutes / 60;
+                        time = currOrder.maxTime.Hours + currOrder.maxTime.Minutes / 60.0;
                     }
-                    else time= currOrder.doneTotalTime.Hours + currOrder.doneTotalTime.Minutes / 60;
+                    else time= currOrder.doneTotalTime.Hours + currOrder.doneTotalTime.Minutes / 60.0;
                 }
+                MessageBox.Show(time + "");
 
-                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (time+(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60));
+                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (time+(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60.0));
                     //(Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
                 lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
                 lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
@@ -88,8 +90,8 @@ namespace EasyMoveOMS
                     Quantity = Convert.ToDouble(time), Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (time)
                 });
                 services.Add(new Service() { Description = "Travel", Price = Convert.ToDouble(currOrder.pricePerHour),
-                    Quantity = Convert.ToDouble(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60),
-                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60))
+                    Quantity = Convert.ToDouble(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60.0),
+                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0))
                 });
 
 
