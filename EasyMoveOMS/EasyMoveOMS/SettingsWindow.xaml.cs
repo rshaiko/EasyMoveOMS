@@ -48,6 +48,7 @@ namespace EasyMoveOMS
 
 
             Settings.Default.Save();
+            DialogResult = true;
         }
     }
 }

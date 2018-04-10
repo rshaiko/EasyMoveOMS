@@ -42,14 +42,25 @@
         <Label Content="Address:" HorizontalAlignment="Left" Margin="122,111,0,0" VerticalAlignment="Top"/>
         <Label Content="Postal code:" HorizontalAlignment="Left" Margin="152,215,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.564,1.577"/>
         <Label Name="lblTotalBeforeTax" Content="..." HorizontalAlignment="Left" Margin="552,513,0,0" VerticalAlignment="Top"/>
-        <Button Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="291,618,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="291,618,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click"/>
         <Button Name="btnSetNew" Content="Set New" HorizontalAlignment="Left" Margin="676,620,0,0" VerticalAlignment="Top" Width="75" Click="btnSetNew_Click"/>
         <Label Content="City:" HorizontalAlignment="Left" Margin="144,163,0,0" VerticalAlignment="Top"/>
         <TextBox Name="tbCity" HorizontalAlignment="Left" Height="23" Margin="237,167,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Province:" HorizontalAlignment="Left" Margin="475,163,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="cmbProvince" HorizontalAlignment="Left" Margin="601,167,0,0" VerticalAlignment="Top" Width="120" IsEditable="True">
-            <ComboBoxItem>QC</ComboBoxItem>
-            <ComboBoxItem>ON</ComboBoxItem>
+        <ComboBox Name="cmbProvince" Text="QC" IsEditable="True" Margin="601,164,130,486" RenderTransformOrigin="2.089,2.115" >
+            <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="AB" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="BC" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="MB" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="NB" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="NS" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="PE" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="SK" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="NL" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="NT" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="NU" HorizontalAlignment="Left" Height="16"/>
+            <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
         </ComboBox>
         <Button Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="676,651,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
         <Label Name="lblLocalTotal" Content="" HorizontalAlignment="Left" Margin="552,651,0,0" VerticalAlignment="Top" Width="93"/>

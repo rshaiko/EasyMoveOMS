@@ -378,16 +378,23 @@ namespace EasyMoveOMS
 
         internal long AddInvoice(Invoice inv)
         {
-            string sql = "INSERT INTO invoices (orderId, invoiceDate, clientAddrId, noTax) VALUES (@orderId, @invoiceDate, @clientAddrId, @noTax);" +
+            string sql = "INSERT INTO invoices (orderId, invoiceDate, noTax, addrLine, city, zip, province) " +
+                "VALUES (@orderId, @invoiceDate, @noTax,@addrLine,@city,@zip,@province);" +
                 "SELECT LAST_INSERT_ID();";
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@orderId", inv.orderId);
                 cmd.Parameters.AddWithValue("@invoiceDate", inv.invoiceDate);
-                cmd.Parameters.AddWithValue("@clientAddrId", inv.clientAddrId);
+                //cmd.Parameters.AddWithValue("@clientAddrId", inv.clientAddrId);
                 cmd.Parameters.AddWithValue("@noTax", inv.noTax ? 1 : 0);
+                cmd.Parameters.AddWithValue("@addrLine", inv.address);
+                cmd.Parameters.AddWithValue("@city", inv.city);
+                cmd.Parameters.AddWithValue("@zip", inv.zip);
+                cmd.Parameters.AddWithValue("@province", inv.province+"");
+
                 long id = Convert.ToInt32(cmd.ExecuteScalar());
+                //int id = (int)cmd.ExecuteScalar();
                 return id;
             }
         }

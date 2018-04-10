@@ -43,7 +43,7 @@ namespace EasyMoveOMS
 
                 //populating the fields
                 lblName.Content = currOrder.orderClient.name;
-                lblDate.Content = new DateTime();
+                lblDate.Content = DateTime.Now; 
                 foreach (Address a in currOrder.orderAddresses)
                 {
                     if (a.isBilling)
@@ -59,11 +59,25 @@ namespace EasyMoveOMS
                 }
                 orId = currOrder.id;
                 //MessageBox.Show(orId+"");
-                
 
+                double time;
+                time = currOrder.workTime.Hours + currOrder.workTime.Minutes / 60;
+                if (currOrder.doneTotalTime != null)
+                {
 
-                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.workTime.TotalHours)) +
-                    (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
+                    if (currOrder.doneTotalTime<currOrder.minTime)
+                    {
+                        time = currOrder.minTime.Hours+currOrder.minTime.Minutes/60;
+                    }
+                    if (currOrder.doneTotalTime > currOrder.maxTime)
+                    {
+                        time = currOrder.maxTime.Hours + currOrder.maxTime.Minutes / 60;
+                    }
+                    else time= currOrder.doneTotalTime.Hours + currOrder.doneTotalTime.Minutes / 60;
+                }
+
+                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (time+(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60));
+                    //(Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
                 lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
                 lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
                 tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax + "";
@@ -71,11 +85,11 @@ namespace EasyMoveOMS
 
 
                 services.Add(new Service() { Description = "Moving", Price = Convert.ToDouble(currOrder.pricePerHour),
-                    Quantity = Convert.ToDouble(currOrder.workTime.TotalHours), Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.workTime.TotalHours))
+                    Quantity = Convert.ToDouble(time), Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (time)
                 });
                 services.Add(new Service() { Description = "Travel", Price = Convert.ToDouble(currOrder.pricePerHour),
-                    Quantity = Convert.ToDouble(currOrder.travelTime.TotalHours),
-                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours))
+                    Quantity = Convert.ToDouble(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60),
+                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60))
                 });
 
 
@@ -446,39 +460,49 @@ namespace EasyMoveOMS
             long orId1 = orId;// currOrder
             //MessageBox.Show(orId1 + "");
             DateTime invDate = DateTime.Now;
-            long clientAddrId;
-            if (cAId != 0)
-            {
-              clientAddrId = cAId;// currOrder
-            }
-            else
-            {//adding new address to DB
-                string addr = tbAddress.Text;
-                string city = tbCity.Text;
-                string pc = tbPostal.Text;
-                string pr = cmbProvince.Text;
-                bool isB = true;
-                Address.AddrType at = (Address.AddrType)Enum.Parse(typeof(Address.AddrType), cmbAddrType.Text); 
-                Address a = new Address(id,orId1, addr, city, pc, pr, 1, false, false,isB, at,"");
+            //long clientAddrId;
+            //if (cAId != 0)
+            //{
+            //  clientAddrId = cAId;// currOrder
+            //}
+            //else
+            //{//adding new address to DB
+            //    string addr = tbAddress.Text;
+            //    string city = tbCity.Text;
+            //    string pc = tbPostal.Text;
+            //    string pr = cmbProvince.Text;
+            //    bool isB = true;
+            //    Address.AddrType at = (Address.AddrType)Enum.Parse(typeof(Address.AddrType), cmbAddrType.Text); 
+            //    Address a = new Address(id,orId1, addr, city, pc, pr, 1, false, false,isB, at,"");
 
-                clientAddrId = Globals.db.AddNewBillingAddress(a);
-            }
+            //    clientAddrId = Globals.db.AddNewBillingAddress(a);
+            //}
                 bool noT= (bool)chbCalculateTax.IsChecked;
-            Invoice inv = new Invoice(id, orId1, invDate, clientAddrId, noT);
+            string addr = tbAddress.Text;
+            string ci = tbCity.Text;
+            string z = tbPostal.Text;
+            Invoice.Province pr = (Invoice.Province)Enum.Parse(typeof(Invoice.Province), cmbProvince.Text);
+            
+            Invoice inv = new Invoice() { id = 0, orderId = orId1,invoiceDate= invDate,noTax= noT,address= addr,
+               city= ci, zip=z, province= pr };
            
 
-            long  invoiceId= Globals.db.AddInvoice(inv);
+            long  invId= Globals.db.AddInvoice(inv);
+            MessageBox.Show("Invoice successfully saved.");
             long id1 = 0;
             string[] name = new string[services.Count];
             double[] price = new double[services.Count];
-            for (int i = 0; id < services.Count - 1; i++)
-            { 
+            //MessageBox.Show(services.Count + "");
+            for (int i = 0; i < services.Count; i++)
+            {
+               
                 name[i] = services[i].Description;
+                //MessageBox.Show(name[i] + i+"");
                 price[i] = services[i].Amount;
 
-                InvoiceItem ii = new InvoiceItem(id1, invoiceId, name[i], price[i]);
+                InvoiceItem ii = new InvoiceItem() { id=id1,invoiceId= invId,name= name[i],price= price[i] };
                 Globals.db.AddInvoiceItems(ii);
-                MessageBox.Show("Invoice successfully saved.");
+                
             }
             
 
@@ -496,36 +520,41 @@ namespace EasyMoveOMS
             //adding text using different class object to pdf document
             doc.Add(paragraph);
             doc.Close();
-            MessageBox.Show("Successfully exported to PDF.");
+            //MessageBox.Show("Successfully exported to PDF.");
             printPDF();
         }
         private void printPDF()
         {
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.Verb = "print";
-            info.FileName = @"..\..\..\..\Invoice.pdf";
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-
-            Process p = new Process();
-            p.StartInfo = info;
-            p.Start();
-
-            p.WaitForInputIdle();
-            System.Threading.Thread.Sleep(3000);
-            if (false == p.CloseMainWindow())
-                p.Kill();
-
-
+            //ProcessStartInfo info = new ProcessStartInfo();
+            //info.Verb = "print";
+            //info.FileName = @"..\..\..\..\Invoice.pdf";
+            //info.CreateNoWindow = true;
+            //info.WindowStyle = ProcessWindowStyle.Hidden;
 
             //Process p = new Process();
-            //p.StartInfo = new ProcessStartInfo()
-            //{
-            //    CreateNoWindow = true,
-            //    Verb = "print",
-            //    FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
-            //};
+            //p.StartInfo = info;
             //p.Start();
+
+            //p.WaitForInputIdle();
+            //System.Threading.Thread.Sleep(3000);
+            //if (false == p.CloseMainWindow())
+            //    p.Kill();
+
+
+
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo()
+            {
+                CreateNoWindow = true,
+                Verb = "print",
+                FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
+            };
+            p.Start();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 
