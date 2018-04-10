@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace EasyMoveOMS
 {
+    public enum OrderStatus { Scheduled=0, Suspended=1, Done=2, Cancelled=3 };
     public class Order
     {
         public long id { get; set; }
         public DateTime moveDate { get; set; }
         public TimeSpan moveTime { get; set; }
+        public long clientId { get; set; }
         public long truckId { get; set; }
         public int workers { get; set; }
         
@@ -53,7 +55,7 @@ namespace EasyMoveOMS
         public Truck orderTruck { get; set; }
         public List<Payment> orderPayments { get; set; }
 
-        public enum OrderStatus {Scheduled, Suspended, Done, Cancelled};
+        
 
         public Order()
         {
@@ -62,11 +64,56 @@ namespace EasyMoveOMS
 
     }
 
+    public class ListOrderItem
+    {
+        public long id { get; set; }
+        public DateTime dateCreated { get; set; }
+        public DateTime moveDate { get; set; }
+        public TimeSpan moveTime { get; set; }
+        public bool isPaid { get; set; }
+        public OrderStatus orderStatus { get; set; }
+        public String name { get; set; }
+        public String phoneHome { get; set; }
+        public String phoneWork { get; set; }
+        public String addrLine { get; set; }
+        public String city { get; set; }
+
+        public String dateTime
+        {
+            get
+            {
+                String dt = moveDate.ToString("MMMM dd ");
+                dt += " " +moveTime.ToString(@"hh\:mm");
+                return dt;
+            }
+        }
+        public String phones
+        {
+            get
+            {
+                String ps = "";
+                if (phoneWork.Length > 0) ps = ", " + phoneWork;
+                ps = phoneHome + ps;
+                return ps;
+            }
+        }
+        public String address
+        {
+            get
+            {
+                String adr="";
+                adr = addrLine + ", " + city;
+                return adr;
+            }
+        }
+    }
+
     public class DayScheduleItem
     {
-        public DayScheduleItem(long orderId, string truckName, TimeSpan timeTruckFrom, TimeSpan timeTruckTo, int workers)
+        public DayScheduleItem(long orderId, long truckId, string truckName, TimeSpan timeTruckFrom, TimeSpan timeTruckTo, int workers)
         {
             this.orderId = orderId;
+            this.truckId = truckId;
             this.truckName = truckName;
             this.timeTruckFrom = timeTruckFrom;
             this.timeTruckTo = timeTruckTo;
@@ -74,6 +121,7 @@ namespace EasyMoveOMS
         }
 
         public long orderId { get; set; }
+        public long truckId { get; set; }
         public String truckName { get; set; }
         public TimeSpan timeTruckFrom { get; set; }
         public TimeSpan timeTruckTo { get; set; }

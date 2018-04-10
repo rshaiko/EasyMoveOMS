@@ -179,3 +179,12 @@ settings to(from) XML
 -export data to Excel/Word
 -generate new invoice
 3. Need assistance / figure things out
+
+10.04.2018 Roman
+1. What I have done/not done
+- open existing order methods
+- loading existing order and related data to order window
+2. Plan until next Scrum
+- generating a contract
+- search and sort in the main window
+3. Need assistance / figure things out

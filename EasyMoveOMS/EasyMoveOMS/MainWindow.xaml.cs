@@ -24,20 +24,26 @@ namespace EasyMoveOMS
     /// </summary>
     public partial class MainWindow : Window
     {
-       //public static Database db;
+        //public static Database db;
+        List<ListOrderItem> orderList = new List<ListOrderItem>();
 
         public MainWindow()
         {
             try
             {
              
-                Globals.db = new Database();
+                
                 InitializeComponent();
+                Globals.truckList = Globals.db.GetWorkingTrucks();
+
+                Globals.db.reloadOrderList(ref orderList);
+                lvOrders.ItemsSource = orderList;
+
                 //reloadClientsList();
                 chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
 
                 //Rom@
-                Globals.truckList = Globals.db.GetWorkingTrucks();
+                
 
             }
             catch (SqlException e)
@@ -89,6 +95,18 @@ namespace EasyMoveOMS
 
             }
 
+        }
+
+        private void lvOrders_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lvOrders.SelectedIndex == -1) return;
+            ListOrderItem loi = (ListOrderItem)lvOrders.SelectedItem;
+            Order o = new Order { id = loi.id };
+            OrderWindow dlg = new OrderWindow(o);
+            if (dlg.ShowDialog() == true)
+            {
+
+            }
         }
     }
 }

@@ -46,6 +46,86 @@ namespace EasyMoveOMS
             return result;
         }
 
+        internal void loadOrderData(ref Order o)
+        {
+            String sql = "SELECT * FROM orders WHERE id=" + o.id + ";";
+            using (MySqlCommand command = new MySqlCommand(sql, conn))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    o.moveDate = (DateTime)reader["moveDate"];
+                    o.moveTime = (TimeSpan)reader["moveTime"];
+                    o.clientId = Convert.ToInt32(reader["clientId"]);
+                    o.truckId = Convert.ToInt32(reader["truckId"]);
+                    o.workers = Convert.ToInt32(reader["workers"]);
+                    o.pricePerHour = (decimal)reader["pricePerHour"];
+                    o.minTime = (TimeSpan)reader["minTime"];
+                    o.maxTime = (TimeSpan)reader["maxTime"];
+                    o.deposit = (decimal)reader["deposit"];
+                    o.workTime = (TimeSpan)reader["workTime"];
+                    o.travelTime = (TimeSpan)reader["travelTime"];
+                    o.arriveTimeFrom = (TimeSpan)reader["arriveTimeFrom"];
+                    o.arriveTimeTo = (TimeSpan)reader["arriveTimeTo"];
+                    o.boxes = Convert.ToInt32(reader["boxes"]);
+                    o.beds = Convert.ToInt32(reader["beds"]);
+                    o.sofas = Convert.ToInt32(reader["sofas"]);
+                    o.frigos = Convert.ToInt32(reader["frigos"]);
+                    o.wds = Convert.ToInt32(reader["wds"]);
+                    o.desks = Convert.ToInt32(reader["desks"]);
+                    o.tables = Convert.ToInt32(reader["tables"]);
+                    o.chairs = Convert.ToInt32(reader["chairs"]);
+                    o.other = Convert.ToInt32(reader["other"]);
+                    o.oversized = (bool)reader["oversized"];
+                    o.overweight = (bool)reader["overweight"];
+                    o.fragile = (bool)reader["fragile"];
+                    o.expensive = (bool)reader["expensive"];
+                    o.details = (string)reader["details"];
+                    o.isPaid = (bool)reader["isPaid"];
+                    o.orderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), reader["orderStatus"] + "");
+                    o.contactOnDate = (DateTime)reader["contactOnDate"];
+                    o.doneStartTime = (TimeSpan)reader["doneStartTime"];
+                    o.doneEndTime = (TimeSpan)reader["doneEndTime"];
+                    o.doneBreaksTime = (TimeSpan)reader["doneBreaksTime"];
+                    o.doneTotalTime = (TimeSpan)reader["doneTotalTime"];
+                    o.useIntAddress = (bool)reader["useIntAddress"];
+                    o.timeTruckFrom = (TimeSpan)reader["timeTruckFrom"];
+                    o.timeTruckTo = (TimeSpan)reader["timeTruckTo"];
+                }
+            }
+        }
+
+
+        internal void reloadOrderList(ref List<ListOrderItem> orderList)
+        {
+            ListOrderItem li;
+            List<ListOrderItem> loi = new List<ListOrderItem>();
+            String sql = "SELECT o.id, o.dateCreated, o.moveDate, o.moveTime, o.isPaid, o.orderStatus, c.name, c.phoneHome, c.phoneWork, a.addrLine, a.city  " +
+                "FROM easymove.orders AS o LEFT JOIN addresses AS a ON o.id = a.orderId LEFT JOIN clients AS c ON o.clientId=c.id  " +
+                "WHERE addrType='Actual' ORDER BY o.moveDate, o.moveTime;";
+            using (MySqlCommand command = new MySqlCommand(sql, conn))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    li = new ListOrderItem();
+                    li.id = (int)reader["id"];
+                    li.name = (string)reader["name"];
+                    li.moveDate = (DateTime)reader["moveDate"];
+                    li.dateCreated = (DateTime)reader["dateCreated"];
+                    li.moveTime = (TimeSpan)reader["moveTime"];
+                    li.isPaid = (bool)reader["isPaid"];
+                    li.orderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), reader["orderStatus"] + "");
+                    li.phoneHome = (string)reader["phoneHome"];
+                    li.phoneWork = (string)reader["phoneWork"];
+                    li.addrLine = (string)reader["addrLine"];
+                    li.city = (string)reader["city"];
+                    loi.Add(li);
+                }
+            }
+            if (loi.Count > 0) orderList = loi;
+        }
+
         public List<Truck> GetWorkingTrucks()
         {
             List<Truck> result = new List<Truck>();
@@ -82,6 +162,7 @@ namespace EasyMoveOMS
             }
         }
 
+        
         internal long addPayment(Payment p)
         {
             String sql = "INSERT INTO payments (orderId, method, paymentDate, amount, notes) VALUES (@orderId, @method, @paymentDate, @amount, @notes); " +
@@ -134,7 +215,7 @@ namespace EasyMoveOMS
         {
             List<DayScheduleItem> dsi = new List<DayScheduleItem>();
             String dd = dt.ToString("yyyy-MM-dd");
-            String sql = "SELECT o.id, o.timeTruckFrom, o.timeTruckTo, o.workers, t.name FROM orders AS o JOIN trucks AS t ON o.truckId = t.id WHERE o.moveDate = '"+ dd + "' ORDER BY t.name, o.timeTruckFrom;";
+            String sql = "SELECT o.id, o.timeTruckFrom, o.timeTruckTo, o.workers, t.id AS truckId, t.name FROM orders AS o JOIN trucks AS t ON o.truckId = t.id WHERE o.moveDate = '"+ dd + "' ORDER BY t.name, o.timeTruckFrom;";
             Console.WriteLine(sql);
             using (MySqlCommand command = new MySqlCommand(sql, conn))
             using (MySqlDataReader reader = command.ExecuteReader())
@@ -142,11 +223,12 @@ namespace EasyMoveOMS
                 while (reader.Read())
                 {
                     long orderId = Convert.ToInt32(reader["id"]);
+                    long truckId = Convert.ToInt32(reader["truckId"]);
                     TimeSpan timeTruckFrom = (TimeSpan)(reader["timeTruckFrom"]);
                     TimeSpan timeTruckTo = (TimeSpan)(reader["timeTruckTo"]);
                     int workers = Convert.ToInt16(reader["workers"]);
                     String name = reader["name"] + "";
-                    DayScheduleItem item = new DayScheduleItem(orderId, name, timeTruckFrom, timeTruckTo, workers);
+                    DayScheduleItem item = new DayScheduleItem(orderId, truckId, name, timeTruckFrom, timeTruckTo, workers);
                     dsi.Add(item);
                 }
             }

@@ -28,7 +28,7 @@ namespace EasyMoveOMS
         //DECLARATIONS
         Order currentOrder;
         List <Address> orderAddresses = new List<Address>() { new Address(), new Address(), new Address() };
-        Order.OrderStatus os;
+        OrderStatus os;
         Client orderClient;
         Truck orderTruck;
 
@@ -118,6 +118,18 @@ namespace EasyMoveOMS
             else
             {
                 isNewOrder = false;
+                try
+                {
+                    Globals.db.loadOrderData(ref order);
+                    fillDownTheForm(ref order);
+                }
+                catch (MySqlException ex)
+                {
+                    System.Windows.MessageBox.Show("Order data did not loaded:\n\n" + ex.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    //DialogResult = false;
+                    Close();
+                    
+                }
                 currentOrder = order;
                 refreshPaymentsList();
                 //lvPayments.ItemsSource = currentOrder.orderPayments;
@@ -127,6 +139,77 @@ namespace EasyMoveOMS
 
             cbTruck.ItemsSource = Globals.truckList;
         }
+
+        private void fillDownTheForm(ref Order o)
+        {
+            dpMoveDate.SelectedDate = o.moveDate;
+            cbStartTimeH.Text = o.moveTime.Hours + "";
+            cbStartTimeM.SelectedIndex = o.moveTime.Minutes / 15;
+            int truckIndex=0;
+            foreach ( Truck t in Globals.truckList)
+            {
+                if (o.truckId==t.id) break;
+                truckIndex++;
+            }
+            cbTruck.SelectedIndex = truckIndex;
+            tbWorkers.Text = o.workers + "";
+            tbWorkTimeH.Text = o.workTime.Hours + "";
+            cbWorkMinutes.SelectedIndex = o.workTime.Minutes / 15;
+            tbTravelTimeH.Text = o.travelTime.Hours + "";
+            cbTravelMinutes.SelectedIndex = o.travelTime.Minutes / 15;
+            cbArriveFromH.Text = o.arriveTimeFrom.Hours + "";
+            cbArriveFromM.SelectedIndex = o.arriveTimeFrom.Minutes / 15;
+            tbArriveToH.Text = o.arriveTimeTo.Hours + "";
+            cbArriveFromM.SelectedIndex = o.arriveTimeTo.Minutes / 15;
+            tbBoxes.Text = o.boxes + "";
+            tbBeds.Text = o.beds + "";
+            tbSofas.Text = o.sofas + "";
+            tbFrigos.Text = o.frigos + "";
+            tbWds.Text = o.wds + "";
+            tbDesks.Text = o.desks + "";
+            tbTables.Text = o.tables + "";
+            tbChairs.Text = o.chairs + "";
+            tbOther.Text = o.other + "";
+            if (o.oversized) cbOversized.IsChecked = true;
+            if (o.overweight) cbOverweight.IsChecked = true;
+            if (o.fragile) cbFragile.IsChecked = true;
+            if (o.expensive) cbExpensive.IsChecked = true;
+            cbDetails.Text = o.details;
+            tbPricePrHour.Text = o.pricePerHour + "";
+            tbMaxHours.Text = o.maxTime.Hours + "";
+            cbMaxMinutes.SelectedIndex = o.maxTime.Minutes / 15;
+            tbMinHours.Text = o.minTime.Hours + "";
+            cbMinMinutes.SelectedIndex = o.minTime.Minutes / 15;
+            tbDeposit.Text = o.deposit + "";
+            if (o.orderStatus == OrderStatus.Scheduled) rbScheduled.IsChecked = true;
+            if (o.orderStatus == OrderStatus.Suspended) rbSuspended.IsChecked = true;
+            if (o.orderStatus == OrderStatus.Done)
+            {
+                rbDone.IsChecked = true;
+                if (o.contactOnDate != DateTime.MinValue) dpContactOn.SelectedDate = o.contactOnDate;
+                if (o.doneStartTime.Ticks > 0)
+                {
+                    cbDoneStartH.Text = o.doneStartTime.Hours + "";
+                    cbDoneStartM.SelectedIndex = o.doneStartTime.Minutes / 15;
+                    cbDoneEndH.Text = o.doneEndTime.Hours + "";
+                    cbDoneEndM.SelectedIndex = o.doneEndTime.Minutes / 15;
+                    cbDoneBreaksH.Text = o.doneBreaksTime.Hours + "";
+                    cbDoneBreaksM.SelectedIndex = o.doneBreaksTime.Minutes / 15;
+                    cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
+                    cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
+                }
+                else
+                {
+
+                    cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
+                    cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
+                }
+            }
+
+        }
+
+
+
 
         // !!!!!!! --- GET Day Schedule --- !!!!!!!!!!!!
         private void dpMoveDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -161,7 +244,7 @@ namespace EasyMoveOMS
             {
                 foreach(DayScheduleItem d2 in dayScheduleItems)
                 {
-                    if (d1.orderId != d2.orderId)
+                    if (d1.orderId != d2.orderId && d1.truckId==d2.truckId)
                     {
                         //Check for overlaps
                         if (!((d1.timeTruckFrom.Ticks < d2.timeTruckFrom.Ticks && d1.timeTruckTo.Ticks < d2.timeTruckFrom.Ticks)
@@ -578,15 +661,15 @@ namespace EasyMoveOMS
 
                 //ORDER STATUS
                 contactOnDate = new DateTime(2000, 1, 1);
-                if (rbScheduled.IsChecked == true) os = Order.OrderStatus.Scheduled;
+                if (rbScheduled.IsChecked == true) os = OrderStatus.Scheduled;
                 else if (rbSuspended.IsChecked == true)
                 {
-                    os = Order.OrderStatus.Suspended;
+                    os = OrderStatus.Suspended;
                     contactOnDate = (contactOnDateIsChanged) ? dpContactOn.DisplayDate : new DateTime(2000, 1, 1);
                 }
                 else if (rbDone.IsChecked == true)
                 {
-                    os = Order.OrderStatus.Done;
+                    os = OrderStatus.Done;
                     if (cbDoneTotalH.IsEnabled==true)
                     {
                         if (cbDoneStartH.IsEnabled == false)

@@ -15,13 +15,8 @@ namespace EasyMoveOMS
             WebClient client = new WebClient();
             client.Proxy = null;
             Stream data = client.OpenRead(url);
-
-            //WebRequest request = WebRequest.Create(url);
-            //WebResponse response = request.GetResponse();
-            //Stream data = response.GetResponseStream();
             StreamReader reader = new StreamReader(data);
             string responseFromServer = reader.ReadToEnd();
-            //response.Close();
             return responseFromServer;
         }
     }
