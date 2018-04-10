@@ -188,3 +188,13 @@ settings to(from) XML
 - generating a contract
 - search and sort in the main window
 3. Need assistance / figure things out
+
+2018.04.10 Dmitrii
+1. Done since last scrum
+-database class changes
+-settings
+2. Plan until next Scrum
+-main window search
+-mian window sorting
+3. Need assistance / figure things out
+-export to Excel
