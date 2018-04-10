@@ -42,7 +42,7 @@ namespace EasyMoveOMS
         bool movingDateIsChanged = false;
         bool contactOnDateIsChanged = false;
 
-        String zipAct, zipDest, zipInt;
+        //String zipAct, zipDest, zipInt;
         bool[] zipsOk = new bool[3] { false, false, false }; //true if zip code is well formatted
 
         //REGULAR EXPRESSIONS
@@ -68,7 +68,7 @@ namespace EasyMoveOMS
         int startHour, startMinute, workTimeH, workTimeM, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
         int[] minGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of SECONDS !!!
         int[] meterGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google distance - arr of meters
-        String phoneHome, phoneWork, email, googleTime, googleDistance;  
+        String phoneHome, phoneWork, email;//, googleTime, googleDistance;  
         int workers;
         bool payPerHour;
         decimal pricePerHour, deposit;
@@ -280,16 +280,16 @@ namespace EasyMoveOMS
         //SAVE
         private void btSave_Click(object sender, RoutedEventArgs e)
         {
+            isValid = false;
+            validateOrder();
+            if (!isValid) return;
             saveOrder();
         }
 
         private void saveOrder()
         {
             String confirmation = "";
-            isValid = false;
-            validateOrder();
-            if (!isValid) return;
-
+            
             // ==> Save new Client if it is NEW
             if (orderClient.id == 0)
             {
@@ -344,7 +344,7 @@ namespace EasyMoveOMS
                 {
                     System.Windows.MessageBox.Show(confirmation + "Order - Error!\nAddresses - Error!" + ex.Message);
                 }
-
+                
             }
 
             // ==> SAVE ADDRESS data 
@@ -541,7 +541,12 @@ namespace EasyMoveOMS
                 if (!int.TryParse(cbMinMinutes.Text, out minutes)) minutes = 0;
                 minTime = new TimeSpan(hours, minutes, 0);
 
-
+                //PAY PER HOUR
+                if(!decimal.TryParse(tbPricePrHour.Text, out pricePerHour))
+                {
+                    if (tbPricePrHour.Text == "") pricePerHour = 0;
+                    else throw new InvalidDataException("Invalid price entered");
+                }
 
                 //DEPOSIT
                 if(!decimal.TryParse(tbDeposit.Text, out deposit))
@@ -1009,6 +1014,9 @@ namespace EasyMoveOMS
         
         private void tbInvoice_Click(object sender, RoutedEventArgs e)
         {
+            isValid = false;
+            validateOrder();
+            if (!isValid) return;
             saveOrder();
             InvoiceWindow dlg1 = new InvoiceWindow(currentOrder);
             if (dlg1.ShowDialog() == true)
