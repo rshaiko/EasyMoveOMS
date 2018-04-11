@@ -476,15 +476,7 @@
                 <WrapPanel MinWidth="370" Height="23">
                     <Label Content="Price:    "  />
                     <TextBox Name="tbPricePrHour" Height="23" Width="40" />
-                    <Label Content="  Max:"/>
-                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
-                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" />
-                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00">
-                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
-                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
-                    </ComboBox>
+                    
                     <Label Content="  Min:"/>
                     <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
                     <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" />
@@ -494,7 +486,15 @@
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-
+                    <Label Content="  Max:"/>
+                    <TextBox Name="tbMaxHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
+                    <wpfx:ButtonSpinner Name="spinMaxHours" Width="20" Spin="spinMaxHours_Spin" />
+                    <ComboBox Name="cbMaxMinutes" Padding="3,3" Width="40" Text="00">
+                        <ComboBoxItem Content="00" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="15" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
+                        <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
+                    </ComboBox>
                 </WrapPanel>
                 <Label/>
                 <Label/>

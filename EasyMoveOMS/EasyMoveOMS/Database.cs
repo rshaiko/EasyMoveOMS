@@ -48,50 +48,97 @@ namespace EasyMoveOMS
 
         internal void loadOrderData(ref Order o)
         {
-            String sql = "SELECT * FROM orders WHERE id=" + o.id + ";";
+            Client orderClient;
+            Address address;
+            List<Address> orderAddresses = new List<Address>();
+            int row = 1;
+            String sql = "SELECT o.*, c.id AS cId, c.name, c.email, c.phoneHome, c.phoneWork, a.id as aId, a.isBilling, a.addrLine, a.addrType, a.city, a.province, a.zip, a.notes, a.floor, a.stairs, a.elevator " +
+                "FROM orders AS o JOIN clients AS c ON o.clientId=c.id JOIN addresses as a on o.id=a.orderId WHERE o.id=" + o.id + ";";
             using (MySqlCommand command = new MySqlCommand(sql, conn))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    o.moveDate = (DateTime)reader["moveDate"];
-                    o.moveTime = (TimeSpan)reader["moveTime"];
-                    o.clientId = Convert.ToInt32(reader["clientId"]);
-                    o.truckId = Convert.ToInt32(reader["truckId"]);
-                    o.workers = Convert.ToInt32(reader["workers"]);
-                    o.pricePerHour = (decimal)reader["pricePerHour"];
-                    o.minTime = (TimeSpan)reader["minTime"];
-                    o.maxTime = (TimeSpan)reader["maxTime"];
-                    o.deposit = (decimal)reader["deposit"];
-                    o.workTime = (TimeSpan)reader["workTime"];
-                    o.travelTime = (TimeSpan)reader["travelTime"];
-                    o.arriveTimeFrom = (TimeSpan)reader["arriveTimeFrom"];
-                    o.arriveTimeTo = (TimeSpan)reader["arriveTimeTo"];
-                    o.boxes = Convert.ToInt32(reader["boxes"]);
-                    o.beds = Convert.ToInt32(reader["beds"]);
-                    o.sofas = Convert.ToInt32(reader["sofas"]);
-                    o.frigos = Convert.ToInt32(reader["frigos"]);
-                    o.wds = Convert.ToInt32(reader["wds"]);
-                    o.desks = Convert.ToInt32(reader["desks"]);
-                    o.tables = Convert.ToInt32(reader["tables"]);
-                    o.chairs = Convert.ToInt32(reader["chairs"]);
-                    o.other = Convert.ToInt32(reader["other"]);
-                    o.oversized = (bool)reader["oversized"];
-                    o.overweight = (bool)reader["overweight"];
-                    o.fragile = (bool)reader["fragile"];
-                    o.expensive = (bool)reader["expensive"];
-                    o.details = (string)reader["details"];
-                    o.isPaid = (bool)reader["isPaid"];
-                    o.orderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), reader["orderStatus"] + "");
-                    o.contactOnDate = (DateTime)reader["contactOnDate"];
-                    o.doneStartTime = (TimeSpan)reader["doneStartTime"];
-                    o.doneEndTime = (TimeSpan)reader["doneEndTime"];
-                    o.doneBreaksTime = (TimeSpan)reader["doneBreaksTime"];
-                    o.doneTotalTime = (TimeSpan)reader["doneTotalTime"];
-                    o.useIntAddress = (bool)reader["useIntAddress"];
-                    o.timeTruckFrom = (TimeSpan)reader["timeTruckFrom"];
-                    o.timeTruckTo = (TimeSpan)reader["timeTruckTo"];
+                    if (row == 1)
+                    {
+                        o.moveDate = (DateTime)reader["moveDate"];
+                        o.moveTime = (TimeSpan)reader["moveTime"];
+                        o.clientId = Convert.ToInt32(reader["clientId"]);
+                        o.truckId = Convert.ToInt32(reader["truckId"]);
+                        o.workers = Convert.ToInt32(reader["workers"]);
+                        o.pricePerHour = (decimal)reader["pricePerHour"];
+                        o.minTime = (TimeSpan)reader["minTime"];
+                        o.maxTime = (TimeSpan)reader["maxTime"];
+                        o.deposit = (decimal)reader["deposit"];
+                        o.workTime = (TimeSpan)reader["workTime"];
+                        o.travelTime = (TimeSpan)reader["travelTime"];
+                        o.arriveTimeFrom = (TimeSpan)reader["arriveTimeFrom"];
+                        o.arriveTimeTo = (TimeSpan)reader["arriveTimeTo"];
+                        o.boxes = Convert.ToInt32(reader["boxes"]);
+                        o.beds = Convert.ToInt32(reader["beds"]);
+                        o.sofas = Convert.ToInt32(reader["sofas"]);
+                        o.frigos = Convert.ToInt32(reader["frigos"]);
+                        o.wds = Convert.ToInt32(reader["wds"]);
+                        o.desks = Convert.ToInt32(reader["desks"]);
+                        o.tables = Convert.ToInt32(reader["tables"]);
+                        o.chairs = Convert.ToInt32(reader["chairs"]);
+                        o.other = Convert.ToInt32(reader["other"]);
+                        o.oversized = (bool)reader["oversized"];
+                        o.overweight = (bool)reader["overweight"];
+                        o.fragile = (bool)reader["fragile"];
+                        o.expensive = (bool)reader["expensive"];
+                        o.details = (string)reader["details"];
+                        o.isPaid = (bool)reader["isPaid"];
+                        o.orderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), reader["orderStatus"] + "");
+                        o.contactOnDate = (DateTime)reader["contactOnDate"];
+                        o.doneStartTime = (TimeSpan)reader["doneStartTime"];
+                        o.doneEndTime = (TimeSpan)reader["doneEndTime"];
+                        o.doneBreaksTime = (TimeSpan)reader["doneBreaksTime"];
+                        o.doneTotalTime = (TimeSpan)reader["doneTotalTime"];
+                        o.useIntAddress = (bool)reader["useIntAddress"];
+                        o.timeTruckFrom = (TimeSpan)reader["timeTruckFrom"];
+                        o.timeTruckTo = (TimeSpan)reader["timeTruckTo"];
+
+                        //Client
+                        orderClient = new Client();
+                        orderClient.id = o.clientId;
+                        orderClient.name = (string)reader["name"];
+                        orderClient.email = (string)reader["email"];
+                        orderClient.phoneH = (string)reader["phoneHome"];
+                        orderClient.phoneW = (string)reader["phoneWork"];
+                        o.orderClient = orderClient;
+                    }
+                    //Addresses
+                    address = new Address();
+                    address.id = Convert.ToInt32(reader["aId"]);
+                    address.isBilling = (bool)reader["isBilling"];
+                    address.addrLine = (string)reader["addrLine"];
+                    address.city = (string)reader["city"];
+                    address.zip = (string)reader["zip"];
+                    address.province = (string)reader["province"];
+                    address.notes = (string)reader["notes"];
+                    //address.addrType = (Address.AddrType)Enum.Parse(typeof(Address.AddrType), reader["addrType"] + "");
+                    switch (row)
+                    {
+                        case 1:
+                            address.addrType = Address.AddrType.Actual;
+                            break;
+                        case 2:
+                            address.addrType = Address.AddrType.Destination;
+                            break;
+                        case 3:
+                            address.addrType = Address.AddrType.Intermediate;
+                            break;
+                        default:
+                            break;
+                    }
+                    address.floor = Convert.ToInt32(reader["floor"]);
+                    address.stairs = (bool)reader["stairs"];
+                    address.elevator = (bool)reader["elevator"];
+                    orderAddresses.Add(address);
+                    row++;
                 }
+                o.orderAddresses = orderAddresses;
             }
         }
 
@@ -355,7 +402,7 @@ namespace EasyMoveOMS
                 cmd.Parameters.AddWithValue("@id", o.id);
                 cmd.Parameters.AddWithValue("@moveDate", o.moveDate);
                 cmd.Parameters.AddWithValue("@moveTime", o.moveTime);
-                cmd.Parameters.AddWithValue("@clientId", o.orderClient.id);
+                cmd.Parameters.AddWithValue("@clientId", o.clientId);
                 cmd.Parameters.AddWithValue("@truckId", o.orderTruck.id);
                 cmd.Parameters.AddWithValue("@workers", o.workers);
                 cmd.Parameters.AddWithValue("@pricePerHour", o.pricePerHour);

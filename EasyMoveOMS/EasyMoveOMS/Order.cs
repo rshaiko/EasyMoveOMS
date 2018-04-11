@@ -60,6 +60,7 @@ namespace EasyMoveOMS
         public Order()
         {
             id = 0;
+            clientId = 0;
         }
 
     }

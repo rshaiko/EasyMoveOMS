@@ -37,8 +37,9 @@ namespace EasyMoveOMS
         bool isNewOrder=false;
         bool isNewClient = true;
         //bool isFirstAddrInsert = false;
-        bool tbZipEventsOn = true; //off events if not manual changes
-        bool cbDoneEventsOn = true; //off events if not manual changes
+        //bool eventsOn = true; //off events if not manual changes
+        //bool eventsOn = true; //off events if not manual changes
+        bool eventsOn = true; // to turn off some events when needed
         bool movingDateIsChanged = false;
         bool contactOnDateIsChanged = false;
 
@@ -66,7 +67,7 @@ namespace EasyMoveOMS
             doneStartTime, doneEndTime, doneBreaksTime, doneTotalTime,
             timeTruckFrom, timeTruckTo;
         int startHour, startMinute, workTimeH, workTimeM, travelTimeH, travelTimeM, maxHours, maxMinutes, hours, minutes;
-        int[] minGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of SECONDS !!!
+        int[] secGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google time - arr of SECONDS !!!
         int[] meterGoo = new int[3] { 0, 0, 0 }; //to calculate estimated Google distance - arr of meters
         String phoneHome, phoneWork, email;//, googleTime, googleDistance;  
         int workers;
@@ -99,11 +100,16 @@ namespace EasyMoveOMS
 
         public OrderWindow (Order order)
         {
+            eventsOn = false;
             InitializeComponent();
+            cbTruck.ItemsSource = Globals.truckList;
+            eventsOn = true;
+
             currentOrder = order;
-            if (currentOrder == null)  
+            if (currentOrder == null)  //USER creates new order
             {
                 currentOrder = new Order();
+                currentOrder.orderAddresses = orderAddresses;
                 lvPayments.ItemsSource = currentOrder.orderPayments;
                 isNewOrder = true;
 
@@ -115,13 +121,13 @@ namespace EasyMoveOMS
                 //orderAddresses.Add(new Address());
                 //orderAddresses.Add(new Address());
             }
-            else
+            else //USER is opening existing order
             {
                 isNewOrder = false;
                 try
                 {
                     Globals.db.loadOrderData(ref order);
-                    fillDownTheForm(ref order);
+                    if (!fillDownTheForm(ref order)) return; 
                 }
                 catch (MySqlException ex)
                 {
@@ -132,6 +138,7 @@ namespace EasyMoveOMS
                 }
                 currentOrder = order;
                 refreshPaymentsList();
+                updateSchedule(currentOrder.moveDate);
                 //lvPayments.ItemsSource = currentOrder.orderPayments;
                 //orderClient = order.orderClient; // TODO LOAD INFO + change to existing client
                 //orderTruck = order.orderTruck; 
@@ -140,70 +147,127 @@ namespace EasyMoveOMS
             cbTruck.ItemsSource = Globals.truckList;
         }
 
-        private void fillDownTheForm(ref Order o)
+        private bool fillDownTheForm(ref Order o) //returns true if filled in without errors
         {
-            dpMoveDate.SelectedDate = o.moveDate;
-            cbStartTimeH.Text = o.moveTime.Hours + "";
-            cbStartTimeM.SelectedIndex = o.moveTime.Minutes / 15;
-            int truckIndex=0;
-            foreach ( Truck t in Globals.truckList)
+            eventsOn = false;
+            try
             {
-                if (o.truckId==t.id) break;
-                truckIndex++;
-            }
-            cbTruck.SelectedIndex = truckIndex;
-            tbWorkers.Text = o.workers + "";
-            tbWorkTimeH.Text = o.workTime.Hours + "";
-            cbWorkMinutes.SelectedIndex = o.workTime.Minutes / 15;
-            tbTravelTimeH.Text = o.travelTime.Hours + "";
-            cbTravelMinutes.SelectedIndex = o.travelTime.Minutes / 15;
-            cbArriveFromH.Text = o.arriveTimeFrom.Hours + "";
-            cbArriveFromM.SelectedIndex = o.arriveTimeFrom.Minutes / 15;
-            tbArriveToH.Text = o.arriveTimeTo.Hours + "";
-            cbArriveFromM.SelectedIndex = o.arriveTimeTo.Minutes / 15;
-            tbBoxes.Text = o.boxes + "";
-            tbBeds.Text = o.beds + "";
-            tbSofas.Text = o.sofas + "";
-            tbFrigos.Text = o.frigos + "";
-            tbWds.Text = o.wds + "";
-            tbDesks.Text = o.desks + "";
-            tbTables.Text = o.tables + "";
-            tbChairs.Text = o.chairs + "";
-            tbOther.Text = o.other + "";
-            if (o.oversized) cbOversized.IsChecked = true;
-            if (o.overweight) cbOverweight.IsChecked = true;
-            if (o.fragile) cbFragile.IsChecked = true;
-            if (o.expensive) cbExpensive.IsChecked = true;
-            cbDetails.Text = o.details;
-            tbPricePrHour.Text = o.pricePerHour + "";
-            tbMaxHours.Text = o.maxTime.Hours + "";
-            cbMaxMinutes.SelectedIndex = o.maxTime.Minutes / 15;
-            tbMinHours.Text = o.minTime.Hours + "";
-            cbMinMinutes.SelectedIndex = o.minTime.Minutes / 15;
-            tbDeposit.Text = o.deposit + "";
-            if (o.orderStatus == OrderStatus.Scheduled) rbScheduled.IsChecked = true;
-            if (o.orderStatus == OrderStatus.Suspended) rbSuspended.IsChecked = true;
-            if (o.orderStatus == OrderStatus.Done)
-            {
-                rbDone.IsChecked = true;
-                if (o.contactOnDate != DateTime.MinValue) dpContactOn.SelectedDate = o.contactOnDate;
-                if (o.doneStartTime.Ticks > 0)
-                {
-                    cbDoneStartH.Text = o.doneStartTime.Hours + "";
-                    cbDoneStartM.SelectedIndex = o.doneStartTime.Minutes / 15;
-                    cbDoneEndH.Text = o.doneEndTime.Hours + "";
-                    cbDoneEndM.SelectedIndex = o.doneEndTime.Minutes / 15;
-                    cbDoneBreaksH.Text = o.doneBreaksTime.Hours + "";
-                    cbDoneBreaksM.SelectedIndex = o.doneBreaksTime.Minutes / 15;
-                    cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
-                    cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
-                }
-                else
-                {
+                lblTitle.Content = "Order #" + o.id + " - on " + o.moveDate.ToLongDateString();
+                dpMoveDate.SelectedDate = o.moveDate;
+                cbStartTimeH.Text = o.moveTime.Hours + "";
+                cbStartTimeM.SelectedIndex = o.moveTime.Minutes / 15;
+                tbClient.Text = o.orderClient.name;
+                tbPhoneH.Text = o.orderClient.phoneH;
+                tbPhoneW.Text = o.orderClient.phoneW;
+                tbEmail.Text = o.orderClient.email;
 
-                    cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
-                    cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
+                //Selecting Truck in combobox
+                int truckIndex = 0;
+                foreach (Truck t in Globals.truckList)
+                {
+                    if (o.truckId == t.id) break;
+                    truckIndex++;
                 }
+                cbTruck.SelectedIndex = truckIndex;
+
+                tbWorkers.Text = o.workers + "";
+                tbWorkTimeH.Text = o.workTime.Hours + "";
+                cbWorkMinutes.SelectedIndex = o.workTime.Minutes / 15;
+                tbTravelTimeH.Text = o.travelTime.Hours + "";
+                cbTravelMinutes.SelectedIndex = o.travelTime.Minutes / 15;
+                cbArriveFromH.Text = o.arriveTimeFrom.Hours + "";
+                cbArriveFromM.SelectedIndex = o.arriveTimeFrom.Minutes / 15;
+                tbArriveToH.Text = o.arriveTimeTo.Hours + "";
+                cbArriveToM.SelectedIndex = o.arriveTimeTo.Minutes / 15;
+                tbBoxes.Text = o.boxes + "";
+                tbBeds.Text = o.beds + "";
+                tbSofas.Text = o.sofas + "";
+                tbFrigos.Text = o.frigos + "";
+                tbWds.Text = o.wds + "";
+                tbDesks.Text = o.desks + "";
+                tbTables.Text = o.tables + "";
+                tbChairs.Text = o.chairs + "";
+                tbOther.Text = o.other + "";
+                if (o.oversized) cbOversized.IsChecked = true;
+                if (o.overweight) cbOverweight.IsChecked = true;
+                if (o.fragile) cbFragile.IsChecked = true;
+                if (o.expensive) cbExpensive.IsChecked = true;
+                cbDetails.Text = o.details;
+                tbPricePrHour.Text = o.pricePerHour + "";
+                tbMaxHours.Text = o.maxTime.Hours + "";
+                cbMaxMinutes.SelectedIndex = o.maxTime.Minutes / 15;
+                tbMinHours.Text = o.minTime.Hours + "";
+                cbMinMinutes.SelectedIndex = o.minTime.Minutes / 15;
+                tbDeposit.Text = o.deposit + "";
+                if (o.orderStatus == OrderStatus.Scheduled) rbScheduled.IsChecked = true;
+                if (o.orderStatus == OrderStatus.Suspended) rbSuspended.IsChecked = true;
+                if (o.orderStatus == OrderStatus.Done)
+                {
+                    rbDone.IsChecked = true;
+                    if (o.contactOnDate != DateTime.MinValue) dpContactOn.SelectedDate = o.contactOnDate;
+                    if (o.doneStartTime.Ticks > 0 && o.doneEndTime.Ticks > 0)
+                    {
+                        cbDoneStartH.Text = o.doneStartTime.Hours + "";
+                        cbDoneStartM.SelectedIndex = o.doneStartTime.Minutes / 15;
+                        cbDoneEndH.Text = o.doneEndTime.Hours + "";
+                        cbDoneEndM.SelectedIndex = o.doneEndTime.Minutes / 15;
+                        cbDoneBreaksH.Text = o.doneBreaksTime.Hours + "";
+                        cbDoneBreaksM.SelectedIndex = o.doneBreaksTime.Minutes / 15;
+                        cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
+                        cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
+                    }
+                    else
+                    {
+                        cbDoneTotalH.Text = o.doneTotalTime.Hours + "";
+                        cbDoneTotalM.SelectedIndex = o.doneTotalTime.Minutes / 15;
+                    }
+                }
+                // >> Filling down the Addresses
+                // >> 1) actual
+                cbIsBillingAct.IsChecked = o.orderAddresses[0].isBilling ? true : false;
+                tbAddrLineAct.Text = o.orderAddresses[0].addrLine;
+                tbFloorAct.Text = o.orderAddresses[0].floor + "";
+                cbStairsAct.IsChecked = o.orderAddresses[0].stairs ? true : false;
+                cbElevatorAct.IsChecked = o.orderAddresses[0].elevator ? true : false;
+                tbCityAct.Text = o.orderAddresses[0].city;
+                cbProvinceAct.Text = o.orderAddresses[0].province;
+                tbNotesAct.Text = o.orderAddresses[0].notes;
+                eventsOn = true;  tbZipAct.Text = o.orderAddresses[0].zip; eventsOn = false;
+                // >> 2) destination
+                cbIsBillingDest.IsChecked = o.orderAddresses[1].isBilling ? true : false;
+                tbAddrLineDest.Text = o.orderAddresses[1].addrLine;
+                tbFloorDest.Text = o.orderAddresses[1].floor + "";
+                cbStairsDest.IsChecked = o.orderAddresses[1].stairs ? true : false;
+                cbElevatorDest.IsChecked = o.orderAddresses[1].elevator ? true : false;
+                tbCityDest.Text = o.orderAddresses[1].city;
+                cbProvinceDest.Text = o.orderAddresses[1].province;
+                tbNotesDest.Text = o.orderAddresses[1].notes;
+                eventsOn = true;  tbZipDest.Text = o.orderAddresses[1].zip; eventsOn = false;
+                // >> 3) intermediate IF EXISTS
+                if (o.useIntAddress)
+                {
+                    eventsOn = true;
+                    cbUseIntermediateAddress.IsChecked = true;
+                    eventsOn = false;
+                    cbIsBillingInt.IsChecked = o.orderAddresses[2].isBilling ? true : false;
+                    tbAddrLineInt.Text = o.orderAddresses[2].addrLine;
+                    tbFloorInt.Text = o.orderAddresses[2].floor + "";
+                    cbStairsInt.IsChecked = o.orderAddresses[2].stairs ? true : false;
+                    cbElevatorInt.IsChecked = o.orderAddresses[2].elevator ? true : false;
+                    tbCityInt.Text = o.orderAddresses[2].city;
+                    cbProvinceInt.Text = o.orderAddresses[2].province;
+                    tbZipInt.Text = o.orderAddresses[2].zip;
+                }
+
+                eventsOn = true;
+                return true;
+            }
+            catch (Exception e) //Filling order form error
+            {
+                eventsOn = true;
+                MessageBoxResult result = System.Windows.MessageBox.Show("Order data loaded with errors:\n" + e.Message + "\nWould you like to continue?", "Data error", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No);
+                if (result == MessageBoxResult.No) return false;
+                return true; // !!! User will continue workink with not complete data
             }
 
         }
@@ -237,6 +301,7 @@ namespace EasyMoveOMS
             lblSchedule.Content = "On " + dt.ToLongDateString()+ " schedule";// .ToString("yyyy-MM-dd") ;
         }
 
+        //Checking trucks schedule overlapping
         private void checkOverlap(ref List<DayScheduleItem> dayScheduleItems)
         {
             foreach (DayScheduleItem d0 in dayScheduleItems) d0.overlap = false;
@@ -291,15 +356,16 @@ namespace EasyMoveOMS
             String confirmation = "";
             
             // ==> Save new Client if it is NEW
-            if (orderClient.id == 0)
+            if (currentOrder.clientId == 0)
             {
                 orderClient = new Client(0, clientName, clientEmail, clientPhoneH, clientPhoneW);
                 try
                 {
                     clientId = Globals.db.saveNewClient(orderClient);
+                    currentOrder.clientId = clientId;
                     orderClient.id = clientId;
                     currentOrder.orderClient = orderClient;
-                    confirmation = "==> Database: New client <" + orderClient.name + "> was saved\n";
+                    confirmation = ">> New client <" + orderClient.name + "> was added\n";
                     //System.Windows.MessageBox.Show("Database: New client " + orderClient.name + " was saved");
                     tbClient.IsEnabled = false;
                     tbEmail.IsEnabled = false;
@@ -309,13 +375,13 @@ namespace EasyMoveOMS
                 }
                 catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show("Database: Error saving order data \n" + er.Message);
+                    System.Windows.MessageBox.Show("Error saving new client:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                     return;
                 }
             }
 
             // ==> SAVE ORDER data (or create new) in the database
-            if (isNewOrder) currentOrder = new Order();
+            //if (isNewOrder) currentOrder = new Order(); depr
             fillCurrentOrderFromForm();
             if (isNewOrder)
             {
@@ -324,12 +390,13 @@ namespace EasyMoveOMS
                     orderId = Globals.db.saveNewOrder(currentOrder);
                     currentOrder.id = orderId;
                     isNewOrder = false;
-                    lblTitle.Content = "Order #" + currentOrder.id;
-                    confirmation += "==> Database: New Order #" + currentOrder.id + " was created.\n";
+                    lblTitle.Content = "Order #" + currentOrder.id + " -  on "+currentOrder.moveDate.ToLongDateString();
+                    confirmation += ">> Order #" + currentOrder.id + " was created.\n";
                 }
-                catch (MySqlException ex)
+                catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show(confirmation + "Database error. Error saving new order.\n" + ex.Message);
+                    System.Windows.MessageBox.Show(confirmation +"Error creating order:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
                 }
             }
             else
@@ -337,12 +404,12 @@ namespace EasyMoveOMS
                 try
                 {
                     Globals.db.updateOrder(currentOrder);
-                    confirmation += "==> Order #" + currentOrder.id + " - Saved Ok\n";
-                    //System.Windows.MessageBox.Show(confirmation);
+                    confirmation += ">> Order #" + currentOrder.id + " was saved \n";
                 }
-                catch (MySqlException ex)
+                catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show(confirmation + "Order - Error!\nAddresses - Error!" + ex.Message);
+                    System.Windows.MessageBox.Show(confirmation +"Error saving order:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
                 }
                 
             }
@@ -364,12 +431,13 @@ namespace EasyMoveOMS
                     orderAddresses[1].id = lastId + 1;
                     orderAddresses[2].id = lastId + 2;
                     
-                    confirmation += "Addresses - Ok";
-                    System.Windows.MessageBox.Show(confirmation);
+                    confirmation += ">> Addresses were saved\n";
+                    System.Windows.MessageBox.Show(confirmation, "Database", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+
                 }
-                catch (MySqlException ex)
+                catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                    System.Windows.MessageBox.Show(confirmation + "Error saving addresses:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
             }
             else // order is already saved
@@ -377,22 +445,22 @@ namespace EasyMoveOMS
                 try
                 {
                     Globals.db.updateAddresses(orderAddresses);
-                    confirmation += "Addresses - Ok";
+                    confirmation += ">> Addresses were saved";
                     System.Windows.MessageBox.Show(confirmation);
                 }
-                catch (MySqlException ex)
+                catch (MySqlException er)
                 {
-                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                    System.Windows.MessageBox.Show(confirmation + "Error saving addresses:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
-                catch (InvalidDataException ex)
+                catch (InvalidDataException er)
                 {
-                    System.Windows.MessageBox.Show(confirmation + "Addresses - Error! - " + ex.Message);
+                    System.Windows.MessageBox.Show(confirmation + "Error saving addresses:\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
             }
             currentOrder.orderAddresses = orderAddresses;
         }
 
-        private void fillCurrentOrderFromForm()
+        private void fillCurrentOrderFromForm() 
         {
             currentOrder.orderAddresses = orderAddresses;
             currentOrder.moveDate = moveDate;
@@ -446,7 +514,11 @@ namespace EasyMoveOMS
                 {
                     throw new InvalidDataException("Moving date is not selected");
                 }
-                moveDate = (DateTime)dpMoveDate.SelectedDate;
+                //moveDate = (DateTime)dpMoveDate.SelectedDate;
+                if (!DateTime.TryParse(dpMoveDate.SelectedDate+"", out moveDate))
+                {
+                    throw new InvalidDataException("The chosen date is not valid");
+                }
 
                 if (cbStartTimeH.Text == "")
                 {
@@ -468,7 +540,7 @@ namespace EasyMoveOMS
                 moveTime = new TimeSpan(startHour, startMinute, 0);
 
                 // ==> CUSTOMER
-                if (orderClient.id == 0)
+                if (currentOrder.clientId == 0)
                 {
                     clientName = tbClient.Text;
                     clientPhoneH = tbPhoneH.Text;
@@ -588,9 +660,9 @@ namespace EasyMoveOMS
                 TimeSpan halfOfTravelTime = new TimeSpan(travelTime.Ticks / 2); // in seconds
 
                 //timeTruckFrom
-                if (minGoo[0] > 0) //take Google time if exist
+                if (secGoo[0] > 0) //take Google time if exist
                 {
-                    TimeSpan travelToClient = new TimeSpan(0, 0, minGoo[0]);
+                    TimeSpan travelToClient = new TimeSpan(0, 0, secGoo[0]);
                     
                     if (travelToClient.Ticks > moveTime.Ticks) timeTruckFrom = new TimeSpan(0, 0, 0);
                     else timeTruckFrom = moveTime - travelToClient;
@@ -602,9 +674,9 @@ namespace EasyMoveOMS
                 }
 
                 //timeTruckTo
-                if (minGoo[1] > 0) //take Google time if exist
+                if (secGoo[1] > 0) //take Google time if exist
                 {
-                    TimeSpan travelFromClient = new TimeSpan(0, 0, minGoo[1]);
+                    TimeSpan travelFromClient = new TimeSpan(0, 0, secGoo[1]);
                     if (new TimeSpan(travelFromClient.Ticks + workTime.Ticks+ moveTime.Ticks).Ticks > new TimeSpan(23,59,59).Ticks) timeTruckTo = new TimeSpan(23,59, 59);
                     else timeTruckTo = moveTime + workTime + travelFromClient;
                 }
@@ -763,7 +835,7 @@ namespace EasyMoveOMS
                 Address newActual = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
 
                 newActual.id = orderAddresses[0].id;
-                newActual.orderId = orderAddresses[0].orderId;
+                newActual.orderId = currentOrder.id;
 
                 // ==> Destination address
                 addrIsBilling = (cbIsBillingDest.IsChecked == true) ? true : false;
@@ -809,8 +881,8 @@ namespace EasyMoveOMS
                 addrType = Address.AddrType.Destination;
                 //add dest address to the list
                 Address newDestination = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
-                newDestination.id = orderAddresses[1].id;
-                newDestination.orderId = orderAddresses[1].orderId;
+                newDestination.id = currentOrder.orderAddresses[1].id;
+                newDestination.orderId = currentOrder.id;
                 
                 // ==> Intermediate address
                 useIntAddress = false;
@@ -870,8 +942,8 @@ namespace EasyMoveOMS
                 }
                 //add int address to the list
                 Address newIntermediate = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
-                newIntermediate.id = orderAddresses[2].id;
-                newIntermediate.orderId = orderAddresses[2].orderId;
+                newIntermediate.id = currentOrder.orderAddresses[2].id;
+                newIntermediate.orderId = currentOrder.id;
                 orderAddresses.Clear();
                 orderAddresses.Add(newActual);
                 orderAddresses.Add(newDestination);
@@ -971,6 +1043,7 @@ namespace EasyMoveOMS
 
         private void cbIsBillingDest_Checked(object sender, RoutedEventArgs e)
         {
+            if (!eventsOn) return;
             if (cbIsBillingDest.IsChecked == true)
             {
                 cbIsBillingAct.IsChecked = false;
@@ -980,6 +1053,7 @@ namespace EasyMoveOMS
 
         private void cbIsBillingAct_Checked(object sender, RoutedEventArgs e)
         {
+            if (!eventsOn) return;
             if (cbIsBillingAct.IsChecked == true)
             {
                 cbIsBillingDest.IsChecked = false;
@@ -989,6 +1063,7 @@ namespace EasyMoveOMS
 
         private void cbIsBillingInt_Checked(object sender, RoutedEventArgs e)
         {
+            if (!eventsOn) return;
             if (cbIsBillingInt.IsChecked == true)
             {
                 cbIsBillingDest.IsChecked = false;
@@ -999,7 +1074,8 @@ namespace EasyMoveOMS
 
         private void tbTables_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(int.TryParse(tbTables.Text, out int number))
+            if (!eventsOn) return;
+            if (int.TryParse(tbTables.Text, out int number))
             {
                 tbChairs.Text = (number * 4) + "";
                 tbChairs.Background = Brushes.Yellow;
@@ -1035,7 +1111,7 @@ namespace EasyMoveOMS
 
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
         {
-            cbDoneEventsOn = false;
+            eventsOn = false;
             cbDoneStartH.IsEnabled = false;
             cbDoneStartM.IsEnabled = false;
             cbDoneEndH.IsEnabled = false;
@@ -1055,12 +1131,12 @@ namespace EasyMoveOMS
             cbDoneTotalM.SelectedIndex = -1;
 
             dpContactOn.IsEnabled = false;
-            cbDoneEventsOn = true;
+            eventsOn = true;
         }
 
         private void rbSuspended_Checked(object sender, RoutedEventArgs e)
         {
-            cbDoneEventsOn = false;
+            eventsOn = false;
 
             cbDoneStartH.IsEnabled = false;
             cbDoneStartM.IsEnabled = false;
@@ -1083,7 +1159,7 @@ namespace EasyMoveOMS
             dpContactOn.IsEnabled = true;
             contactOnDateIsChanged = false;
 
-            cbDoneEventsOn = true;
+            eventsOn = true;
         }
 
         
@@ -1130,30 +1206,30 @@ namespace EasyMoveOMS
                 int totalMinutes = endH * 60 - startH * 60 - breakH * 60 + endM - startM - breakM;
                 if (totalMinutes < 0)
                 {
-                    cbDoneEventsOn = false;
+                    eventsOn = false;
                     cbDoneTotalH.Text = "";
                     cbDoneTotalM.SelectedIndex = -1;
-                    cbDoneEventsOn = true;
+                    eventsOn = true;
                 }
                 int justMinutes = totalMinutes % 60;
                 int justHours = (totalMinutes - justMinutes) / 60;
-                cbDoneEventsOn = false;
+                eventsOn = false;
                 cbDoneTotalH.Text = justHours+"";
                 cbDoneTotalM.SelectedIndex = justMinutes / 15;
-                cbDoneEventsOn = true;
+                eventsOn = true;
             }
             else
             {
-                cbDoneEventsOn = false;
+                eventsOn = false;
                 cbDoneTotalH.Text = "";
                 cbDoneTotalM.SelectedIndex = -1;
-                cbDoneEventsOn = true;
+                eventsOn = true;
             }
         }
 
         private void cbDoneStartH_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             if (cbDoneBreaksH.Text == "") cbDoneBreaksH.Text = "0";
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
@@ -1162,7 +1238,7 @@ namespace EasyMoveOMS
 
         private void cbDoneEndH_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             if (cbDoneBreaksH.Text == "") cbDoneBreaksH.Text = "0";
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
@@ -1171,7 +1247,7 @@ namespace EasyMoveOMS
 
         private void cbDoneBreaksH_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
             tryCalculateTheTotalTime();
@@ -1179,7 +1255,7 @@ namespace EasyMoveOMS
 
         private void cbDoneTotalH_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneStartH.IsEnabled = false;
             cbDoneStartM.IsEnabled = false;
             cbDoneEndH.IsEnabled = false;
@@ -1190,7 +1266,7 @@ namespace EasyMoveOMS
 
         private void cbDoneStartM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
             tryCalculateTheTotalTime();
@@ -1198,7 +1274,7 @@ namespace EasyMoveOMS
 
         private void cbDoneEndM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
             tryCalculateTheTotalTime();
@@ -1206,7 +1282,7 @@ namespace EasyMoveOMS
 
         private void cbDoneBreaksM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
             tryCalculateTheTotalTime();
@@ -1214,7 +1290,7 @@ namespace EasyMoveOMS
 
         private void cbDoneTotalM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!cbDoneEventsOn) return;
+            if (!eventsOn) return;
             cbDoneStartH.IsEnabled = false;
             cbDoneStartM.IsEnabled = false;
             cbDoneEndH.IsEnabled = false;
@@ -1248,9 +1324,9 @@ namespace EasyMoveOMS
 
         private void cbStartTimeH_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (!eventsOn) return;
             if (int.TryParse(cbStartTimeH.Text, out timeStartH))
             {
-
                 cbArriveFromH.Text = timeStartH + "";
                 tbArriveToH.Text = (timeStartH + 1) + "";
                 cbArriveFromH.Background = Brushes.Yellow;
@@ -1377,21 +1453,22 @@ namespace EasyMoveOMS
         // --> ZIP validations + Distance API
         private void tbZipAct_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tbZipEventsOn) checkZip(tbZipAct.Text, 0, sender);
+            checkZip(tbZipAct.Text, 0, sender);
         }
 
         private void tbZipDest_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tbZipEventsOn) checkZip(tbZipDest.Text, 1, sender);
+            checkZip(tbZipDest.Text, 1, sender);
         }
 
         private void tbZipInt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tbZipEventsOn) checkZip(tbZipInt.Text, 2, sender);
+            checkZip(tbZipInt.Text, 2, sender);
         }
 
         private void checkZip(string tmp, int i, object sender)
         {
+            //if (!eventsOn) return;
             TextBox tb = (TextBox)sender;
             Match mZip = rZip.Match(tmp);
             if (mZip.Success)
@@ -1405,13 +1482,13 @@ namespace EasyMoveOMS
                 }
 
                 tb.Background = Brushes.LightGreen;
-                tbZipEventsOn = false;
+                eventsOn = false;
                 if (tb.Text.Length == 6)
                 {
                     tb.Text = tb.Text.Substring(0, 3) + " " + tb.Text.Substring(3, 3);
                 }
                 tb.Text = (tb.Text).ToUpper();
-                tbZipEventsOn = true;
+                eventsOn = true;
                 if (zipsOk[0] && zipsOk[1] && i != 2) // i!=2 - don't make api request in case entering intermediate address
                 {
                     string url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + tbZipAct.Text + "&destinations=" + tbZipDest.Text + "&key=" + Globals.APIkey;
@@ -1432,6 +1509,25 @@ namespace EasyMoveOMS
             else
             {
                 zipsOk[i] = false;
+                if (i == 0)
+                {
+                    tbGoogleTimeTo.Content = "...";
+                    tbGoogleDistanceTo.Content = "...";
+                    tbGoogleDistance.Content = "...";
+                    tbGoogleTime.Content = "...";
+                    tbGoogleTimeTT.Content = "......";
+                    tbGoogleDistanceTT.Content = "......";
+                }
+                else if (i == 1)
+                {
+                    tbGoogleTimeFrom.Content = "...";
+                    tbGoogleDistanceFrom.Content = "...";
+                    tbGoogleDistance.Content = "...";
+                    tbGoogleTime.Content = "...";
+                    tbGoogleTimeTT.Content = "......";
+                    tbGoogleDistanceTT.Content = "......";
+                }
+
                 if (i == 0 || i == 1)
                 {
                     tbGoogleDistance.Content = "...";
@@ -1454,7 +1550,7 @@ namespace EasyMoveOMS
                     tbGoogleDistanceTo.Content = goo.rows[0].elements[0].distance.text.ToString();
                     tbGoogleTimeTo.Content = goo.rows[0].elements[0].duration.text.ToString();
                     int.TryParse(goo.rows[0].elements[0].distance.value+"", out meterGoo[0]);
-                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out minGoo[0]);
+                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out secGoo[0]);
                     tryCalculateGooEstimation();
                     String s;
                     s = goo.destination_addresses[0];
@@ -1467,7 +1563,7 @@ namespace EasyMoveOMS
                 catch (Exception)
                 {
                     meterGoo[0] = 0;
-                    minGoo[0] = 0;
+                    secGoo[0] = 0;
                     tryCalculateGooEstimation();
                     tbGoogleDistanceTo.Content = "...";
                     tbGoogleTimeTo.Content = "...";
@@ -1484,7 +1580,7 @@ namespace EasyMoveOMS
                     tbGoogleDistanceFrom.Content = goo.rows[0].elements[0].distance.text.ToString();
                     tbGoogleTimeFrom.Content = goo.rows[0].elements[0].duration.text.ToString();
                     int.TryParse(goo.rows[0].elements[0].distance.value + "", out meterGoo[1]);
-                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out minGoo[1]);
+                    int.TryParse(goo.rows[0].elements[0].duration.value + "", out secGoo[1]);
                     tryCalculateGooEstimation();
                     String s;
                     s = goo.origin_addresses[0];
@@ -1497,7 +1593,7 @@ namespace EasyMoveOMS
                 catch (Exception)
                 {
                     meterGoo[1] = 0;
-                    minGoo[1] = 0;
+                    secGoo[1] = 0;
                     tryCalculateGooEstimation();
                     tbGoogleDistanceFrom.Content = "...";
                     tbGoogleTimeFrom.Content = "...";
@@ -1508,16 +1604,16 @@ namespace EasyMoveOMS
 
         private void tryCalculateGooEstimation()
         {
-            if (meterGoo[0] > 0 && meterGoo[1] > 0 && minGoo[0] > 0 && minGoo[1] > 0)
+            if (meterGoo[0] > 0 && meterGoo[1] > 0 && secGoo[0] > 0 && secGoo[1] > 0)
             {
                 meterGoo[2] = meterGoo[0] + meterGoo[1];
                 double fkm = (double)meterGoo[2] / 1000;
                 String km = Math.Round(fkm, 1) + " km";
 
-                minGoo[2] = minGoo[0] + minGoo[1];
-                double h = minGoo[2] / 3600;
+                secGoo[2] = secGoo[0] + secGoo[1];
+                double h = secGoo[2] / 3600;
                 String hh = Math.Round(h, 0) + " h  ";
-                double m = (minGoo[2] - (h * 3600)) / 60;
+                double m = (secGoo[2] - (h * 3600)) / 60;
                 String mm = Math.Round(m, 0) + " m";
 
                 tbGoogleDistanceTT.Content = km;
