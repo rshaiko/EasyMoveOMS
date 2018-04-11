@@ -17,6 +17,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Office;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace EasyMoveOMS
 {
@@ -1243,6 +1245,29 @@ namespace EasyMoveOMS
             cbDoneTotalH.IsEnabled = false;
             cbDoneTotalM.IsEnabled = false;
             tryCalculateTheTotalTime();
+        }
+
+        private void btCreateContract_Click(object sender, RoutedEventArgs e)
+        {
+            //OBJECT OF MISSING "NULL VALUE"
+            Object oMissing = System.Reflection.Missing.Value;
+
+            //OBJECTS OF FALSE AND TRUE
+            Object oTrue = true;
+            Object oFalse = false;
+                        
+            //CREATING OBJECTS OF WORD AND DOCUMENT
+            Word.Application oWord = new Word.Application();
+            Word.Document oWordDoc = new Word.Document();
+
+            //MAKING THE APPLICATION VISIBLE
+            oWord.Visible = true;
+            
+            //ADDING A NEW DOCUMENT TO THE APPLICATION
+            oWordDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+
+            Object oTemplatePath = @"C:\Users\roma\Desktop\EasyTemplate.dot";
+            oWordDoc = oWord.Documents.Add(ref oTemplatePath, ref oMissing, ref oMissing, ref oMissing);
         }
 
         private void cbDoneBreaksH_TextChanged(object sender, TextChangedEventArgs e)

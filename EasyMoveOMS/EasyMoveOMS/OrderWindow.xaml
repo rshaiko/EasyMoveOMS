@@ -18,7 +18,7 @@
             <Button Name="btSave" Click="btSave_Click" Content="Save" Width="110" Height="30" BorderBrush="#356894"/>
             <Label/>
             <Label/>
-            <Button Content="Export to..." Width="110" Height="30" BorderBrush="#356894"/>
+            <Button Name="btCreateContract" Content="Create contract" Width="110" Height="30" BorderBrush="#356894" Click="btCreateContract_Click"/>
             <Label/>
             <Label/>
             <Button Name="tbInvoice" Click="tbInvoice_Click" Content="Create invoice" Width="110" Height="30" BorderBrush="#356894"/>
