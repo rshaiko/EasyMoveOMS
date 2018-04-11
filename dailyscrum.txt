@@ -206,3 +206,12 @@ settings to(from) XML
 - generating a contract
 - prepare presentation
 3. Need assistance / figure things out
+
+2018.04.11 Dmitrii
+1. Done since last scrum
+-main window search
+-mian window sorting
+2. Plan until next Scrum
+-debugging
+-presentation
+3. Need assistance / figure things out
