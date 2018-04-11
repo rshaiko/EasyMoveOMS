@@ -95,6 +95,35 @@ namespace EasyMoveOMS
             }
         }
 
+        internal void reloadOrderListScheduled(ref List<ListOrderItem> orderList)
+        {
+            ListOrderItem li;
+            List<ListOrderItem> loi = new List<ListOrderItem>();
+            String sql = "SELECT o.id, o.dateCreated, o.moveDate, o.moveTime, o.isPaid, o.orderStatus, c.name, c.phoneHome, c.phoneWork, a.addrLine, a.city  " +
+                "FROM easymove.orders AS o LEFT JOIN addresses AS a ON o.id = a.orderId LEFT JOIN clients AS c ON o.clientId=c.id  " +
+                "WHERE addrType='Actual' AND orderStatus='Scheduled' ORDER BY o.moveDate, o.moveTime;";
+            using (MySqlCommand command = new MySqlCommand(sql, conn))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    li = new ListOrderItem();
+                    li.id = (int)reader["id"];
+                    li.name = (string)reader["name"];
+                    li.moveDate = (DateTime)reader["moveDate"];
+                    li.dateCreated = (DateTime)reader["dateCreated"];
+                    li.moveTime = (TimeSpan)reader["moveTime"];
+                    li.isPaid = (bool)reader["isPaid"];
+                    li.orderStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), reader["orderStatus"] + "");
+                    li.phoneHome = (string)reader["phoneHome"];
+                    li.phoneWork = (string)reader["phoneWork"];
+                    li.addrLine = (string)reader["addrLine"];
+                    li.city = (string)reader["city"];
+                    loi.Add(li);
+                }
+            }
+            if (loi.Count > 0) orderList = loi;
+        }
 
         internal void reloadOrderList(ref List<ListOrderItem> orderList)
         {

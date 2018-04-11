@@ -65,12 +65,12 @@
                 <DockPanel Grid.Column="3" Height="Auto">
                 <WrapPanel DockPanel.Dock="Top" >
                     <Label x:Name="label" Content="Search:" HorizontalAlignment="Left" Height="23" Margin="10,20,0,10" VerticalAlignment="Top" Width="52"/>
-                    <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="228" Margin="10,20,0,10"/>
-                    <Button Name="btSort"  Content="Sort by ..." HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.59,0.628" Height="23"/>
+                    <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="228" Margin="10,20,0,10" TextChanged="tbSearch_TextChanged"/>
+                    <Button Name="btSort"  Content="Sort by ..." HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.59,0.628" Height="23" Click="btSort_Click"/>
                     <Button x:Name="btNew" Click="btNew_Click" Content="New" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
                     <Button x:Name="btEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,20,0,10" VerticalAlignment="Top" Width="75" Height="23"/>
                     <Button x:Name="btDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,20,30,10" VerticalAlignment="Top" Width="75" Height="23"/>
-                    <CheckBox Name="chbShowAll" Content="Show all" HorizontalAlignment="Left" Margin="0,20,0,10" VerticalAlignment="Bottom" Width="75" Height="18"/>
+                    <CheckBox Name="chbShowAll" Content="Show all" HorizontalAlignment="Left" Margin="0,20,0,10" VerticalAlignment="Bottom" Width="75" Height="18" Unchecked="chbShowAll_Unchecked" Checked="chbShowAll_Checked"/>
                 </WrapPanel>
                 <ListView   Margin="10,10,10,10" Name="lvOrders" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" MouseDoubleClick="lvOrders_MouseDoubleClick" >
                     <!--<ListView.ItemContainerStyle>
@@ -87,12 +87,37 @@
                 </ListView.ItemContainerStyle>-->
                     <ListView.View >
                         <GridView >
-                                <GridViewColumn Header="Number" Width="65"   DisplayMemberBinding="{Binding id}" />
-                                <GridViewColumn  Header="Name" Width="150" DisplayMemberBinding="{Binding name}" />
-                                <GridViewColumn  Header="Date" Width="110"  DisplayMemberBinding="{Binding dateTime}" />
-                                <GridViewColumn Header="Address"  Width="250" DisplayMemberBinding="{Binding address}" />
-                                <GridViewColumn Header="Phone" Width="120"  DisplayMemberBinding="{Binding phones}" />
-                                <GridViewColumn  Header="Status" Width="75" DisplayMemberBinding="{Binding orderStatus}" />
+                            <GridViewColumn Width="65" DisplayMemberBinding="{Binding id}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Number" Click="GridViewColumnHeader_Click">Number</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="150" DisplayMemberBinding="{Binding name}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Name" Click="GridViewColumnHeader_Click">Name</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="110" DisplayMemberBinding="{Binding dateTime}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Date" Click="GridViewColumnHeader_Click">Date</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="250" DisplayMemberBinding="{Binding address}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Address" Click="GridViewColumnHeader_Click">Address</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding phones}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Phone" Click="GridViewColumnHeader_Click">Phone</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="75" DisplayMemberBinding="{Binding orderStatus}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Status" Click="GridViewColumnHeader_Click">Status</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+
                         </GridView>
                     </ListView.View>
                 </ListView>

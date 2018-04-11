@@ -35,12 +35,12 @@
             </DataGrid.Columns>
         </DataGrid>
         <TextBox Name="tbTotal" HorizontalAlignment="Left" Height="23" Margin="552,621,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" GotFocus="tbTotal_GotFocus" TextChanged="tbTotal_TextChanged_1"/>
-        <TextBox Name="tbPostal" HorizontalAlignment="Left" Height="23" Margin="291,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" RenderTransformOrigin="0.494,0.87"/>
+        <TextBox Name="tbPostal" HorizontalAlignment="Left" Height="23" Margin="443,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" RenderTransformOrigin="0.494,0.87"/>
         <TextBox Name="tbAddress" HorizontalAlignment="Left" Height="23" Margin="237,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" />
         <Label Content="Discount (%):" HorizontalAlignment="Left" Margin="440,469,0,0" VerticalAlignment="Top"/>
         <TextBox Name="tbDiscount" HorizontalAlignment="Left" Height="23" Margin="552,476,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" TextChanged="tbDiscount_TextChanged" GotFocus="tbDiscount_GotFocus"/>
         <Label Content="Address:" HorizontalAlignment="Left" Margin="122,111,0,0" VerticalAlignment="Top"/>
-        <Label Content="Postal code:" HorizontalAlignment="Left" Margin="152,215,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.564,1.577"/>
+        <Label Content="Postal code:" HorizontalAlignment="Left" Margin="325,215,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.564,1.577"/>
         <Label Name="lblTotalBeforeTax" Content="..." HorizontalAlignment="Left" Margin="552,513,0,0" VerticalAlignment="Top"/>
         <Button Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="291,618,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click"/>
         <Button Name="btnSetNew" Content="Set New" HorizontalAlignment="Left" Margin="676,620,0,0" VerticalAlignment="Top" Width="75" Click="btnSetNew_Click"/>
@@ -65,12 +65,6 @@
         <Button Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="676,651,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
         <Label Name="lblLocalTotal" Content="" HorizontalAlignment="Left" Margin="552,651,0,0" VerticalAlignment="Top" Width="93"/>
         <Button Name="btnSave" Content="Save Invoice" HorizontalAlignment="Left" Margin="171,618,0,0" VerticalAlignment="Top" Width="98" Click="btnSave_Click"/>
-        <ComboBox Name="cmbAddrType" HorizontalAlignment="Left" Margin="601,219,0,0" VerticalAlignment="Top" Width="120" IsEditable="True">
-            <ComboBoxItem>Actual</ComboBoxItem>
-            <ComboBoxItem>Destination</ComboBoxItem>
-            <ComboBoxItem>Intermediate</ComboBoxItem>
-        </ComboBox>
-        <Label Content="Address Type:" HorizontalAlignment="Left" Margin="470,215,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

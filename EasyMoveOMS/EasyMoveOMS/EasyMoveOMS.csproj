@@ -77,7 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Address.cs" />
-	<Compile Include="DlgAddPayment.xaml.cs">
+    <Compile Include="DlgAddPayment.xaml.cs">
       <DependentUpon>DlgAddPayment.xaml</DependentUpon>
     </Compile>
     <Compile Include="InvoiceItem.cs" />
@@ -85,7 +85,10 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SmallClasses.cs" />
-	<Page Include="DlgAddPayment.xaml">
+    <Compile Include="SortDialog.xaml.cs">
+      <DependentUpon>SortDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DlgAddPayment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SortDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -52,7 +52,7 @@ namespace EasyMoveOMS
                         tbCity.Text = a.city;
                         cmbProvince.Text = a.province;
                         tbPostal.Text = a.zip;
-                        cmbAddrType.SelectedValue = a.addrType;
+                        //cmbAddrType.SelectedValue = a.addrType;
 
                         cAId =a.id;
                     }
