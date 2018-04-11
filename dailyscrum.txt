@@ -198,3 +198,11 @@ settings to(from) XML
 -mian window sorting
 3. Need assistance / figure things out
 -export to Excel
+
+11.04.2018 Roman
+1. What I have done/not done
+- debugged opening-save-update orders
+2. Plan until next Scrum
+- generating a contract
+- prepare presentation
+3. Need assistance / figure things out
