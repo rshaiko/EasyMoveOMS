@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="InvoiceWindow" Height="719.426" Width="800" FontSize="15" ResizeMode="NoResize">
+        Title="Invoice - EasyMove OMS" Height="719.426" Width="800" FontSize="15" ResizeMode="NoResize">
     <Grid>
         <CheckBox IsChecked="false" Name="chbCalculateTax" Content=" No Taxes" HorizontalAlignment="Left" Margin="672,0,0,655" VerticalAlignment="Bottom" Width="85" Height="18" Checked="chbCalculateTax_Checked" Unchecked="chbCalculateTax_Unchecked"/>
         <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="66,34,0,0" VerticalAlignment="Top"/>

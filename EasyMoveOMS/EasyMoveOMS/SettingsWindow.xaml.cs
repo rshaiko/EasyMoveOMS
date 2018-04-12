@@ -57,5 +57,10 @@ namespace EasyMoveOMS
             Settings.Default.Save();
             DialogResult = true;
         }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
     }
 }

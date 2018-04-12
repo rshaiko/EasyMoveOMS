@@ -3,14 +3,14 @@
   <Profiles />
   <Settings>
     <Setting Name="showAll" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="connStr" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G;SslMode=none&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G</Value>
+      <Value Profile="(Default)">Server=den1.mysql5.gear.host; database=easymove; UID=easymove; password=Cz6iV4UR__0G;SslMode=none</Value>
     </Setting>
     <Setting Name="companyName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

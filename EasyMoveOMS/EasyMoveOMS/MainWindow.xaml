@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         
         Title="Orders - Easy Move OMS" Height="750" Width="1200" FontSize="12"
-        WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        WindowStartupLocation="CenterScreen" Closing="Window_Closing" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="15">
             <MenuItem Header="_Orders" Margin="5,5">
@@ -18,7 +18,7 @@
             <MenuItem Header="_Clients" Margin="5,5">
 
             </MenuItem>
-            <MenuItem Header="_Invoices" Margin="5,5">
+            <MenuItem Header="_Invoices" Margin="5,5" Click="MenuItem_Click">
 
             </MenuItem>
             <MenuItem Header="_Reports" Margin="5,5">
@@ -32,7 +32,7 @@
         </Menu>
        <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem HorizontalContentAlignment="Stretch" BorderThickness="0,5,0,0" BorderBrush="#356894">
-                <TextBlock Name="lblStatus" Text="Current order info" HorizontalAlignment="Stretch" />
+                <TextBlock Name="lblStatus" Text="Total number of orders: " HorizontalAlignment="Stretch" />
             </StatusBarItem>
         </StatusBar>
         <Label DockPanel.Dock="Top" x:Name="lblTitle" BorderThickness="0,0,0,5" BorderBrush="#356894" FontSize="20" Content="ORDERS" HorizontalContentAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
@@ -89,32 +89,32 @@
                         <GridView >
                             <GridViewColumn Width="65" DisplayMemberBinding="{Binding id}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Number" Click="GridViewColumnHeader_Click">Number</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="id" Click="GridViewColumnHeader_Click">Number</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
                             <GridViewColumn Width="150" DisplayMemberBinding="{Binding name}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Name" Click="GridViewColumnHeader_Click">Name</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="name" Click="GridViewColumnHeader_Click">Name</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
                             <GridViewColumn Width="110" DisplayMemberBinding="{Binding dateTime}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Date" Click="GridViewColumnHeader_Click">Date</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="dateTime" Click="GridViewColumnHeader_Click">Date</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
-                            <GridViewColumn Width="250" DisplayMemberBinding="{Binding address}">
+                            <GridViewColumn Width="200" DisplayMemberBinding="{Binding address}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Address" Click="GridViewColumnHeader_Click">Address</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="address" Click="GridViewColumnHeader_Click">Address</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
                             <GridViewColumn Width="120" DisplayMemberBinding="{Binding phones}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Phone" Click="GridViewColumnHeader_Click">Phone</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="phones" Click="GridViewColumnHeader_Click">Phone</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
                             <GridViewColumn Width="75" DisplayMemberBinding="{Binding orderStatus}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Status" Click="GridViewColumnHeader_Click">Status</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="orderStatus" Click="GridViewColumnHeader_Click">Status</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
 

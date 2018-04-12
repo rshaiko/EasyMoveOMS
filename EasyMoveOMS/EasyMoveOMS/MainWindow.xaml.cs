@@ -53,12 +53,12 @@ namespace EasyMoveOMS
                     Globals.db.reloadOrderListScheduled(ref orderList);
                     lvOrders.ItemsSource = orderList;
                 }
-
+                lblStatus.Text += ""+ orderList.Count;
                 //reloadClientsList();
-                
+
 
                 //Rom@
-                
+
 
             }
             catch (SqlException e)
@@ -252,6 +252,15 @@ namespace EasyMoveOMS
                 drawingContext.DrawGeometry(Brushes.Black, null, geometry);
 
                 drawingContext.Pop();
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            InvoiceWindow dlg1 = new InvoiceWindow(null);
+            if (dlg1.ShowDialog() == true)
+            {
+
             }
         }
     }

@@ -38,12 +38,12 @@ namespace EasyMoveOMS
         {
             InitializeComponent();
 
-            if (currOrder != null && currOrder.orderClient!=null && currOrder.orderAddresses!=null)
+            if (currOrder != null && currOrder.orderClient != null && currOrder.orderAddresses != null)
             {
 
                 //populating the fields
                 lblName.Content = currOrder.orderClient.name;
-                lblDate.Content = DateTime.Now; 
+                lblDate.Content = DateTime.Now;
                 foreach (Address a in currOrder.orderAddresses)
                 {
                     if (a.isBilling)
@@ -54,7 +54,7 @@ namespace EasyMoveOMS
                         tbPostal.Text = a.zip;
                         //cmbAddrType.SelectedValue = a.addrType;
 
-                        cAId =a.id;
+                        cAId = a.id;
                     }
                 }
                 orId = currOrder.id;
@@ -62,35 +62,42 @@ namespace EasyMoveOMS
 
                 double time;
                 time = currOrder.minTime.Hours + currOrder.minTime.Minutes / 60.0;
-                MessageBox.Show(time + "");
-                if (currOrder.doneTotalTime != null)
+               
+                if (currOrder.doneTotalTime.Hours != 0)
                 {
 
-                    if (currOrder.doneTotalTime<currOrder.minTime)
+                    if (currOrder.doneTotalTime < currOrder.minTime)
                     {
-                        time = currOrder.minTime.Hours+currOrder.minTime.Minutes/60.0;
+                        time = currOrder.minTime.Hours + currOrder.minTime.Minutes / 60.0;
                     }
                     if (currOrder.doneTotalTime > currOrder.maxTime)
                     {
                         time = currOrder.maxTime.Hours + currOrder.maxTime.Minutes / 60.0;
                     }
-                    else time= currOrder.doneTotalTime.Hours + currOrder.doneTotalTime.Minutes / 60.0;
+                    else time = currOrder.doneTotalTime.Hours + currOrder.doneTotalTime.Minutes / 60.0;
                 }
-                MessageBox.Show(time + "");
+                
 
-                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (time+(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60.0));
-                    //(Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
+                lblTotalBeforeTax.Content = (Convert.ToDouble(currOrder.pricePerHour)) * (time + (currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0));
+                //(Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.TotalHours));
                 lblTPS.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TPS;
                 lblTVQ.Content = Convert.ToDouble(lblTotalBeforeTax.Content) * TVQ;
                 tbTotal.Text = Convert.ToDouble(lblTotalBeforeTax.Content) * totalTax + "";
 
 
 
-                services.Add(new Service() { Description = "Moving", Price = Convert.ToDouble(currOrder.pricePerHour),
-                    Quantity = Convert.ToDouble(time), Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (time)
+                services.Add(new Service()
+                {
+                    Description = "Moving",
+                    Price = Convert.ToDouble(currOrder.pricePerHour),
+                    Quantity = Convert.ToDouble(time),
+                    Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (time)
                 });
-                services.Add(new Service() { Description = "Travel", Price = Convert.ToDouble(currOrder.pricePerHour),
-                    Quantity = Convert.ToDouble(currOrder.travelTime.Hours+ currOrder.travelTime.Minutes / 60.0),
+                services.Add(new Service()
+                {
+                    Description = "Travel",
+                    Price = Convert.ToDouble(currOrder.pricePerHour),
+                    Quantity = Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0),
                     Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0))
                 });
 
@@ -110,6 +117,21 @@ namespace EasyMoveOMS
 
                 sum = 0;
                 btnReset.IsEnabled = false;
+            }
+            else
+            {
+                lblDate.Content = DateTime.Now;
+
+                services.Add(new Service()
+                {
+                    Description = "",
+                    Price = 0,
+                    Quantity = 1,
+                    Amount = 0
+                });
+
+                dgInvoice.ItemsSource = services;
+                btnSave.IsEnabled = false;
             }
         }
 
@@ -560,27 +582,26 @@ namespace EasyMoveOMS
         }
     }
 
-    public class Service : INotifyPropertyChanged//,  IEditableObject
+    public class Service : INotifyPropertyChanged
     {
         public Service() { Quantity = 1; }
         public string Description { get; set; }
         public double Price { get; set; }
-        public double Quantity { get; set; }
-        //public double Amount { get; set; }
+        public double Quantity { get; set; }     
         private double _amount;
         public double Amount
         {
             get { return _amount; }
-            set { _amount = value; NotifyPropertyChanged("Amount"); }
+            set { _amount = value;
+                NotifyPropertyChanged("Amount"); }
         }
 
-        private void NotifyPropertyChanged(string propertyName)
+        private void NotifyPropertyChanged
+            (string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke
+                (this, new PropertyChangedEventArgs(propertyName));
         }
-
-        
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
