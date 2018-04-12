@@ -215,3 +215,11 @@ settings to(from) XML
 -debugging
 -presentation
 3. Need assistance / figure things out
+
+12.04.2018 Roman
+1. What I have done/not done
+- prepared the part of presentation
+- generating a contract in Word format
+2. Plan until next Scrum
+- check the buttons functionality, testing the application
+3. Need assistance / figure things out

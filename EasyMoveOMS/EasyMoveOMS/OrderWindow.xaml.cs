@@ -119,9 +119,6 @@ namespace EasyMoveOMS
                 orderClient.id = 0;
                 orderTruck = new Truck();
                 orderTruck.id = 0;
-                //orderAddresses.Add(new Address());
-                //orderAddresses.Add(new Address());
-                //orderAddresses.Add(new Address());
             }
             else //USER is opening existing order
             {
@@ -235,6 +232,7 @@ namespace EasyMoveOMS
                 cbProvinceAct.Text = o.orderAddresses[0].province;
                 tbNotesAct.Text = o.orderAddresses[0].notes;
                 eventsOn = true;  tbZipAct.Text = o.orderAddresses[0].zip; eventsOn = false;
+                
                 // >> 2) destination
                 cbIsBillingDest.IsChecked = o.orderAddresses[1].isBilling ? true : false;
                 tbAddrLineDest.Text = o.orderAddresses[1].addrLine;
@@ -245,6 +243,7 @@ namespace EasyMoveOMS
                 cbProvinceDest.Text = o.orderAddresses[1].province;
                 tbNotesDest.Text = o.orderAddresses[1].notes;
                 eventsOn = true;  tbZipDest.Text = o.orderAddresses[1].zip; eventsOn = false;
+                
                 // >> 3) intermediate IF EXISTS
                 if (o.useIntAddress)
                 {
@@ -273,9 +272,6 @@ namespace EasyMoveOMS
             }
 
         }
-
-
-
 
         // !!!!!!! --- GET Day Schedule --- !!!!!!!!!!!!
         private void dpMoveDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -432,7 +428,7 @@ namespace EasyMoveOMS
                     orderAddresses[0].id = lastId;
                     orderAddresses[1].id = lastId + 1;
                     orderAddresses[2].id = lastId + 2;
-                    
+                    currentOrder.orderAddresses = orderAddresses;
                     confirmation += ">> Addresses were saved\n";
                     System.Windows.MessageBox.Show(confirmation, "Database", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
 
@@ -836,7 +832,7 @@ namespace EasyMoveOMS
                 //new actual address 
                 Address newActual = new Address(addrLine, addrCity, addrZip, addrProvince, addrFloor, addrElevator, addrStairs, addrIsBilling, addrType, addrNotes);
 
-                newActual.id = orderAddresses[0].id;
+                newActual.id = currentOrder.orderAddresses[0].id;
                 newActual.orderId = currentOrder.id;
 
                 // ==> Destination address
@@ -1109,8 +1105,6 @@ namespace EasyMoveOMS
             ((ComboBox)sender).Background = Brushes.White;
         }
 
-        
-
         private void rbScheduled_Checked(object sender, RoutedEventArgs e)
         {
             eventsOn = false;
@@ -1163,8 +1157,6 @@ namespace EasyMoveOMS
 
             eventsOn = true;
         }
-
-        
 
         private void tbWorkTimeH_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1249,25 +1241,127 @@ namespace EasyMoveOMS
 
         private void btCreateContract_Click(object sender, RoutedEventArgs e)
         {
-            //OBJECT OF MISSING "NULL VALUE"
-            Object oMissing = System.Reflection.Missing.Value;
+            CreateDocument();
+        }
+        private void CreateDocument()
+        {
+            isValid = false;
+            validateOrder();
+            if (!isValid) return;
+            saveOrder();
+            try
+            {
+                //Create an instance for word app
+                Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
 
-            //OBJECTS OF FALSE AND TRUE
-            Object oTrue = true;
-            Object oFalse = false;
+                //Set animation status for word application
+                winword.ShowAnimation = false;
+
+                //Set status for word application is to be visible or not.
+                winword.Visible = false;
+
+                //Create a missing variable for missing value
+                object missing = System.Reflection.Missing.Value;
+
+                Object oTemplatePath = @"C:\Users\roma\Desktop\contractTemplate.dotx";
+                Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(oTemplatePath, ref missing, ref missing, ref missing);
+
+                foreach (Word.Field myMergeField in document.Fields)
+                {
+                    
+                    Word.Range rngFieldCode = myMergeField.Code;
+                    String fieldText = rngFieldCode.Text;
+
+                    if (fieldText.StartsWith(" MERGEFIELD"))
+                    {
+                        Int32 endMerge = fieldText.IndexOf("\\");
+                        Int32 fieldNameLength = fieldText.Length - endMerge;
+                        String fieldName = fieldText.Substring(11, endMerge - 11);
+                        fieldName = fieldName.Trim();
+
+                        Order o = currentOrder;
                         
-            //CREATING OBJECTS OF WORD AND DOCUMENT
-            Word.Application oWord = new Word.Application();
-            Word.Document oWordDoc = new Word.Document();
+                        switch (fieldName)
+                        {
+                            case "orderId":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(o.id+"");
+                                break;
+                            case "name":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbClient.Text);
+                                break;
+                            case "phones":
+                                myMergeField.Select();
+                                string phones = tbPhoneW.Text == "" ? tbPhoneH.Text : tbPhoneH.Text + "(h), " + tbPhoneW.Text + "(w)";
+                                winword.Selection.TypeText(phones);
+                                break;
+                            case "email":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbEmail.Text);
+                                break;
+                            case "addrLineAct":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbAddrLineAct.Text);
+                                break;
+                            case "addrCityAct":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbCityAct.Text+"  "+cbProvinceAct.Text+"  "+ tbZipAct.Text);
+                                break;
+                            case "addrLineDest":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbAddrLineDest.Text);
+                                break;
+                            case "addrCityDest":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(tbCityDest.Text + "  " + cbProvinceDest.Text + "  " + tbZipDest.Text);
+                                break;
+                            case "dateTime":
+                                myMergeField.Select();
+                                String dt = ((DateTime)dpMoveDate.SelectedDate).ToString("dd.MM.yyyy") + " at " + cbStartTimeH.Text+":"+cbStartTimeM.Text;
+                                winword.Selection.TypeText(dt);
+                                break;
+                            case "arriveFrom":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(o.arriveTimeFrom.ToString(@"hh\:mm"));
+                                break;
+                            case "arriveTo":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(o.arriveTimeTo.ToString(@"hh\:mm"));
+                                break;
+                            case "price":
+                                myMergeField.Select();
+                                winword.Selection.TypeText(o.pricePerHour+"");
+                                break;
+                            case "minTime":
+                                myMergeField.Select();
+                                String mint = o.minTime.Ticks > 0 ? " Minimum payment for: " + o.minTime.ToString(@"hh\:mm") : " ";
+                                winword.Selection.TypeText(mint);
+                                break;
+                            case "maxTime":
+                                myMergeField.Select();
+                                String maxt = o.maxTime.Ticks > 0 ? "  Maximum payment for: " + o.maxTime.ToString(@"hh\:mm") : " ";
+                                winword.Selection.TypeText(maxt);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
 
-            //MAKING THE APPLICATION VISIBLE
-            oWord.Visible = true;
-            
-            //ADDING A NEW DOCUMENT TO THE APPLICATION
-            oWordDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-
-            Object oTemplatePath = @"C:\Users\roma\Desktop\EasyTemplate.dot";
-            oWordDoc = oWord.Documents.Add(ref oTemplatePath, ref oMissing, ref oMissing, ref oMissing);
+                //Save the document
+                object filename = @"c:\temp1.docx";
+                document.SaveAs2(ref filename);
+                document.Close(ref missing, ref missing, ref missing);
+                document = null;
+                winword.Quit(ref missing, ref missing, ref missing);
+                winword = null;
+                System.Windows.MessageBox.Show("Document created successfully !");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
 
         private void cbDoneBreaksH_TextChanged(object sender, TextChangedEventArgs e)

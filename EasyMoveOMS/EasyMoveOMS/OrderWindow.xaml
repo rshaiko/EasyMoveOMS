@@ -119,8 +119,8 @@
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">  EasyMove >> Client</Label>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">  >> ... moving ... >></Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Width="140">  EasyMove >> Client</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Width="160" Content="       &gt;&gt;  moving  &gt;&gt;"/>
                     <Label Name="tbGoogleTime" Grid.Column="1" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left" Height="23"  Content="..." Width="85"  Foreground="Black"/>
                     <Label Name="tbGoogleDistance"  Grid.Column="2" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left"  Height="23" Content="..." Width="85"  Foreground="Black"/>
 
@@ -132,8 +132,8 @@
 
                     <Label Name="tbGoogleTimeTT" Grid.Column="1" Grid.Row="3" Background="#edeeef" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold" Height="23"  Content="......" Width="85" Foreground="Black"/>
                     <Label Name="tbGoogleDistanceTT"  Grid.Column="2" Grid.Row="3" Background="#edeeef" HorizontalContentAlignment="Center" HorizontalAlignment="Left" FontWeight="DemiBold"  Height="23" Content="......" Width="85"  Foreground="Black"/>
-                    
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">  Destination >> EasyMove</Label>
+
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" Content="EasyMove &lt;&lt; Destination"/>
                     <Label Padding="2,2" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" FontWeight="DemiBold">Estimated travel time</Label>
                 </Grid>
                 <Label Padding="0,5"></Label>
