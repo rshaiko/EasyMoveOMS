@@ -35,8 +35,6 @@ namespace EasyMoveOMS
         {
             try
             {
-             
-                
                 InitializeComponent();
                 //DataContext = this;
 
@@ -54,12 +52,6 @@ namespace EasyMoveOMS
                     lvOrders.ItemsSource = orderList;
                 }
                 lblStatus.Text = "Total number of orders: "+ orderList.Count;
-                //reloadClientsList();
-
-
-                //Rom@
-
-
             }
             catch (SqlException e)
             {
@@ -67,21 +59,21 @@ namespace EasyMoveOMS
                 MessageBox.Show("Error opening database connection: " + e.Message);
                 Environment.Exit(1);
             }
-
-
-            
-             
-                /*
-             InvoiceWindow dlg1 = new InvoiceWindow();
-             if (dlg1.ShowDialog() == true)
-             {
-
-             }*/
         }
 
-        private void reloadClientsList()
+        private void refreshOrderWindow()
         {
-            lvOrders.ItemsSource = Globals.db.GetAllClients();
+            if (chbShowAll.IsChecked.Value)
+            {
+                Globals.db.reloadOrderList(ref orderList);
+                lvOrders.ItemsSource = orderList;
+            }
+            else
+            {
+                Globals.db.reloadOrderListScheduled(ref orderList);
+                lvOrders.ItemsSource = orderList;
+            }
+            lblStatus.Text = "Total number of orders: " + orderList.Count;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -93,24 +85,21 @@ namespace EasyMoveOMS
         //NEW ORDER
         private void btNew_Click(object sender, RoutedEventArgs e)
         {
+            createNewOrder();
+        }
+
+        private void createNewOrder()
+        {
             OrderWindow dlg = new OrderWindow(null);
             if (dlg.ShowDialog() == true)
             {
-                if (chbShowAll.IsChecked.Value)
-                {
-                    Globals.db.reloadOrderList(ref orderList);
-                    lvOrders.ItemsSource = orderList;
-                }
-                else
-                {
-                    Globals.db.reloadOrderListScheduled(ref orderList);
-                    lvOrders.ItemsSource = orderList;
-                }
-                lblStatus.Text = "Total number of orders: " + orderList.Count;
+                refreshOrderWindow();
+            }
+            else
+            {
+                refreshOrderWindow();
             }
         }
-
-        
 
         private void mSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -124,13 +113,22 @@ namespace EasyMoveOMS
 
         private void lvOrders_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            editCurrentOrder();
+        }
+
+        private void editCurrentOrder()
+        {
             if (lvOrders.SelectedIndex == -1) return;
             ListOrderItem loi = (ListOrderItem)lvOrders.SelectedItem;
             Order o = new Order { id = loi.id };
             OrderWindow dlg = new OrderWindow(o);
             if (dlg.ShowDialog() == true)
             {
-
+                refreshOrderWindow();
+            }
+            else
+            {
+                refreshOrderWindow();
             }
         }
 
@@ -144,8 +142,6 @@ namespace EasyMoveOMS
                              || o.addrLine.Contains(word) || o.phones.Contains(word) || (o.orderStatus.ToString().Contains(word))
                               select o );
                 ListOrderItem = result.ToList();
-
-                
             }
             lvOrders.ItemsSource = ListOrderItem;
             lblStatus.Text = "Total number of orders: " + ListOrderItem.Count;
@@ -279,7 +275,7 @@ namespace EasyMoveOMS
 
         private void btEdit_Click(object sender, RoutedEventArgs e)
         {
-
+            editCurrentOrder();
         }
 
         private void btDelete_Click(object sender, RoutedEventArgs e)

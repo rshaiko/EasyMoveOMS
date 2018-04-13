@@ -11,15 +11,15 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="15">
             <MenuItem Header="_Orders" Margin="5,5">
-                <MenuItem Name="mNew"  Header="_New"  />
-                <MenuItem Name="mEdit" Header="_Edit" />
+                <MenuItem Name="mNew"  Header="_New" Click="btNew_Click" />
+                <MenuItem Name="mEdit" Header="_Edit" Click="btEdit_Click" />
                 <Separator />
             </MenuItem>
             <MenuItem Header="_Clients" Margin="5,5">
 
             </MenuItem>
-            <MenuItem Header="_Invoices" Margin="5,5" Click="MenuItem_Click">
-
+            <MenuItem Header="_Invoices" Margin="5,5" >
+                <MenuItem Header="_Create new" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Reports" Margin="5,5">
             </MenuItem>
@@ -57,11 +57,6 @@
             <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Margin="3,0" Background="#356894" />
                 <GridSplitter Grid.Column="4" Width="5" HorizontalAlignment="Stretch" Margin="3,0" Background="#356894" />
 
-
-
-                <TabControl Grid.Column="5" />
-
-
                 <DockPanel Grid.Column="3" Height="Auto">
                 <WrapPanel DockPanel.Dock="Top" >
                     <Label x:Name="label" Content="Search:" HorizontalAlignment="Left" Height="23" Margin="10,20,0,10" VerticalAlignment="Top" Width="52"/>
@@ -79,22 +74,26 @@
 
                         </ContextMenu>
                     </ListView.ContextMenu>
-                    <!--<ListView.ItemContainerStyle>
+                    <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Departed}" Value="True">
-                                <Setter Property="Background" Value="Gray" />
+                            <DataTrigger Binding="{Binding comingSoon}" Value="1">
+                                <Setter Property="Background" Value="#A6F0605E" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Departed}" Value="False">
-                                <Setter Property="Background" Value="White" />
+                            <DataTrigger Binding="{Binding comingSoon}" Value="2">
+                                <Setter Property="Background" Value="#9CEEE651" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding comingSoon}" Value="3">
+                                <Setter Property="Background" Value="#BAD2EDB1" />
+                            </DataTrigger>
+                            
                         </Style.Triggers>
                     </Style>
-                </ListView.ItemContainerStyle>-->
+                </ListView.ItemContainerStyle>
                     <ListView.View >
                         
                         <GridView >
-                            <GridViewColumn Width="65" DisplayMemberBinding="{Binding id}">
+                            <GridViewColumn Width="50" DisplayMemberBinding="{Binding id}">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="id" Click="GridViewColumnHeader_Click">Number</GridViewColumnHeader>
                                 </GridViewColumn.Header>
@@ -106,7 +105,7 @@
                             </GridViewColumn>
                             <GridViewColumn Width="110" DisplayMemberBinding="{Binding dateTime}">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="dateTime" Click="GridViewColumnHeader_Click">Date</GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="dateTime" Click="GridViewColumnHeader_Click">Date/Time</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                             </GridViewColumn>
                             <GridViewColumn Width="200" DisplayMemberBinding="{Binding address}">

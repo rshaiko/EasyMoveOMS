@@ -7,12 +7,13 @@
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
         Title="New order - EasyMove OMS" Height="750" Width="1200" FontSize="12"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
     <DockPanel>
         <Label DockPanel.Dock="Top" x:Name="lblTitle" FontSize="25" Padding="0,5,0,0" FontWeight="DemiBold" FontFamily="Garamond"  Content="New order"  HorizontalAlignment="Center" Margin="0,0" VerticalAlignment="Top" />
         <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0,10,0,10">
 
-            <Button Content="Cancel" Width="110" Height="30" BorderBrush="#356894" />
+            <Button Name="btCancel" Content="Cancel" Width="110" Height="30" BorderBrush="#356894" Click="btCancel_Click" />
             <Label/>
             <Label/>
             <Button Name="btSave" Click="btSave_Click" Content="Save" Width="110" Height="30" BorderBrush="#356894"/>

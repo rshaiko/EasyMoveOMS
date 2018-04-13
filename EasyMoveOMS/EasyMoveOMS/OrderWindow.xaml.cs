@@ -37,10 +37,6 @@ namespace EasyMoveOMS
 
         bool isValid = false;
         bool isNewOrder=false;
-        bool isNewClient = true;
-        //bool isFirstAddrInsert = false;
-        //bool eventsOn = true; //off events if not manual changes
-        //bool eventsOn = true; //off events if not manual changes
         bool eventsOn = true; // to turn off some events when needed
         bool movingDateIsChanged = false;
         bool contactOnDateIsChanged = false;
@@ -57,7 +53,7 @@ namespace EasyMoveOMS
         static String rexProv = @"^(?:AB|BC|MB|N[BLTSU]|ON|PE|QC|SK|YT)$";
         static Regex rProv = new Regex(rexProv);
         
-        //Regex for Email
+        //Regex for Email  -- METHOD Create Email is used instead
         //static String rexEmail = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
         //static Regex rEmail = new Regex(rexEmail);
 
@@ -159,7 +155,11 @@ namespace EasyMoveOMS
                 tbPhoneH.Text = o.orderClient.phoneH;
                 tbPhoneW.Text = o.orderClient.phoneW;
                 tbEmail.Text = o.orderClient.email;
-
+                tbClient.IsEnabled = false;
+                tbEmail.IsEnabled = false;
+                tbPhoneH.IsEnabled = false;
+                tbPhoneW.IsEnabled = false;
+                btSelectClient.Content = "Edit";
                 //Selecting Truck in combobox
                 int truckIndex = 0;
                 foreach (Truck t in Globals.truckList)
@@ -369,7 +369,7 @@ namespace EasyMoveOMS
                     tbEmail.IsEnabled = false;
                     tbPhoneH.IsEnabled = false;
                     tbPhoneW.IsEnabled = false;
-                    btSelectClient.Content = "Edit/Change";
+                    btSelectClient.Content = "Edit";
                 }
                 catch (MySqlException er)
                 {
@@ -461,12 +461,11 @@ namespace EasyMoveOMS
         private void fillCurrentOrderFromForm() 
         {
             currentOrder.orderAddresses = orderAddresses;
-            currentOrder.moveDate = moveDate;
-            currentOrder.moveTime = moveTime;
-
-            currentOrder.orderClient = orderClient;
+            if (currentOrder.clientId==0) currentOrder.orderClient = orderClient;
             currentOrder.orderTruck = orderTruck;
 
+            currentOrder.moveDate = moveDate;
+            currentOrder.moveTime = moveTime;
             currentOrder.workers = workers;
             currentOrder.pricePerHour = pricePerHour;
             currentOrder.maxTime = maxTime;
@@ -502,6 +501,7 @@ namespace EasyMoveOMS
             currentOrder.useIntAddress = useIntAddress;
         }
 
+        //VALIDATE ALL the controls in order window
         private void validateOrder()
         {
             try
@@ -958,6 +958,47 @@ namespace EasyMoveOMS
             }
         }
 
+        // VALIDATION Methods
+        private void validateItemsToMove(TextBox tb, ref int itemTypeNumber)
+        {
+            if (tb.Text == "")
+            {
+                itemTypeNumber = 0;
+            }
+            else
+            {
+                if (!int.TryParse(tb.Text, out itemTypeNumber))
+                {
+                    tb.Background = Brushes.Red;
+                    throw new InvalidDataException("Invalid number of items entered");
+                }
+                if (itemTypeNumber < 0)
+                {
+                    tb.Background = Brushes.Red;
+                    throw new InvalidDataException("Negative number of items entered");
+                }
+            }
+        }
+
+        //calculating arrive time // TODO
+
+        private void cbStartTimeH_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!eventsOn) return;
+            if (int.TryParse(cbStartTimeH.Text, out timeStartH))
+            {
+                cbArriveFromH.Text = timeStartH + "";
+                tbArriveToH.Text = (timeStartH + 1) + "";
+                cbArriveFromH.Background = Brushes.Yellow;
+                tbArriveToH.Background = Brushes.Yellow;
+            }
+            else
+            {
+                cbArriveFromH.Background = Brushes.Yellow;
+                tbArriveToH.Background = Brushes.Yellow;
+            }
+        }
+
         private bool checkProvince(ComboBox cb)
         {
             string pr = cb.Text.ToUpper();
@@ -999,6 +1040,7 @@ namespace EasyMoveOMS
             return (textLength < min || textLength > max) ? false : true;
         }
 
+
         private void rbDone_Checked(object sender, RoutedEventArgs e)
         {
             cbDoneStartH.IsEnabled = true;
@@ -1009,7 +1051,6 @@ namespace EasyMoveOMS
             cbDoneBreaksM.IsEnabled = true;
             cbDoneTotalH.IsEnabled = true;
             cbDoneTotalM.IsEnabled = true;
-
             dpContactOn.IsEnabled = false;
         }
 
@@ -1175,7 +1216,7 @@ namespace EasyMoveOMS
 
        
 
-        //Calculation of total working time for the DONE order
+        // Calculation of total working time (DONE status)
         private void tryCalculateTheTotalTime()
         {
             int startH, startM, endH, endM, breakH=0, breakM;
@@ -1239,6 +1280,16 @@ namespace EasyMoveOMS
             tryCalculateTheTotalTime();
         }
 
+        private void btCancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DialogResult = false;
+        }
+
         private void btCreateContract_Click(object sender, RoutedEventArgs e)
         {
             CreateDocument();
@@ -1262,8 +1313,7 @@ namespace EasyMoveOMS
 
                 //Create a missing variable for missing value
                 object missing = System.Reflection.Missing.Value;
-
-                Object oTemplatePath = @"C:\Users\roma\Desktop\contractTemplate.dotx";
+                Object oTemplatePath = System.IO.Path.GetFullPath("../../Resources/contractTemplate.dotx");
                 Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(oTemplatePath, ref missing, ref missing, ref missing);
 
                 foreach (Word.Field myMergeField in document.Fields)
@@ -1280,25 +1330,25 @@ namespace EasyMoveOMS
                         fieldName = fieldName.Trim();
 
                         Order o = currentOrder;
-                        
+
                         switch (fieldName)
                         {
                             case "orderId":
                                 myMergeField.Select();
-                                winword.Selection.TypeText(o.id+"");
+                                winword.Selection.TypeText(o.id + "");
                                 break;
                             case "name":
                                 myMergeField.Select();
-                                winword.Selection.TypeText(tbClient.Text);
+                                winword.Selection.TypeText(o.orderClient.name);
                                 break;
                             case "phones":
                                 myMergeField.Select();
-                                string phones = tbPhoneW.Text == "" ? tbPhoneH.Text : tbPhoneH.Text + "(h), " + tbPhoneW.Text + "(w)";
-                                winword.Selection.TypeText(phones);
+                                string phones = o.orderClient.phoneW == "" ? o.orderClient.phoneH : o.orderClient.phoneH + "(h), " + o.orderClient.phoneW + "(w)";
+                                winword.Selection.TypeText(phones + " ");
                                 break;
                             case "email":
                                 myMergeField.Select();
-                                winword.Selection.TypeText(tbEmail.Text);
+                                winword.Selection.TypeText(o.orderClient.email + " ");
                                 break;
                             case "addrLineAct":
                                 myMergeField.Select();
@@ -1306,7 +1356,7 @@ namespace EasyMoveOMS
                                 break;
                             case "addrCityAct":
                                 myMergeField.Select();
-                                winword.Selection.TypeText(tbCityAct.Text+"  "+cbProvinceAct.Text+"  "+ tbZipAct.Text);
+                                winword.Selection.TypeText(tbCityAct.Text + "  " + cbProvinceAct.Text + "  " + tbZipAct.Text);
                                 break;
                             case "addrLineDest":
                                 myMergeField.Select();
@@ -1318,7 +1368,7 @@ namespace EasyMoveOMS
                                 break;
                             case "dateTime":
                                 myMergeField.Select();
-                                String dt = ((DateTime)dpMoveDate.SelectedDate).ToString("dd.MM.yyyy") + " at " + cbStartTimeH.Text+":"+cbStartTimeM.Text;
+                                String dt = ((DateTime)dpMoveDate.SelectedDate).ToString("dd.MM.yyyy") + " at " + cbStartTimeH.Text + ":" + cbStartTimeM.Text;
                                 winword.Selection.TypeText(dt);
                                 break;
                             case "arriveFrom":
@@ -1331,17 +1381,30 @@ namespace EasyMoveOMS
                                 break;
                             case "price":
                                 myMergeField.Select();
-                                winword.Selection.TypeText(o.pricePerHour+"");
+                                winword.Selection.TypeText(o.pricePerHour + "");
                                 break;
                             case "minTime":
                                 myMergeField.Select();
-                                String mint = o.minTime.Ticks > 0 ? " Minimum payment for: " + o.minTime.ToString(@"hh\:mm") : " ";
+                                String mint = o.minTime.Ticks > 0 ? "Minimum hours to be paid for: " + (o.minTime.Hours + o.minTime.Minutes / 60.0) : " ";
                                 winword.Selection.TypeText(mint);
                                 break;
                             case "maxTime":
                                 myMergeField.Select();
-                                String maxt = o.maxTime.Ticks > 0 ? "  Maximum payment for: " + o.maxTime.ToString(@"hh\:mm") : " ";
+                                String maxt = o.maxTime.Ticks > 0 ? "Maximum hours to be paid for: " + (o.maxTime.Hours + o.maxTime.Minutes / 60.0) : " ";
                                 winword.Selection.TypeText(maxt);
+                                break;
+                            case "travelTime":
+                                myMergeField.Select();
+                                String tt = o.travelTime.Ticks > 0 ? (o.travelTime.Hours + o.travelTime.Minutes / 60.0) + " hh" : " ";
+                                winword.Selection.TypeText(tt);
+                                break;
+                            case "N/A":
+                                if (o.useIntAddress)
+                                {
+                                    //myMergeField.Select();
+                                    //String intAdr = o.orderAddresses[3].addrLine + "\n" + o.orderAddresses[3].city + "  " + o.orderAddresses[3].province + "  " + o.orderAddresses[3].zip;
+                                    //winword.Selection.TypeText(intAdr);
+                                }
                                 break;
                             default:
                                 break;
@@ -1349,14 +1412,16 @@ namespace EasyMoveOMS
                     }
                 }
 
-                //Save the document
-                object filename = @"c:\temp1.docx";
-                document.SaveAs2(ref filename);
-                document.Close(ref missing, ref missing, ref missing);
-                document = null;
-                winword.Quit(ref missing, ref missing, ref missing);
-                winword = null;
-                System.Windows.MessageBox.Show("Document created successfully !");
+                winword.Visible=true;
+                
+                // !! Save the document
+                ////object filename = @"c:\contract.docx";
+                ////document.SaveAs2(ref filename);
+                ////document.Close(ref missing, ref missing, ref missing);
+                ////document = null;
+                ////winword.Quit(ref missing, ref missing, ref missing);
+                ////winword = null;
+                ////System.Windows.MessageBox.Show("Contract was saved to c:\ successfully !");
             }
             catch (Exception ex)
             {
@@ -1418,45 +1483,7 @@ namespace EasyMoveOMS
             cbDoneBreaksM.IsEnabled = false;
         }
 
-        //Some Validation Methods
-        private void validateItemsToMove(TextBox tb, ref int itemTypeNumber)
-        {
-            if (tb.Text == "")
-            {
-                itemTypeNumber = 0;
-            }
-            else
-            {
-                if(!int.TryParse(tb.Text, out itemTypeNumber)){
-                tb.Background = Brushes.Red;
-                throw new InvalidDataException("Invalid number of items entered");
-                }
-                if (itemTypeNumber < 0)
-                {
-                tb.Background = Brushes.Red;
-                throw new InvalidDataException("Negative number of items entered");
-                }
-            }
-        }
-
-        //calculating arrive time // TODO
-
-        private void cbStartTimeH_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!eventsOn) return;
-            if (int.TryParse(cbStartTimeH.Text, out timeStartH))
-            {
-                cbArriveFromH.Text = timeStartH + "";
-                tbArriveToH.Text = (timeStartH + 1) + "";
-                cbArriveFromH.Background = Brushes.Yellow;
-                tbArriveToH.Background = Brushes.Yellow;
-            }
-            else
-            {
-                cbArriveFromH.Background = Brushes.Yellow;
-                tbArriveToH.Background = Brushes.Yellow;
-            }
-        }
+        
 
         // --> SPIN BOXES-ITEMS 
         private void spinBoxes_Spin(object sender, SpinEventArgs e)

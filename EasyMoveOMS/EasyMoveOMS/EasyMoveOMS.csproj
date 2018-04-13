@@ -88,6 +88,9 @@
     <Compile Include="SortDialog.xaml.cs">
       <DependentUpon>SortDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DlgClient.xaml.cs">
+      <DependentUpon>DlgClient.xaml</DependentUpon>
+    </Compile>
     <Page Include="DlgAddPayment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,6 +131,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DlgClient.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Order.cs" />
@@ -157,6 +164,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\contractTemplate.dotx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

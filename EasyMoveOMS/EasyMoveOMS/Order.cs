@@ -55,8 +55,6 @@ namespace EasyMoveOMS
         public Truck orderTruck { get; set; }
         public List<Payment> orderPayments { get; set; }
 
-        
-
         public Order()
         {
             id = 0;
@@ -105,6 +103,25 @@ namespace EasyMoveOMS
                 String adr="";
                 adr = addrLine + ", " + city;
                 return adr;
+            }
+        }
+        public String comingSoon // to highlight orders
+        {       
+            get
+            {
+                int code = 0;
+                double dd;
+                DateTime dtNow = DateTime.Now;
+                if (moveDate > dtNow)
+                {
+                    TimeSpan difference = moveDate - dtNow;
+                    var diffInDays = difference.TotalDays;
+                    double.TryParse(diffInDays + "", out dd);
+                    if (dd <= 7) code = 1;
+                    else if (dd <= 14) code = 2;
+                    else code = 3;
+                }
+                return code+"";
             }
         }
     }
