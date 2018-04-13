@@ -347,7 +347,6 @@ namespace EasyMoveOMS
             validateOrder();
             if (!isValid) return;
             saveOrder();
-            DialogResult = true;
         }
 
         private void saveOrder()
