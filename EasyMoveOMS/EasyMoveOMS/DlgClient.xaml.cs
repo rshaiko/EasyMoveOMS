@@ -17,9 +17,9 @@ namespace EasyMoveOMS
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class DlgClient : Window
     {
-        public Window1()
+        public DlgClient()
         {
             InitializeComponent();
         }
