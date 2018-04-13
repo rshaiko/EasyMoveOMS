@@ -34,6 +34,8 @@ namespace EasyMoveOMS
         long cAId=0;
         long orId;
 
+
+
         public InvoiceWindow(Order currOrder)
         {
             InitializeComponent();
@@ -52,7 +54,7 @@ namespace EasyMoveOMS
                         tbCity.Text = a.city;
                         cmbProvince.Text = a.province;
                         tbPostal.Text = a.zip;
-                        //cmbAddrType.SelectedValue = a.addrType;
+                      
 
                         cAId = a.id;
                     }
@@ -135,18 +137,6 @@ namespace EasyMoveOMS
             }
         }
 
-
-        /* private void dgInvoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
-         {
-             DataGrid dg = (DataGrid)sender;
-             DataRowView rowSelected = dg.SelectedItem as DataRowView;
-             if (rowSelected != null) {
-                 lblDescription.Content = rowSelected.Row[0].ToString();
-                 lblAmount.Content = rowSelected.Row[1].ToString();
-             }
-         }*/
-        
-            //int rowIndex;
         private void dgInvoice_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (e.EditAction == DataGridEditAction.Commit)
@@ -263,7 +253,7 @@ namespace EasyMoveOMS
                 MessageBox.Show("Discount must be a number.");
                 return;
             }
-            double temp = local - local * discount / 100;//Convert.ToDouble(lblTotalBeforeTax.Content) - Convert.ToDouble(lblTotalBeforeTax.Content) * discount / 100;//sum - sum * discount / 100;
+            double temp = local - local * discount / 100;
             lblTotalBeforeTax.Content = Math.Round(temp, 2);
             lblTPS.Content = Math.Round(temp * TPS, 2);
             lblTVQ.Content = Math.Round(temp * TVQ, 2);
@@ -274,16 +264,12 @@ namespace EasyMoveOMS
 
         private void miDelete_Click(object sender, RoutedEventArgs e)
         {
-            //dgInvoice.CancelEdit();
-            //if (dgInvoice.CancelEdit(DataGridEditingUnit.Cell)) { return; }
-
-            //if (rowIndex != (services.Count - 1)) { return; }
+           
             MessageBoxResult result = MessageBox.Show("Would you like to delete the selected row?", "Alert", MessageBoxButton.YesNo);
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    //try
-                    //{
+                   
                         int index = dgInvoice.SelectedIndex;
 
                         if (index < 0)
@@ -291,11 +277,7 @@ namespace EasyMoveOMS
 
                             return;
                         }
-                        //if (index == services.Count - 1)
-                        //{
-                        //    MessageBox.Show("Please complete editing the current row.");
-                        //    return;
-                        //}
+                        
 
                         services.RemoveAt(index);
 
@@ -316,13 +298,7 @@ namespace EasyMoveOMS
                         tbTotal.Text = Math.Round(sum * totalTax, 2) + "";
 
                         sum = 0;
-                    //}
-                    //catch (InvalidOperationException)
-                    //{
-                    //    MessageBox.Show("Please complete editing the current row.");
-                    //        return;
-
-                    //}
+                    
 
                     break;
                 case MessageBoxResult.No:
@@ -351,35 +327,7 @@ namespace EasyMoveOMS
             if(localTotal!=0)
             lblLocalTotal.Content =localTotal;
             btnReset.IsEnabled = true;
-            //string value = tbTotal.Text;
-            //double total;
-
-            //if (!double.TryParse(value, out total))
-            //{
-
-            //    MessageBox.Show("Discount must be a number.");
-            //    return;
-            //}
-            //if ((localTotal - total) > 0)
-            //{
-            //    double temp = (localTotal - total) * 100 / localTotal;
-
-
-            //    lblTotalBeforeTax.Content = (1 - temp / 100) * total;
-            //    lblTPS.Content = (1 - temp / 100) * total * TPS;
-            //    lblTVQ.Content = (1 - temp / 100) * total * TVQ;
-
-            //}
-            //if ((localTotal - total) < 0)
-            //{
-            //    lblDiscount.Content = "";
-            //    double temp = (total - localTotal) * 100 / localTotal;
-
-
-            //    lblTotalBeforeTax.Content = (1 + temp / 100) * total;
-            //    lblTPS.Content = (1 + temp / 100) * total * TPS;
-            //    lblTVQ.Content = (1 + temp / 100) * total * TVQ;
-            //}
+           
 
         }
         private void btnSetNew_Click(object sender, RoutedEventArgs e)
@@ -539,12 +487,29 @@ namespace EasyMoveOMS
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\..\Invoice.pdf", FileMode.Create));
             doc.Open();//open document
-            //content
-            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph("Hi there you!");
+                       //content
+            string content="";
+            for (int i = 0; i < services.Count; i++)
+            { content += "   " + services[i].Description+":    "+services[i].Price + "  *  " + services[i].Quantity + "    " + services[i].Amount+"\n"; }
+
+            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph("\n                              " +
+                "                                             INVOICE\n\n" + "   " + Settings.Default.companyName
+                +",\n"+ "   " + Settings.Default.address + ",\n" + "   " + Settings.Default.province + ",\n" + "   " + Settings.Default.zip + ",\n" + "   " + Settings.Default.phoneNumber+
+               ",\n"+ "   " + DateTime.Now+"\n\n");
             //adding text using different class object to pdf document
             doc.Add(paragraph);
+            double totalBef = 0;
+            for (int i = 0; i < services.Count; i++)
+            { totalBef += services[i].Amount; }
+            iTextSharp.text.Paragraph paragraph2 = new iTextSharp.text.Paragraph("   " + lblName.Content+",\n"+"   " + tbAddress.Text+",\n"
+                + "   " + tbCity.Text+",\n"+ "   " + cmbProvince.Text+",\n"+ "   " + tbPostal.Text+"\n" + content  + "   " + "Total before tax:   " + totalBef + "\n" +
+                "   " + "TPS:   " + Math.Round(totalBef * TPS, 2) + "\n" + "   " + "TVQ:   " + Math.Round(totalBef * TVQ, 2)
+                +"   " +"\n"+"   " +"TOTAL:   "+ Math.Round(totalBef * totalTax, 2));
+               
+            
+            doc.Add(paragraph2);
             doc.Close();
-            //MessageBox.Show("Successfully exported to PDF.");
+            MessageBox.Show("Successfully exported to PDF.");
             printPDF();
         }
         private void printPDF()
@@ -571,7 +536,7 @@ namespace EasyMoveOMS
             {
                 CreateNoWindow = true,
                 Verb = "print",
-                FileName = @"..\..\..\..\Invoice.pdf" //put the correct path here
+                FileName = @"..\..\..\..\Invoice.pdf" 
             };
             p.Start();
         }

@@ -53,7 +53,7 @@ namespace EasyMoveOMS
                     Globals.db.reloadOrderListScheduled(ref orderList);
                     lvOrders.ItemsSource = orderList;
                 }
-                lblStatus.Text += ""+ orderList.Count;
+                lblStatus.Text = "Total number of orders: "+ orderList.Count;
                 //reloadClientsList();
 
 
@@ -96,7 +96,17 @@ namespace EasyMoveOMS
             OrderWindow dlg = new OrderWindow(null);
             if (dlg.ShowDialog() == true)
             {
-
+                if (chbShowAll.IsChecked.Value)
+                {
+                    Globals.db.reloadOrderList(ref orderList);
+                    lvOrders.ItemsSource = orderList;
+                }
+                else
+                {
+                    Globals.db.reloadOrderListScheduled(ref orderList);
+                    lvOrders.ItemsSource = orderList;
+                }
+                lblStatus.Text = "Total number of orders: " + orderList.Count;
             }
         }
 
@@ -138,6 +148,7 @@ namespace EasyMoveOMS
                 
             }
             lvOrders.ItemsSource = ListOrderItem;
+            lblStatus.Text = "Total number of orders: " + ListOrderItem.Count;
         }
 
         private void btSort_Click(object sender, RoutedEventArgs e)
@@ -153,12 +164,14 @@ namespace EasyMoveOMS
         {
             Globals.db.reloadOrderListScheduled(ref orderList);
             lvOrders.ItemsSource = orderList;
+            lblStatus.Text = "Total number of orders: " + orderList.Count;
         }
 
         private void chbShowAll_Checked(object sender, RoutedEventArgs e)
         {
             Globals.db.reloadOrderList(ref orderList);
             lvOrders.ItemsSource = orderList;
+            lblStatus.Text = "Total number of orders: " + orderList.Count;
         }
 
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -260,6 +273,99 @@ namespace EasyMoveOMS
             InvoiceWindow dlg1 = new InvoiceWindow(null);
             if (dlg1.ShowDialog() == true)
             {
+
+            }
+        }
+
+        private void btEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure to delete?", "Alert", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    int index = lvOrders.SelectedIndex;
+                    if (index < 0)
+                    {
+                        return;
+                    }
+                    ListOrderItem i = (ListOrderItem)lvOrders.Items[index];
+                    try
+                    {
+                        Globals.db.DeleteListOrderItemById((int)i.id);
+                        if (chbShowAll.IsChecked.Value)
+                        {
+                            Globals.db.reloadOrderList(ref orderList);
+                            lvOrders.ItemsSource = orderList;
+                        }
+                        else
+                        {
+                            Globals.db.reloadOrderListScheduled(ref orderList);
+                            lvOrders.ItemsSource = orderList;
+                        }
+                        lblStatus.Text = "Total number of orders: " + orderList.Count;
+
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                        MessageBox.Show("Database query error " + ex.Message);
+                    }
+
+                    break;
+                case MessageBoxResult.No:
+
+                    break;
+
+
+            }
+        }
+
+        private void miDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure to delete?", "Alert", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    int index = lvOrders.SelectedIndex;
+                    if (index < 0)
+                    {
+                        return;
+                    }
+                    ListOrderItem i = (ListOrderItem)lvOrders.Items[index];
+                    try
+                    {
+                        Globals.db.DeleteListOrderItemById((int)i.id);
+                        if (chbShowAll.IsChecked.Value)
+                        {
+                            Globals.db.reloadOrderList(ref orderList);
+                            lvOrders.ItemsSource = orderList;
+                        }
+                        else
+                        {
+                            Globals.db.reloadOrderListScheduled(ref orderList);
+                            lvOrders.ItemsSource = orderList;
+                        }
+                        lblStatus.Text = "Total number of orders: " + orderList.Count;
+
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                        MessageBox.Show("Database query error " + ex.Message);
+                    }
+
+                    break;
+                case MessageBoxResult.No:
+
+                    break;
+
 
             }
         }

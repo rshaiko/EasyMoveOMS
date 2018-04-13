@@ -222,6 +222,15 @@ namespace EasyMoveOMS
             return result;
         }
 
+        internal void DeleteListOrderItemById(int id)
+        {
+            string sql = "DELETE FROM orders WHERE id=@Id";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.Add("@Id", MySqlDbType.Int16).Value = id;
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+        }
+
         internal void updatePayment(Payment p)
         {
             String sql = "UPDATE payments SET orderId=@orderId, method=@method, paymentDate=@paymentDate, amount=@amount, notes=@notes WHERE id=@id;";
