@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,7 +34,8 @@ namespace EasyMoveOMS
         public static double totalTax = 1.14975;
         long cAId=0;
         long orId;
-
+        static String rexZip = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
+        static Regex rZip = new Regex(rexZip);
 
 
         public InvoiceWindow(Order currOrder)
@@ -44,7 +46,7 @@ namespace EasyMoveOMS
             {
 
                 //populating the fields
-                lblName.Content = currOrder.orderClient.name;
+                tbName.Text = currOrder.orderClient.name;
                 lblDate.Content = DateTime.Now;
                 foreach (Address a in currOrder.orderAddresses)
                 {
@@ -451,8 +453,35 @@ namespace EasyMoveOMS
             //}
                 bool noT= (bool)chbCalculateTax.IsChecked;
             string addr = tbAddress.Text;
+            if (addr=="")
+            {
+                
+                MessageBox.Show("Address field cannot be empty.");
+                return;
+            }
+
             string ci = tbCity.Text;
+            if (ci == "")
+            {
+
+                MessageBox.Show("City field cannot be empty.");
+                return;
+            }
+            
             string z = tbPostal.Text;
+            if (z == "")
+            {
+                MessageBox.Show("Postal code field cannot be empty.");
+                return;
+            }
+            
+                Match mZip = rZip.Match(z);
+            if (!mZip.Success)
+            {
+                MessageBox.Show("Invalid ZIP.");
+                return;
+            }
+
             Invoice.Province pr = (Invoice.Province)Enum.Parse(typeof(Invoice.Province), cmbProvince.Text);
             
             Invoice inv = new Invoice() { id = 0, orderId = orId1,invoiceDate= invDate,noTax= noT,address= addr,
@@ -464,12 +493,10 @@ namespace EasyMoveOMS
             long id1 = 0;
             string[] name = new string[services.Count];
             double[] price = new double[services.Count];
-            //MessageBox.Show(services.Count + "");
             for (int i = 0; i < services.Count; i++)
             {
                
                 name[i] = services[i].Description;
-                //MessageBox.Show(name[i] + i+"");
                 price[i] = services[i].Amount;
 
                 InvoiceItem ii = new InvoiceItem() { id=id1,invoiceId= invId,name= name[i],price= price[i] };
@@ -485,7 +512,7 @@ namespace EasyMoveOMS
         private void btbExportPrint_Click(object sender, RoutedEventArgs e)
         {
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\..\Invoice.pdf", FileMode.Create));
+            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\Invoice.pdf", FileMode.Create));
             doc.Open();//open document
                        //content
             string content="";
@@ -498,10 +525,17 @@ namespace EasyMoveOMS
                ",\n"+ "   " + DateTime.Now+"\n\n");
             //adding text using different class object to pdf document
             doc.Add(paragraph);
+            
+            if (tbName.Text == "")
+            {
+
+                MessageBox.Show("Company/Name field cannot be empty.");
+                return;
+            }
             double totalBef = 0;
             for (int i = 0; i < services.Count; i++)
             { totalBef += services[i].Amount; }
-            iTextSharp.text.Paragraph paragraph2 = new iTextSharp.text.Paragraph("   " + lblName.Content+",\n"+"   " + tbAddress.Text+",\n"
+            iTextSharp.text.Paragraph paragraph2 = new iTextSharp.text.Paragraph("   " + tbName.Text+",\n"+"   " + tbAddress.Text+",\n"
                 + "   " + tbCity.Text+",\n"+ "   " + cmbProvince.Text+",\n"+ "   " + tbPostal.Text+"\n" + content  + "   " + "Total before tax:   " + totalBef + "\n" +
                 "   " + "TPS:   " + Math.Round(totalBef * TPS, 2) + "\n" + "   " + "TVQ:   " + Math.Round(totalBef * TVQ, 2)
                 +"   " +"\n"+"   " +"TOTAL:   "+ Math.Round(totalBef * totalTax, 2));
