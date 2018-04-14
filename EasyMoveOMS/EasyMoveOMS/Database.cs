@@ -26,24 +26,94 @@ namespace EasyMoveOMS
         }
 
 
-        public List<Client> GetAllClients()
+        //public List<Client> GetAllClients()
+        //{
+        //    List<Client> result = new List<Client>();
+        //    using (MySqlCommand command = new MySqlCommand("SELECT * FROM clients", conn))
+        //    using (MySqlDataReader reader = command.ExecuteReader())
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            int id = (int)reader["id"];
+        //            string name = (string)reader["name"];
+        //            string email = (string)reader["email"];
+        //            string phone = (string)reader["phone"];
+        //            string fax = (string)reader["fax"];
+        //            Client cl = new Client(id, name, email, phone, fax);
+        //            result.Add(cl);
+        //        }
+        //    }
+        //    return result;
+        //}
+
+        internal void loadClientData(ref List<Client> cl)
         {
-            List<Client> result = new List<Client>();
-            using (MySqlCommand command = new MySqlCommand("SELECT * FROM clients", conn))
-            using (MySqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
+            //internal void updatePayment(Payment p)
+            //{
+            //    
+            //}
+
+
+            //internal long addPayment(Payment p)
+            //{
+            //    String sql = "INSERT INTO payments (orderId, method, paymentDate, amount, notes) VALUES (@orderId, @method, @paymentDate, @amount, @notes); " +
+            //        "SELECT LAST_INSERT_ID();";
+            //    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            //    {
+            //        cmd.Parameters.AddWithValue("@orderId", p.orderId);
+            //        cmd.Parameters.AddWithValue("@method", p.method + "");
+            //        cmd.Parameters.AddWithValue("@paymentDate", p.paymentDate);
+            //        cmd.Parameters.AddWithValue("@amount", p.amount);
+            //        cmd.Parameters.AddWithValue("@notes", p.notes);
+
+            //        long id = Convert.ToInt32(cmd.ExecuteScalar());
+            //        return id;
+            //    }
+            //}
+
+                String sql = "SELECT * FROM clients;";
+                List<Client> clNew = new List<Client>();
+                using (MySqlCommand command = new MySqlCommand(sql, conn))
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    int id = (int)reader["id"];
-                    string name = (string)reader["name"];
-                    string email = (string)reader["email"];
-                    string phone = (string)reader["phone"];
-                    string fax = (string)reader["fax"];
-                    Client cl = new Client(id, name, email, phone, fax);
-                    result.Add(cl);
+                    while (reader.Read())
+                    {
+                        Client c = new Client();
+                        c.id = Convert.ToInt32(reader["id"]);
+                        c.name = reader["name"] + "";
+                        c.phoneH = reader["phoneHome"] + "";
+                        c.phoneW = reader["phoneWork"] + "";
+                        c.email = reader["email"] + "";
+                        clNew.Add(c);
+                    }
+                if (clNew.Count > 0) cl = clNew;
+                else throw new Exception("Unexpected error loading data.\nList was not updated");
                 }
+
+            
+        }
+        internal void deleteClient(long id)
+        {
+            string sql = "DELETE FROM clients WHERE id=@Id";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.Add("@Id", MySqlDbType.Int16).Value = id;
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+        }
+
+        internal void updateClient(Client c)
+        {
+            String sql = "UPDATE clients SET name=@name, email=@email, phoneHome=@phoneHome, phoneWork=@phoneWork WHERE id=@id;";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", c.id);
+                cmd.Parameters.AddWithValue("@name", c.name);
+                cmd.Parameters.AddWithValue("@email", c.email);
+                cmd.Parameters.AddWithValue("@phoneHome", c.phoneH);
+                cmd.Parameters.AddWithValue("@phoneWork", c.phoneW);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
             }
-            return result;
         }
 
         internal void loadOrderData(ref Order o)

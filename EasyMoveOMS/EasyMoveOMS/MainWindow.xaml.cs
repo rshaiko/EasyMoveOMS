@@ -138,7 +138,7 @@ namespace EasyMoveOMS
             String word = tbSearch.Text;
             if (word != "")
             {
-                var result = (from o in ListOrderItem where o.name.Contains(word) || o.dateTime.Contains(word)
+                var result = (from o in ListOrderItem where (o.name).ToLower().Contains(word.ToLower()) || o.dateTime.Contains(word)
                              || o.addrLine.Contains(word) || o.phones.Contains(word) || (o.orderStatus.ToString().Contains(word))
                               select o );
                 ListOrderItem = result.ToList();
@@ -173,41 +173,6 @@ namespace EasyMoveOMS
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
 
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Name") {
-            //    var listByName = from p in orderList orderby p.name select p;
-            //    List<ListOrderItem> orderListByName = listByName.ToList();
-            //    lvOrders.ItemsSource = orderListByName;
-            //}
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Date")
-            //{
-            //    var listByDate = from p in orderList orderby p.dateTime select p;
-            //    List<ListOrderItem> orderListByDate = listByDate.ToList();
-            //    lvOrders.ItemsSource = orderListByDate;
-            //}
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Address")
-            //{
-            //    var listByAddr = from p in orderList orderby p.addrLine select p;
-            //    List<ListOrderItem> orderListByAddr = listByAddr.ToList();
-            //    lvOrders.ItemsSource = orderListByAddr;
-            //}
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Address")
-            //{
-            //    var listByAddr = from p in orderList orderby p.addrLine select p;
-            //    List<ListOrderItem> orderListByAddr = listByAddr.ToList();
-            //    lvOrders.ItemsSource = orderListByAddr;
-            //}
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Phone")
-            //{
-            //    var listByPhone = from p in orderList orderby p.phones select p;
-            //    List<ListOrderItem> orderListByPhone = listByPhone.ToList();
-            //    lvOrders.ItemsSource = orderListByPhone;
-            //}
-            //if (((FrameworkElement)(sender)).Tag.ToString() == "Phone")
-            //{
-            //    var listByStatus = from p in orderList orderby p.orderStatus select p;
-            //    List<ListOrderItem> orderListByStatus = listByStatus.ToList();
-            //    lvOrders.ItemsSource = orderListByStatus;
-            //}
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             string sortBy = column.Tag.ToString();
             if (listViewSortCol != null)
@@ -364,6 +329,12 @@ namespace EasyMoveOMS
 
 
             }
+        }
+
+        private void miClients_Click(object sender, RoutedEventArgs e)
+        {
+            DlgClient dc = new DlgClient(null, 0);
+            dc.ShowDialog();
         }
     }
 }

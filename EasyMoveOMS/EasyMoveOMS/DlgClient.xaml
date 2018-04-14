@@ -1,50 +1,47 @@
 ﻿<Window x:Class="EasyMoveOMS.DlgClient"
+        WindowStartupLocation="CenterScreen"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="Customers - EasyMove OMS" Height="454" Width="820" FontSize="14">
+        Title="Customers - EasyMove OMS" Height="454" Width="820" FontSize="14"
+        Closing="Window_Closing">
     <Grid Height="425" VerticalAlignment="Top" Margin="0,0,0,-1">
-        <Label Content="Name:" HorizontalAlignment="Left" Margin="504,40,0,0" VerticalAlignment="Top" Width="63" />
-        <Label Content="Phone (h):" HorizontalAlignment="Left" Margin="504,104,0,0" VerticalAlignment="Top" Width="72"/>
-        <Label Content="Phone (w):" HorizontalAlignment="Left" Margin="504,167,0,0" VerticalAlignment="Top" Width="83"/>
-        <Label Content="Email:" HorizontalAlignment="Left" Margin="504,226,0,0" VerticalAlignment="Top" Width="83"/>
-        <TextBox Name="tbName" HorizontalAlignment="Left" Height="23" Margin="592,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <TextBox Name="tbPhoneH" HorizontalAlignment="Left" Height="23" Margin="592,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <TextBox Name="tbPhoneW" HorizontalAlignment="Left" Height="23" Margin="592,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <TextBox x:Name="tbEmail" HorizontalAlignment="Left" Height="23" Margin="592,228,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <Button Content="Order" HorizontalAlignment="Left" Height="37" Margin="467,371,0,0" VerticalAlignment="Top" Width="134"/>
-        <Button Content="Update" HorizontalAlignment="Left" Height="27" Margin="641,290,0,0" VerticalAlignment="Top" Width="59"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Height="37" Margin="243,371,0,0" VerticalAlignment="Top" Width="134"/>
-        <Button Content="New" HorizontalAlignment="Left" Height="27" Margin="555,290,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.424,0.926"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Height="27" Margin="727,290,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.746,0.519"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="499*"/>
+            <ColumnDefinition Width="314*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Name:" HorizontalAlignment="Left" Margin="5.5,92,0,0" VerticalAlignment="Top" Width="63" Grid.Column="1" />
+        <Label Content="Phone (h):" HorizontalAlignment="Left" Margin="5.5,138,0,0" VerticalAlignment="Top" Width="72" Grid.Column="1"/>
+        <Label Content="Phone (w):" HorizontalAlignment="Left" Margin="5.5,184,0,0" VerticalAlignment="Top" Width="83" Grid.Column="1"/>
+        <Label Content="Email:" HorizontalAlignment="Left" Margin="5.5,226,0,0" VerticalAlignment="Top" Width="83" Grid.Column="1"/>
+        <TextBox Name="tbName" HorizontalAlignment="Left" Height="24" Margin="93.5,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Grid.Column="1"/>
+        <TextBox Name="tbPhoneH" HorizontalAlignment="Left" Height="24" Margin="93.5,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Grid.Column="1"/>
+        <TextBox Name="tbPhoneW" HorizontalAlignment="Left" Height="22" Margin="93.5,186,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Grid.Column="1"/>
+        <TextBox x:Name="tbEmail" HorizontalAlignment="Left" Height="23" Margin="93.5,228,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Grid.Column="1"/>
+        <Button Name="btOrder" Content="Order" HorizontalAlignment="Left" Height="37" Margin="467,371,0,0" VerticalAlignment="Top" Width="134" Click="btOrder_Click" Grid.ColumnSpan="2"/>
+        <Button Name="btUpdate" Content="Update" HorizontalAlignment="Left" Height="27" Margin="142.5,290,0,0" VerticalAlignment="Top" Width="59" Click="btUpdate_Click" Grid.Column="1"/>
+        <Button Name="btCancel" Content="Cancel" HorizontalAlignment="Left" Height="37" Margin="243,371,0,0" VerticalAlignment="Top" Width="134" Click="btCancel_Click"/>
+        <Button Name="btNEw" Content="New" HorizontalAlignment="Left" Height="27" Margin="56.5,290,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.424,0.926" Click="btNEw_Click" Grid.Column="1" />
+        <Button Name="btDelete" Content="Delete" HorizontalAlignment="Left" Height="27" Margin="228.5,290,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.746,0.519" Click="btDelete_Click" Grid.Column="1"/>
 
 
-        <ListView Margin="10,40,322,84" Name="lvClients" SelectionMode="Single">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Departed}" Value="True">
-                            <Setter Property="Background" Value="Gray" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Departed}" Value="False">
-                            <Setter Property="Background" Value="White" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
+        <ListView Margin="10,47,8.5,84" Name="lvClients" SelectionMode="Single" MouseDoubleClick="lvClients_MouseDoubleClick" SelectionChanged="lvClients_SelectionChanged">
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Phones" Width="200" DisplayMemberBinding="{Binding Passport}" />
+                    <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding name}" />
+                    <GridViewColumn Header="Phones" Width="200" DisplayMemberBinding="{Binding phones}" />
                 </GridView>
             </ListView.View>
 
 
         </ListView>
         <Label x:Name="label" Content="Search:" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Width="52"/>
-        <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="423" Margin="67,9,0,0"/>
+        <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="414" Margin="67,9,0,0" TextChanged="tbSearch_TextChanged"/>
+        <Label Content="Id:" HorizontalAlignment="Left" Height="27" Margin="5.5,47,0,0" VerticalAlignment="Top" Width="47" Grid.Column="1"/>
+        <Label Name="lblId" Content="..." HorizontalAlignment="Left" Height="27" Margin="93.5,47,0,0" VerticalAlignment="Top" Width="194" Grid.Column="1"/>
     </Grid>
 </Window>

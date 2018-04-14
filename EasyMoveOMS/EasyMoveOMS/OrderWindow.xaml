@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="25" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" MinWidth="364">
-                 <Label />
+                <Label />
                 <Label Content="MOVING INFORMATION" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#d4d0c8"/>
                 <Label />
                 <WrapPanel MinWidth="380">
@@ -72,11 +72,10 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="Client*:" Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbClient" MouseEnter="tbClient_MouseEnter" TabIndex="4" Height="23" Text="Client 1" Width="140" Foreground="Black"/>
+                    <TextBox Name="tbClient" MouseEnter="tbClient_MouseEnter" TabIndex="4" Height="23" Width="199" Foreground="Black"/>
                     <Label></Label>
-                    <Button Name="btSelectClient" Height="23" Content="Select" Width="60" IsEnabled="True"/>
                     <Label></Label>
-                    <Button Name="btAddClient" Height="23" Content="Add new" Width="60" IsEnabled="True"/>
+                    <Button x:Name="btSelectClient" Height="23" Content="Select" Width="60" IsEnabled="True" Click="btSelectClient_Click" />
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -89,7 +88,7 @@
                 <Label/>
                 <WrapPanel>
                     <Label Content="Email:  " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbEmail" MouseEnter="tbEmail_MouseEnter" TabIndex="7" Height="23" Text="" Width="283" Foreground="Black"/>
+                    <TextBox Name="tbEmail" MouseEnter="tbEmail_MouseEnter" TabIndex="7" Height="23" Text="" Width="278" Foreground="Black"/>
 
                 </WrapPanel>
                 <Label/>
@@ -112,7 +111,7 @@
                         <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="2*" />
-                        
+
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"  />
@@ -120,7 +119,7 @@
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
-                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Width="140">  EasyMove >> Client</Label>
+                    <Label Padding="2,2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Width="140">EasyMove >> Client</Label>
                     <Label Padding="2,2" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Width="160" Content="       &gt;&gt;  moving  &gt;&gt;"/>
                     <Label Name="tbGoogleTime" Grid.Column="1" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left" Height="23"  Content="..." Width="85"  Foreground="Black"/>
                     <Label Name="tbGoogleDistance"  Grid.Column="2" Grid.Row="1" Background="#edeeef" HorizontalAlignment="Left"  Height="23" Content="..." Width="85"  Foreground="Black"/>
@@ -158,10 +157,10 @@
                         <ComboBoxItem Content="30" HorizontalAlignment="Left" Height="16"/>
                         <ComboBoxItem Content="45" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
-                    
-                    
+
+
                     <Label />
-                    
+
                     <Label />
                 </WrapPanel>
 
@@ -256,7 +255,7 @@
 
                 <WrapPanel>
                     <Label Content="Adr:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbAddrLineAct" Height="23"  MinWidth="316" Text="Addr55"/>
+                    <TextBox Name="tbAddrLineAct" Height="23"  MinWidth="316"/>
                 </WrapPanel>
                 <Label></Label>
                 <WrapPanel>
@@ -272,7 +271,7 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbCityAct" Height="23"  Text="LaSalle" Width="140"/>
+                    <TextBox Name="tbCityAct" Height="23" Width="140"/>
                     <Label></Label>
                     <ComboBox Name="cbProvinceAct" TextBoxBase.TextChanged="cbProvince_TextChanged" Width="45" Text="QC" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
@@ -290,7 +289,7 @@
                         <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" Text="H8N 2K6" Width="80"/>
+                    <TextBox Name="tbZipAct" TextChanged="tbZipAct_TextChanged" Height="23" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -308,7 +307,7 @@
                 </WrapPanel>
                 <WrapPanel>
                     <Label Content="Adr:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbAddrLineDest" Height="23"  MinWidth="316" Text="sadfwefws 55"/>
+                    <TextBox Name="tbAddrLineDest" Height="23"  MinWidth="316"/>
                 </WrapPanel>
                 <Label></Label>
                 <WrapPanel>
@@ -324,7 +323,7 @@
                 <Label></Label>
                 <WrapPanel>
                     <Label Content="City:   " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbCityDest" Height="23"  Text="LaSalle" Width="140"/>
+                    <TextBox Name="tbCityDest" Height="23" Width="140"/>
                     <Label></Label>
                     <ComboBox Name="cbProvinceDest" Width="45" Text="QC" TextBoxBase.TextChanged="cbProvince_TextChanged" IsEditable="True">
                         <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
@@ -342,7 +341,7 @@
                         <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
                     </ComboBox>
                     <Label Content=" ZIP: " Height="25" VerticalAlignment="Top"/>
-                    <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23"  Text="H8N 2K6" Width="80"/>
+                    <TextBox Name="tbZipDest" TextChanged="tbZipDest_TextChanged"  Height="23" Width="80"/>
                 </WrapPanel>
                 <Label/>
                 <WrapPanel>
@@ -477,7 +476,7 @@
                 <WrapPanel MinWidth="370" Height="23">
                     <Label Content="Price:    "  />
                     <TextBox Name="tbPricePrHour" Height="23" Width="40" />
-                    
+
                     <Label Content="  Min:"/>
                     <TextBox Name="tbMinHours" Height="23" Text="" Padding="2,3,0,0" Width="25" />
                     <wpfx:ButtonSpinner Name="spinMinHours" Width="20" Spin="spinMinHours_Spin" />
@@ -505,12 +504,12 @@
                     <TextBox Name="tbPaymentsTotal" Text="" Width="55" IsEnabled="False" Foreground="Black"/>
                     <Label/>
                     <CheckBox Name="cbComplete"  Height="14" Content="complete   " IsEnabled="False" Checked="cbComplete_Checked" Unchecked="cbComplete_Unchecked"/>
-                   
+
                     <Button Name="btAddPayment" Click="btAddPayment_Click" Content="Add >" Padding="0,2"/>
                     <Label Content="     Deposit, $: " Padding="0,2" />
                     <TextBox x:Name="tbDeposit" Text="" Width="40" />
                     <Label/>
-                    
+
                 </WrapPanel>
                 <Label/>
                 <Grid MaxHeight="150" MinHeight="65">

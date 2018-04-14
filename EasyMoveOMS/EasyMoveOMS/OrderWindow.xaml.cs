@@ -108,11 +108,10 @@ namespace EasyMoveOMS
             {
                 currentOrder = new Order();
                 currentOrder.orderAddresses = orderAddresses;
+                orderClient = new Client();
+                currentOrder.orderClient = orderClient;
                 lvPayments.ItemsSource = currentOrder.orderPayments;
                 isNewOrder = true;
-
-                orderClient = new Client();
-                orderClient.id = 0;
                 orderTruck = new Truck();
                 orderTruck.id = 0;
             }
@@ -1290,6 +1289,49 @@ namespace EasyMoveOMS
             DialogResult = false;
         }
 
+        private void btSelectClient_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentOrder.orderClient.id == 0)
+            {
+                DlgClient dClient = new DlgClient(null,1);
+                bool result = (bool) dClient.ShowDialog();
+                if (dClient.currEditedClient.id > 0)
+                {
+                    currentOrder.orderClient = dClient.currEditedClient;
+                    tbClient.Text = currentOrder.orderClient.name;
+                    tbEmail.Text = currentOrder.orderClient.email;
+                    tbPhoneH.Text = currentOrder.orderClient.phoneH;
+                    tbPhoneW.Text = currentOrder.orderClient.phoneW;
+                    tbClient.IsEnabled = false;
+                    tbEmail.IsEnabled = false;
+                    tbPhoneH.IsEnabled = false;
+                    tbPhoneW.IsEnabled = false;
+                    btSelectClient.Content = "Edit";
+                }
+               
+            }
+
+
+            else
+            {
+                DlgClient dClient = new DlgClient(currentOrder.orderClient,1); 
+                if (dClient.ShowDialog() == true)
+                {
+                    currentOrder.orderClient = dClient.currEditedClient;
+                    tbClient.Text = currentOrder.orderClient.name;
+                    tbEmail.Text = currentOrder.orderClient.email;
+                    tbPhoneH.Text = currentOrder.orderClient.phoneH;
+                    tbPhoneW.Text = currentOrder.orderClient.phoneW;
+                    tbClient.IsEnabled = false;
+                    tbEmail.IsEnabled = false;
+                    tbPhoneH.IsEnabled = false;
+                    tbPhoneW.IsEnabled = false;
+                    btSelectClient.Content = "Edit";
+                }
+            }
+            
+        }
+
         private void btCreateContract_Click(object sender, RoutedEventArgs e)
         {
             CreateDocument();
@@ -1412,10 +1454,12 @@ namespace EasyMoveOMS
                     }
                 }
 
+
+                //Add user dialog - OPEN | SAVE WORD | SAVE PDF, print maybe
                 winword.Visible=true;
                 
-                // !! Save the document
-                ////object filename = @"c:\contract.docx";
+                ////// !! SAVE the document
+                ////object filename = @"c:\contract.docx"; //generate filename - C + number + -date- + version# if pevious exist 
                 ////document.SaveAs2(ref filename);
                 ////document.Close(ref missing, ref missing, ref missing);
                 ////document = null;

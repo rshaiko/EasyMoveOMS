@@ -15,7 +15,7 @@
                 <MenuItem Name="mEdit" Header="_Edit" Click="btEdit_Click" />
                 <Separator />
             </MenuItem>
-            <MenuItem Header="_Clients" Margin="5,5">
+            <MenuItem Name="miClients" Header="_Clients" Margin="5,5" Click="miClients_Click">
 
             </MenuItem>
             <MenuItem Header="_Invoices" Margin="5,5" >
@@ -70,6 +70,7 @@
                 <ListView   Margin="10,10,10,10" Name="lvOrders" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" MouseDoubleClick="lvOrders_MouseDoubleClick" >
                     <ListView.ContextMenu>
                         <ContextMenu Name="cMenu">
+                            <MenuItem Name="miEdit" Header="Edit" Click="btEdit_Click"/>
                             <MenuItem Name="miDelete" Header="Delete" Click="miDelete_Click"/>
 
                         </ContextMenu>
