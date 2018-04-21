@@ -558,9 +558,6 @@ namespace EasyMoveOMS
                         tbEmail.Background = Brushes.Red;
                         throw new InvalidDataException("Entered email is not valid");
                     }
-                    
-                    
-                    
                 }
 
                 // ==> TRUCK AND WORKERS
@@ -581,7 +578,7 @@ namespace EasyMoveOMS
                     tbWorkers.Background = Brushes.Red;
                     throw new InvalidDataException("Workers number can not be negative");
                 }
-
+                
                 
                 //Max HOURS
                 if(!int.TryParse(tbMaxHours.Text, out maxHours))
@@ -1355,7 +1352,8 @@ namespace EasyMoveOMS
 
                 //Create a missing variable for missing value
                 object missing = System.Reflection.Missing.Value;
-                Object oTemplatePath = System.IO.Path.GetFullPath("../../Resources/contractTemplate.dotx");
+
+                Object oTemplatePath = System.IO.Path.GetFullPath("contractTemplate.dotx");
                 Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(oTemplatePath, ref missing, ref missing, ref missing);
 
                 foreach (Word.Field myMergeField in document.Fields)
@@ -1437,15 +1435,39 @@ namespace EasyMoveOMS
                                 break;
                             case "travelTime":
                                 myMergeField.Select();
-                                String tt = o.travelTime.Ticks > 0 ? (o.travelTime.Hours + o.travelTime.Minutes / 60.0) + " hh" : " ";
+                                String tt = o.travelTime.Ticks > 0 ? (o.travelTime.Hours + o.travelTime.Minutes / 60.0) + " h" : " ";
                                 winword.Selection.TypeText(tt);
                                 break;
-                            case "N/A":
+                            case "deposit":
+                                myMergeField.Select();
+                                String depo = o.deposit>0 ? o.deposit + "$" : " ";
+                                winword.Selection.TypeText(depo);
+                                break;
+                            case "description":
+                                myMergeField.Select();
+                                String descr = (o.boxes > 0 ? "boxes: " + o.boxes + "; " : "")
+                                    + (o.beds > 0 ? "beds: " + o.beds + "; " : "")
+                                    + (o.sofas > 0 ? "sofas: " + o.sofas + "; " : "")
+                                    + (o.frigos > 0 ? "frigos: " + o.frigos + "; " : "")
+                                    + (o.wds > 0 ? "wds: " + o.wds + "; " : "")
+                                    + (o.desks > 0 ? "desks: " + o.desks + "; " : "")
+                                    + (o.tables > 0 ? "tables: " + o.tables + "; " : "")
+                                    + (o.chairs > 0 ? "chairs: " + o.chairs + "; " : "")
+                                    + (o.other > 0 ? "other: " + o.other + "; " : "") 
+                                    + o.details + " " ;
+                                winword.Selection.TypeText(descr);
+                                break;
+                            case "addrInt":
                                 if (o.useIntAddress)
                                 {
-                                    //myMergeField.Select();
-                                    //String intAdr = o.orderAddresses[3].addrLine + "\n" + o.orderAddresses[3].city + "  " + o.orderAddresses[3].province + "  " + o.orderAddresses[3].zip;
-                                    //winword.Selection.TypeText(intAdr);
+                                    myMergeField.Select();
+                                    String intAdr = o.orderAddresses[2].addrLine + "\n" + o.orderAddresses[2].city + "  " + o.orderAddresses[2].province + "  " + o.orderAddresses[2].zip;
+                                    winword.Selection.TypeText(intAdr);
+                                }
+                                else
+                                {
+                                    myMergeField.Select();
+                                    winword.Selection.TypeText("N/A");
                                 }
                                 break;
                             default:

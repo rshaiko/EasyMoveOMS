@@ -19,6 +19,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 namespace EasyMoveOMS
 {
@@ -511,6 +513,7 @@ namespace EasyMoveOMS
         
         private void btbExportPrint_Click(object sender, RoutedEventArgs e)
         {
+            exportToExcel();
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\Invoice.pdf", FileMode.Create));
             doc.Open();//open document
@@ -546,6 +549,64 @@ namespace EasyMoveOMS
             MessageBox.Show("Successfully exported to PDF.");
             printPDF();
         }
+
+        private void exportToExcel()
+        {
+            try
+            {
+                //Create an instance for word app
+                Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+
+                //Set animation status for word application
+                //excel.ShowAnimation = false;
+
+                //Set status for word application is to be visible or not.
+                excel.Visible = false;
+
+                //Create a missing variable for missing value
+                object missing = System.Reflection.Missing.Value;
+
+                Object oTemplatePath = System.IO.Path.GetFullPath("invoiceTemplate.xltx");
+                Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Add(oTemplatePath);
+
+                var xlApp = new Excel.Application();
+                var xlWorkBook = xlApp.Workbooks.Add();
+                var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+        //        Microsoft.Office.Interop.Excel.ExcelTitleRow(list[0], 1, xlWorkSheet);
+
+        //        int row = 2;
+        //        foreach (var item in list)
+        //        {
+        //            ExcelFillRow(item, row++, xlWorkSheet);
+        //        }
+
+        //        for (int i = 1; i < list[0].MaxLevel - 1; i++)
+        //        {
+        //            ((Microsoft.Office.Interop.Excel.Range)xlWorkSheet.Columns[i]).ColumnWidth = 2;
+        //        }
+        //((Excel.Range)xlWorkSheet.Columns[list[0].MaxLevel - 1]).ColumnWidth = 30;
+        //        ((Excel.Range)xlWorkSheet.Rows[1]).WrapText = true;
+        //        ((Excel.Range)xlWorkSheet.Rows[1]).HorizontalAlignment = HorizontalAlignment.Center;
+        //        ((Excel.Range)xlWorkSheet.Cells[1, 1]).WrapText = false;
+
+        //        workbook.SaveAs(fileName);
+                workbook.Close();
+                excel.Quit();
+            }
+            catch (AccessViolationException)
+            {
+                MessageBox.Show(
+                     "Have encountered access violation. This could be issue with Excel 2000 if that is only version installed on computer",
+                     "Access Violation");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unknown error",
+                     "Unknown error");
+            }
+        }
+
         private void printPDF()
         {
             //ProcessStartInfo info = new ProcessStartInfo();
