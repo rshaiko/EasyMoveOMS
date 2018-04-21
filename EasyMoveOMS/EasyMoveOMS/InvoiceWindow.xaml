@@ -5,20 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMoveOMS"
         mc:Ignorable="d"
-        Title="Invoice - EasyMove OMS" Height="719.426" Width="800" FontSize="15" ResizeMode="NoResize">
+        Title="Invoice - EasyMove OMS" Height="750" Width="1200" FontSize="15" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <CheckBox IsChecked="false" Name="chbCalculateTax" Content=" No Taxes" HorizontalAlignment="Left" Margin="672,0,0,655" VerticalAlignment="Bottom" Width="85" Height="18" Checked="chbCalculateTax_Checked" Unchecked="chbCalculateTax_Unchecked"/>
-        <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="66,34,0,0" VerticalAlignment="Top"/>
-        <Label Content="Date:" HorizontalAlignment="Left" Margin="144,76,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblDate" Content="..." HorizontalAlignment="Left" Margin="248,76,0,0" VerticalAlignment="Top" Width="227"/>
-        <Label Content="Total before tax:" HorizontalAlignment="Left" Margin="421,513,0,0" VerticalAlignment="Top"/>
-        <Label Content="TPS 5%:" HorizontalAlignment="Left" Margin="475,548,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblTPS" Content="..." HorizontalAlignment="Left" Margin="552,548,0,0" VerticalAlignment="Top" RenderTransformOrigin="-3.3,0.533"/>
-        <Label Content="TVQ 9.975%:" HorizontalAlignment="Left" Margin="443,583,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblTVQ" Content="..." HorizontalAlignment="Left" Margin="552,583,0,0" VerticalAlignment="Top"/>
-        <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="482,618,0,0" VerticalAlignment="Top"/>
-        <Button Name="btbExportPrint" Content="Print Invoice" HorizontalAlignment="Left" Margin="47,618,0,0" VerticalAlignment="Top" Width="103" Click="btbExportPrint_Click"/>
-        <DataGrid  AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="47,288,0,0" VerticalAlignment="Top" Width="704"  CellEditEnding="dgInvoice_CellEditEnding">
+        <CheckBox IsChecked="false" Name="chbCalculateTax" Content=" No Taxes" HorizontalAlignment="Left" Margin="245,0,0,448" VerticalAlignment="Bottom" Width="84" Height="22" Checked="chbCalculateTax_Checked" Unchecked="chbCalculateTax_Unchecked"/>
+        <Label Content="Name/Company:" HorizontalAlignment="Left" Margin="242,70,0,0" VerticalAlignment="Top"/>
+        <Label Content="Date:" HorizontalAlignment="Left" Margin="242,112,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblDate" Content="..." Height="30" HorizontalAlignment="Left" Margin="368,112,0,0" VerticalAlignment="Top" Width="228"/>
+        <Label Content="Total before tax:" HorizontalAlignment="Left" Margin="616,518,0,0" VerticalAlignment="Top"/>
+        <Label Content="TPS 5%:" HorizontalAlignment="Left" Margin="670,553,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblTPS" Content="..." HorizontalAlignment="Left" Margin="746,553,0,0" VerticalAlignment="Top" RenderTransformOrigin="-3.3,0.533"/>
+        <Label Content="TVQ 9.975%:" HorizontalAlignment="Left" Margin="638,588,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblTVQ" Content="..." HorizontalAlignment="Left" Margin="746,588,0,0" VerticalAlignment="Top"/>
+        <Label Content="TOTAL:" HorizontalAlignment="Left" Margin="676,623,0,0" VerticalAlignment="Top"/>
+        <Button Name="btbExportPrint" Content="Print Invoice" HorizontalAlignment="Left" Margin="242,623,0,0" VerticalAlignment="Top" Width="102" Click="btbExportPrint_Click"/>
+        <DataGrid  AutoGenerateColumns="False" Name="dgInvoice" HorizontalAlignment="Left" Height="167" Margin="242,286,0,0" VerticalAlignment="Top" Width="704"  CellEditEnding="dgInvoice_CellEditEnding">
             <DataGrid.ContextMenu>
                 <ContextMenu Name="cMenu">
                     <MenuItem Click="miDelete_Click" Name="miDelete" Header="Delete" />
@@ -33,20 +34,27 @@
                 <DataGridTextColumn Header="Amount, $        " Binding="{Binding Amount}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox Name="tbTotal" HorizontalAlignment="Left" Height="23" Margin="552,621,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" GotFocus="tbTotal_GotFocus" TextChanged="tbTotal_TextChanged_1"/>
-        <TextBox Name="tbPostal" HorizontalAlignment="Left" Height="23" Margin="443,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" RenderTransformOrigin="0.494,0.87"/>
-        <TextBox Name="tbAddress" HorizontalAlignment="Left" Height="23" Margin="237,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" />
-        <Label Content="Discount (%):" HorizontalAlignment="Left" Margin="440,469,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="tbDiscount" HorizontalAlignment="Left" Height="23" Margin="552,476,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" TextChanged="tbDiscount_TextChanged" GotFocus="tbDiscount_GotFocus"/>
-        <Label Content="Address:" HorizontalAlignment="Left" Margin="122,111,0,0" VerticalAlignment="Top"/>
-        <Label Content="Postal code:" HorizontalAlignment="Left" Margin="325,215,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.564,1.577"/>
-        <Label Name="lblTotalBeforeTax" Content="..." HorizontalAlignment="Left" Margin="552,513,0,0" VerticalAlignment="Top"/>
-        <Button Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="291,618,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click"/>
-        <Button Name="btnSetNew" Content="Set New" HorizontalAlignment="Left" Margin="676,620,0,0" VerticalAlignment="Top" Width="75" Click="btnSetNew_Click"/>
-        <Label Content="City:" HorizontalAlignment="Left" Margin="144,163,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="tbCity" HorizontalAlignment="Left" Height="23" Margin="237,167,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Province:" HorizontalAlignment="Left" Margin="475,163,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="cmbProvince" Text="QC" IsEditable="True" Margin="601,164,130,486" RenderTransformOrigin="2.089,2.115" >
+        <TextBox Name="tbTotal" HorizontalAlignment="Left" Height="30" Margin="746,626,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94" GotFocus="tbTotal_GotFocus" TextChanged="tbTotal_TextChanged_1"/>
+        <TextBox Name="tbPostal" HorizontalAlignment="Left" Height="30" Margin="841,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" RenderTransformOrigin="0.494,0.87"/>
+        <TextBox Name="tbAddress" HorizontalAlignment="Left" Height="30" Margin="368,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" />
+        <Label Content="Discount (%):" HorizontalAlignment="Left" Margin="634,474,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbDiscount" HorizontalAlignment="Left" Height="30" Margin="746,481,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94" TextChanged="tbDiscount_TextChanged" GotFocus="tbDiscount_GotFocus"/>
+        <Label Content="Address:" HorizontalAlignment="Left" Margin="242,154,0,0" VerticalAlignment="Top"/>
+        <Label Content="Postal code:" HorizontalAlignment="Left" Margin="746,196,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.564,1.577"/>
+        <Label Name="lblTotalBeforeTax" Content="..." HorizontalAlignment="Left" Margin="746,518,0,0" VerticalAlignment="Top"/>
+        <Button Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="486,623,0,0" VerticalAlignment="Top" Width="74" Click="Cancel_Click"/>
+        <Button Name="btnSetNew" Content="Set New" HorizontalAlignment="Left" Margin="870,625,0,0" VerticalAlignment="Top" Width="76" Click="btnSetNew_Click"/>
+        <Label Content="City:" HorizontalAlignment="Left" Margin="242,196,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="tbCity" HorizontalAlignment="Left" Height="30" Margin="368,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="211"/>
+        <Label Content="Province:" HorizontalAlignment="Left" Margin="584,196,0,0" VerticalAlignment="Top"/>
+
+
+        <Button Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="870,656,0,0" VerticalAlignment="Top" Width="76" Click="btnReset_Click"/>
+        <Label Name="lblLocalTotal" Content="" HorizontalAlignment="Left" Margin="746,656,0,0" VerticalAlignment="Top" Width="94"/>
+        <Button Name="btnSave" Content="Save Invoice" HorizontalAlignment="Left" Margin="366,623,0,0" VerticalAlignment="Top" Width="98" Click="btnSave_Click"/>
+        <TextBox x:Name="tbName" HorizontalAlignment="Left" Height="30" Margin="368,77,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" />
+        <Label Name="lblInvoice" HorizontalContentAlignment="Center" FontSize="25" Padding="0,5,0,0" FontWeight="DemiBold" FontFamily="Garamond"  Height="37" Margin="468,10,478,674" Content="New invoice" Width="248" />
+        <ComboBox Name="cmbProvince" Text="QC" IsEditable="True" HorizontalAlignment="Left" Margin="659,196,0,0" VerticalAlignment="Top" Width="50" RenderTransformOrigin="-3.06,0.615">
             <ComboBoxItem Content="QC" HorizontalAlignment="Left" Height="16"/>
             <ComboBoxItem Content="ON" HorizontalAlignment="Left" Height="16"/>
             <ComboBoxItem Content="AB" HorizontalAlignment="Left" Height="16"/>
@@ -61,10 +69,6 @@
             <ComboBoxItem Content="NU" HorizontalAlignment="Left" Height="16"/>
             <ComboBoxItem Content="YT" HorizontalAlignment="Left" Height="16"/>
         </ComboBox>
-        <Button Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="676,651,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
-        <Label Name="lblLocalTotal" Content="" HorizontalAlignment="Left" Margin="552,651,0,0" VerticalAlignment="Top" Width="93"/>
-        <Button Name="btnSave" Content="Save Invoice" HorizontalAlignment="Left" Margin="171,618,0,0" VerticalAlignment="Top" Width="98" Click="btnSave_Click"/>
-        <TextBox x:Name="tbName" HorizontalAlignment="Left" Height="23" Margin="237,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" />
 
     </Grid>
 </Window>

@@ -38,11 +38,13 @@ namespace EasyMoveOMS
         long orId;
         static String rexZip = @"^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy][0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz] ?[0-9][ABCEGHJKLMNPRSTVWXYZabceghjklmnprstvwxyz][0-9]$";
         static Regex rZip = new Regex(rexZip);
+        Order o = new Order();
 
 
         public InvoiceWindow(Order currOrder)
         {
             InitializeComponent();
+            o = currOrder;
 
             if (currOrder != null && currOrder.orderClient != null && currOrder.orderAddresses != null)
             {
@@ -94,14 +96,14 @@ namespace EasyMoveOMS
 
                 services.Add(new Service()
                 {
-                    Description = "Moving",
+                    Description = "Heures / Hours",
                     Price = Convert.ToDouble(currOrder.pricePerHour),
                     Quantity = Convert.ToDouble(time),
                     Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (time)
                 });
                 services.Add(new Service()
                 {
-                    Description = "Travel",
+                    Description = "Heure de voyagement / Travel time",
                     Price = Convert.ToDouble(currOrder.pricePerHour),
                     Quantity = Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0),
                     Amount = (Convert.ToDouble(currOrder.pricePerHour)) * (Convert.ToDouble(currOrder.travelTime.Hours + currOrder.travelTime.Minutes / 60.0))
@@ -514,44 +516,45 @@ namespace EasyMoveOMS
         private void btbExportPrint_Click(object sender, RoutedEventArgs e)
         {
             exportToExcel();
-            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\Invoice.pdf", FileMode.Create));
-            doc.Open();//open document
-                       //content
-            string content="";
-            for (int i = 0; i < services.Count; i++)
-            { content += "   " + services[i].Description+":    "+services[i].Price + "  *  " + services[i].Quantity + "    " + services[i].Amount+"\n"; }
+            //Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+            //PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream(@"..\..\..\Invoice.pdf", FileMode.Create));
+            //doc.Open();//open document
+            //           //content
+            //string content="";
+            //for (int i = 0; i < services.Count; i++)
+            //{ content += "   " + services[i].Description+":    "+services[i].Price + "  *  " + services[i].Quantity + "    " + services[i].Amount+"\n"; }
 
-            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph("\n                              " +
-                "                                             INVOICE\n\n" + "   " + Settings.Default.companyName
-                +",\n"+ "   " + Settings.Default.address + ",\n" + "   " + Settings.Default.province + ",\n" + "   " + Settings.Default.zip + ",\n" + "   " + Settings.Default.phoneNumber+
-               ",\n"+ "   " + DateTime.Now+"\n\n");
-            //adding text using different class object to pdf document
-            doc.Add(paragraph);
+            //iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph("\n                              " +
+            //    "                                             INVOICE\n\n" + "   " + Settings.Default.companyName
+            //    +",\n"+ "   " + Settings.Default.address + ",\n" + "   " + Settings.Default.province + ",\n" + "   " + Settings.Default.zip + ",\n" + "   " + Settings.Default.phoneNumber+
+            //   ",\n"+ "   " + DateTime.Now+"\n\n");
+            ////adding text using different class object to pdf document
+            //doc.Add(paragraph);
             
-            if (tbName.Text == "")
-            {
+            //if (tbName.Text == "")
+            //{
 
-                MessageBox.Show("Company/Name field cannot be empty.");
-                return;
-            }
-            double totalBef = 0;
-            for (int i = 0; i < services.Count; i++)
-            { totalBef += services[i].Amount; }
-            iTextSharp.text.Paragraph paragraph2 = new iTextSharp.text.Paragraph("   " + tbName.Text+",\n"+"   " + tbAddress.Text+",\n"
-                + "   " + tbCity.Text+",\n"+ "   " + cmbProvince.Text+",\n"+ "   " + tbPostal.Text+"\n" + content  + "   " + "Total before tax:   " + totalBef + "\n" +
-                "   " + "TPS:   " + Math.Round(totalBef * TPS, 2) + "\n" + "   " + "TVQ:   " + Math.Round(totalBef * TVQ, 2)
-                +"   " +"\n"+"   " +"TOTAL:   "+ Math.Round(totalBef * totalTax, 2));
+            //    MessageBox.Show("Company/Name field cannot be empty.");
+            //    return;
+            //}
+            //double totalBef = 0;
+            //for (int i = 0; i < services.Count; i++)
+            //{ totalBef += services[i].Amount; }
+            //iTextSharp.text.Paragraph paragraph2 = new iTextSharp.text.Paragraph("   " + tbName.Text+",\n"+"   " + tbAddress.Text+",\n"
+            //    + "   " + tbCity.Text+",\n"+ "   " + cmbProvince.Text+",\n"+ "   " + tbPostal.Text+"\n" + content  + "   " + "Total before tax:   " + totalBef + "\n" +
+            //    "   " + "TPS:   " + Math.Round(totalBef * TPS, 2) + "\n" + "   " + "TVQ:   " + Math.Round(totalBef * TVQ, 2)
+            //    +"   " +"\n"+"   " +"TOTAL:   "+ Math.Round(totalBef * totalTax, 2));
                
             
-            doc.Add(paragraph2);
-            doc.Close();
-            MessageBox.Show("Successfully exported to PDF.");
-            printPDF();
+            //doc.Add(paragraph2);
+            //doc.Close();
+            //MessageBox.Show("Successfully exported to PDF.");
+            //printPDF();
         }
 
         private void exportToExcel()
         {
+           
             try
             {
                 //Create an instance for word app
@@ -568,10 +571,37 @@ namespace EasyMoveOMS
 
                 Object oTemplatePath = System.IO.Path.GetFullPath("invoiceTemplate.xltx");
                 Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Add(oTemplatePath);
+                Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.ActiveSheet;
+                worksheet.Cells[12, 1] = tbName.Text;
+                worksheet.Cells[13, 1] = tbAddress.Text;
+                worksheet.Cells[14, 1] = tbCity.Text + "   "+ cmbProvince.Text + "   " + tbPostal.Text;
+                worksheet.Cells[16, 1] = DateTime.Now.ToString("dd.MM.yyyy");
 
-                var xlApp = new Excel.Application();
-                var xlWorkBook = xlApp.Workbooks.Add();
-                var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                worksheet.Cells[18, 1] = "Invoice #"+ o.id;
+                for (int i = 0; i < services.Count; i++)
+                {
+                    worksheet.Cells[21 + i, 1] = services[i].Description;
+                    worksheet.Cells[21 + i, 3] = services[i].Price;
+                    worksheet.Cells[21 + i, 4] = services[i].Quantity;
+                }
+
+                if (chbCalculateTax.IsChecked == true) // is checked means NO TAX
+                {
+                    worksheet.Cells[28, 4] = 0;
+                    worksheet.Cells[29, 4] = 0;
+                }
+
+                //Show discount if exists
+                decimal disc = 0;
+                if (decimal.TryParse(tbDiscount.Text, out disc)){
+                    if (disc > 0) worksheet.Cells[26, 4] = disc / 100;
+                }
+
+                excel.Visible = true;
+
+                //var xlApp = new Excel.Application();
+                //var xlWorkBook = xlApp.Workbooks.Add();
+                //var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
         //        Microsoft.Office.Interop.Excel.ExcelTitleRow(list[0], 1, xlWorkSheet);
 
@@ -591,8 +621,8 @@ namespace EasyMoveOMS
         //        ((Excel.Range)xlWorkSheet.Cells[1, 1]).WrapText = false;
 
         //        workbook.SaveAs(fileName);
-                workbook.Close();
-                excel.Quit();
+                //workbook.Close();
+                //excel.Quit();
             }
             catch (AccessViolationException)
             {
@@ -640,6 +670,8 @@ namespace EasyMoveOMS
         {
             DialogResult = false;
         }
+
+       
     }
 
     public class Service : INotifyPropertyChanged

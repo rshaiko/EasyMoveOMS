@@ -38,6 +38,24 @@ namespace EasyMoveOMS
                 InitializeComponent();
                 //DataContext = this;
 
+                //Call Database every 3 minutes to keep connection alive
+                var startTimeSpan = TimeSpan.Zero;
+                var periodTimeSpan = TimeSpan.FromMinutes(3);
+
+                var timer = new System.Threading.Timer((e) =>
+                {
+                    try
+                    {
+                        Globals.db = new Database();
+                    }
+                    catch (SqlException exx)
+                    {
+                        MessageBox.Show("Error opening database connection: " + exx.Message);
+                        Environment.Exit(1);
+                    }
+                }, null, startTimeSpan, periodTimeSpan);
+
+
                 chbShowAll.IsChecked = (bool)Settings.Default["showAll"];
 
                 Globals.truckList = Globals.db.GetWorkingTrucks();
@@ -55,7 +73,6 @@ namespace EasyMoveOMS
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.StackTrace);
                 MessageBox.Show("Error opening database connection: " + e.Message);
                 Environment.Exit(1);
             }

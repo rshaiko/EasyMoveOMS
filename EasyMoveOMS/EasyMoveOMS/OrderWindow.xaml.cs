@@ -1290,7 +1290,7 @@ namespace EasyMoveOMS
         {
             if (currentOrder.orderClient.id == 0)
             {
-                DlgClient dClient = new DlgClient(null,1);
+                DlgClient dClient = new DlgClient(null,1); // we send "0" from client window
                 bool result = (bool) dClient.ShowDialog();
                 if (dClient.currEditedClient.id > 0)
                 {
@@ -1305,15 +1305,26 @@ namespace EasyMoveOMS
                     tbPhoneW.IsEnabled = false;
                     btSelectClient.Content = "Edit";
                 }
-               
             }
 
 
             else
             {
-                DlgClient dClient = new DlgClient(currentOrder.orderClient,1); 
-                if (dClient.ShowDialog() == true)
+                DlgClient dClient = new DlgClient(currentOrder.orderClient,1);
+                bool result = (bool)dClient.ShowDialog();
+                if (dClient.currEditedClient.id != currentOrder.clientId)
                 {
+                    //try
+                    //{
+                    //    Globals.db.updateOrderClientId(dClient.currEditedClient.id, currentOrder.id);
+                    //    System.Windows.MessageBox.Show("Client was updated", "Database", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+                    //}
+                    //catch (MySqlException er)
+                    //{
+                    //    System.Windows.MessageBox.Show("Error updating client\n" + er.Message, "Database error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    //    return;
+                    //}
+                    currentOrder.clientId = dClient.currEditedClient.id;
                     currentOrder.orderClient = dClient.currEditedClient;
                     tbClient.Text = currentOrder.orderClient.name;
                     tbEmail.Text = currentOrder.orderClient.email;
@@ -1324,6 +1335,14 @@ namespace EasyMoveOMS
                     tbPhoneH.IsEnabled = false;
                     tbPhoneW.IsEnabled = false;
                     btSelectClient.Content = "Edit";
+                }
+                else
+                {
+                    currentOrder.orderClient = dClient.currEditedClient;
+                    tbClient.Text = currentOrder.orderClient.name;
+                    tbEmail.Text = currentOrder.orderClient.email;
+                    tbPhoneH.Text = currentOrder.orderClient.phoneH;
+                    tbPhoneW.Text = currentOrder.orderClient.phoneW;
                 }
             }
             
@@ -1425,12 +1444,12 @@ namespace EasyMoveOMS
                                 break;
                             case "minTime":
                                 myMergeField.Select();
-                                String mint = o.minTime.Ticks > 0 ? "Minimum hours to be paid for: " + (o.minTime.Hours + o.minTime.Minutes / 60.0) : " ";
+                                String mint = o.minTime.Ticks > 0 ? "Heures/Hours minimum: " + (o.minTime.Hours + o.minTime.Minutes / 60.0) : "; ";
                                 winword.Selection.TypeText(mint);
                                 break;
                             case "maxTime":
                                 myMergeField.Select();
-                                String maxt = o.maxTime.Ticks > 0 ? "Maximum hours to be paid for: " + (o.maxTime.Hours + o.maxTime.Minutes / 60.0) : " ";
+                                String maxt = o.maxTime.Ticks > 0 ? "Heures/Hours maximum: " + (o.maxTime.Hours + o.maxTime.Minutes / 60.0) : "; ";
                                 winword.Selection.TypeText(maxt);
                                 break;
                             case "travelTime":
@@ -1445,15 +1464,15 @@ namespace EasyMoveOMS
                                 break;
                             case "description":
                                 myMergeField.Select();
-                                String descr = (o.boxes > 0 ? "boxes: " + o.boxes + "; " : "")
-                                    + (o.beds > 0 ? "beds: " + o.beds + "; " : "")
-                                    + (o.sofas > 0 ? "sofas: " + o.sofas + "; " : "")
-                                    + (o.frigos > 0 ? "frigos: " + o.frigos + "; " : "")
-                                    + (o.wds > 0 ? "wds: " + o.wds + "; " : "")
-                                    + (o.desks > 0 ? "desks: " + o.desks + "; " : "")
-                                    + (o.tables > 0 ? "tables: " + o.tables + "; " : "")
-                                    + (o.chairs > 0 ? "chairs: " + o.chairs + "; " : "")
-                                    + (o.other > 0 ? "other: " + o.other + "; " : "") 
+                                String descr = (o.boxes > 0 ? "boxes - " + o.boxes + "; " : "")
+                                    + (o.beds > 0 ? "beds - " + o.beds + "; " : "")
+                                    + (o.sofas > 0 ? "sofas - " + o.sofas + "; " : "")
+                                    + (o.frigos > 0 ? "frigos - " + o.frigos + "; " : "")
+                                    + (o.wds > 0 ? "other appliances - " + o.wds + "; " : "")
+                                    + (o.desks > 0 ? "desks - " + o.desks + "; " : "")
+                                    + (o.tables > 0 ? "tables - " + o.tables + "; " : "")
+                                    + (o.chairs > 0 ? "chairs - " + o.chairs + "; " : "")
+                                    + (o.other > 0 ? "other - " + o.other + "; " : "") 
                                     + o.details + " " ;
                                 winword.Selection.TypeText(descr);
                                 break;

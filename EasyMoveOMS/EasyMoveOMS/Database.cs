@@ -25,6 +25,20 @@ namespace EasyMoveOMS
             conn.Open();
         }
 
+        //internal void reconnect()
+        //{
+        //    string sql = "SELECT * FROM trucks";
+
+        //    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+        //    using (MySqlDataReader reader = cmd.ExecuteReader())
+        //    {
+        //        while (reader.Read())
+        //        {
+        //        }
+        //    }
+
+        //}
+
 
         //public List<Client> GetAllClients()
         //{
@@ -690,7 +704,17 @@ namespace EasyMoveOMS
             }
         }
 
-        
+        internal void updateOrderClientId(long clientId, long orderId)
+        {
+            String sql = "UPDATE orders SET  clientId=@clientId WHERE id=@orderId;";
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@clientId", clientId);
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
 }
